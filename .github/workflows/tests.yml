@@ -40,10 +40,11 @@ jobs:
       - name: Start World Broker
         uses: namoshek/rabbitmq-github-action@v1
         with:
-          version: "3.9.13-management"
+          version: "3.9.13"
           ports: "1885:1885 4369:4369 5672:5672 15672:15672 15674:15674 25672:25672"
           config: ${{ github.workspace }}/.ci/rabbitmq.conf
           definitions: ${{ github.workspace }}/.ci/rabbit_definitions.json
+          plugins: rabbitmq_management
           container-name: "rabbit"
 
       - name: Set up Python ${{ matrix.python }}
