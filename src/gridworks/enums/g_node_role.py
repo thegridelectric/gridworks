@@ -5,7 +5,7 @@ from fastapi_utils.enums import StrEnum
 
 
 class GNodeRole(StrEnum):
-    Unknown = auto()
+    GNode = auto()
     TerminalAsset = auto()
     Scada = auto()
     PriceService = auto()
@@ -21,7 +21,7 @@ class GNodeRole(StrEnum):
 
     @classmethod
     def default(cls) -> "GNodeRole":
-        return cls.Unknown
+        return cls.GNode
 
     @classmethod
     def values(cls) -> List[str]:

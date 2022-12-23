@@ -8,8 +8,8 @@ services:
     networks:
       - "dev"
     hostname: rabbit
-    container_name: atn-dev-rabbit
-    image: "jessmillar/dev-rabbit-x86:chaos__bf5e8a4__20221206"
+    container_name: gw-dev-rabbit
+    image: "jessmillar/dev-rabbit-x86:chaos__06181e7__20221223"
     ports:
       - 1885:1885
       - 4369:4369
