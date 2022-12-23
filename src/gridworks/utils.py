@@ -84,7 +84,7 @@ def message_category_from_symbol(symbol: MessageCategorySymbol) -> MessageCatego
         category = MessageCategory.RabbitJsonBroadcast
     elif symbol == MessageCategorySymbol.s:
         category = MessageCategory.RabbitGwSerial
-    elif symbol == MessageCategorySymbol.mq:
+    elif symbol == MessageCategorySymbol.gw:
         category = MessageCategory.MqttJsonBroadcast
     elif symbol == MessageCategorySymbol.post:
         category = MessageCategory.RestApiPost
@@ -113,7 +113,7 @@ def responsive_sleep(
             time.sleep(step_duration)
     if getattr(obj, running_field_name) and last_sleep > 0:
         time.sleep(last_sleep)
-    return getattr(obj, running_field_name)
+    return getattr(obj, running_field_name)  # type: ignore[no-any-return]
 
 
 class MessageSummary:

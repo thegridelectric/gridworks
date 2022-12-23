@@ -17,7 +17,7 @@ LOGGER.setLevel(logging.INFO)
 class SupervisorContainer:
     by_id: Dict[str, "SupervisorContainer"] = {}
 
-    def __new__(cls, supervisor_container_id, *args, **kwargs):
+    def __new__(cls, supervisor_container_id: str, *args, **kwargs) -> "SupervisorContainer":  # type: ignore
         try:
             return cls.by_id[supervisor_container_id]
         except KeyError:
@@ -38,10 +38,3 @@ class SupervisorContainer:
         self.world_instance_alias = world_instance_alias
         self.supervisor_g_node_instance_id = supervisor_g_node_instance_id
         self.supervisor_g_node_alias = supervisor_g_node_alias
-
-    @classmethod
-    def check_uniqueness_of_primary_key(cls, attributes):
-        if attributes["supervisor_container_id"] in cls.by_id.keys():
-            raise Exception(
-                f"supervisor_container_id {attributes['supervisor_container_id']} already in use"
-            )

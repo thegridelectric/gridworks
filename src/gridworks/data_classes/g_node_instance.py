@@ -39,8 +39,8 @@ class GNodeInstance:
         strategy: StrategyName,
         status: GniStatus,
         supervisor_container_id: str,
-        start_time_unix_s: str,
-        end_time_unix_s: str = 0,
+        start_time_unix_s: int,
+        end_time_unix_s: int = 0,
         algo_address: Optional[str] = None,
     ):
         self.g_node_instance_id = g_node_instance_id
@@ -56,10 +56,10 @@ class GNodeInstance:
         if not isinstance(status, GniStatus):
             raise DcError(f"status {status} must be GniStatus, got {type(status)}")
         self.status: GniStatus = status
-        self.supervisor_container_id = supervisor_container_id
-        self.start_time_unix_s = start_time_unix_s
-        self.end_time_unix_s = end_time_unix_s
-        self.algo_address = algo_address
+        self.supervisor_container_id: str = supervisor_container_id
+        self.start_time_unix_s: int = start_time_unix_s
+        self.end_time_unix_s: int = end_time_unix_s
+        self.algo_address: Optional[str] = algo_address
 
         self.__class__.by_alias[self.g_node.alias] = self
 
