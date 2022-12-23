@@ -38,29 +38,6 @@ LOG_FORMAT = (
 LOGGER = logging.getLogger(__name__)
 
 
-def decode_state(state_array: List[Any]) -> Dict[bytes, Union[int, bytes]]:
-    state: Dict[bytes, Union[int, bytes]] = dict()
-
-    for pair in state_array:
-        key = base64.b64decode(pair["key"])
-
-        value = pair["value"]
-        valueType = value["type"]
-
-        if valueType == 2:
-            # value is uint64
-            value = value.get("uint", 0)
-        elif valueType == 1:
-            # value is byte array
-            value = base64.b64decode(value.get("bytes", ""))
-        else:
-            raise Exception(f"Unexpected state type: {valueType}")
-
-        state[key] = value
-
-    return state
-
-
 def address_to_public_key(addr: str) -> str:
     return base64.b32encode(encoding.decode_address(addr)).decode()
 
@@ -95,17 +72,50 @@ def string_to_algo_addr(input_str: str) -> str:
 ##############################################################################
 
 
-def fully_compile_contract(client: AlgodClient, contract: Expr) -> bytes:
-    teal = compileTeal(contract, mode=Mode.Application, version=5)
-    response = client.compile(teal)
-    return base64.b64decode(response["result"])
+def decode_state(state_array: List[Any]) -> Dict[bytes, Union[int, bytes]]:
+    state: Dict[bytes, Union[int, bytes]] = dict()
+
+    for pair in state_array:
+        key = base64.b64decode(pair["key"])
+
+        value = pair["value"]
+        valueType = value["type"]
+
+        if valueType == 2:
+            # value is uint64
+            value = value.get("uint", 0)
+        elif valueType == 1:
+            # value is byte array
+            value = base64.b64decode(value.get("bytes", ""))
+        else:
+            raise Exception(f"Unexpected state type: {valueType}")
+
+        state[key] = value
+
+    return state
 
 
 def get_app_global_state(
     client: AlgodClient, app_id: int
 ) -> Dict[bytes, Union[int, bytes]]:
+    """Returns the global state of an Algorand application
+
+    Args:
+        client: Any AlgodClient
+        app_id (int): the application id of the smart contract
+
+    Returns:
+        Dict[bytes, Union[int, bytes]]: Returns the decoded key/value
+        pairs of an app's global state (uints and bytes)
+    """
     appInfo = client.application_info(app_id)
     return decode_state(appInfo["params"]["global-state"])
+
+
+def fully_compile_contract(client: AlgodClient, contract: Expr) -> bytes:
+    teal = compileTeal(contract, mode=Mode.Application, version=5)
+    response = client.compile(teal)
+    return base64.b64decode(response["result"])
 
 
 ##############################################################################
