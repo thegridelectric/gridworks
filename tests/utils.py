@@ -1,12 +1,16 @@
 import time
 import uuid
 from typing import Callable
+from typing import List
 from typing import Optional
 
 import pendulum
+import pika
+from pydantic import BaseModel
 
 from gridworks.actor_base import ActorBase
 from gridworks.actor_base import OnSendMessageDiagnostic
+from gridworks.actor_base import RabbitRole
 from gridworks.enums import GNodeRole
 from gridworks.enums import MessageCategory
 from gridworks.gw_config import GNodeSettings
@@ -18,36 +22,10 @@ from gridworks.schemata import SimTimestep
 from gridworks.schemata import SimTimestep_Maker
 
 
-def wait_for(
-    f: Callable[[], bool],
-    timeout: float,
-    tag: str = "",
-    raise_timeout: bool = True,
-    retry_duration: float = 0.1,
-) -> bool:
-    """Call function f() until it returns True or a timeout is reached. retry_duration specified the sleep time between
-    calls. If the timeout is reached before f return True, the function will either raise a ValueError (the default),
-    or, if raise_timeout==False, it will return False. Function f is guaranteed to be called at least once. If an
-    exception is raised the tag string will be attached to its message.
-    """
-    now = time.time()
-    until = now + timeout
-    if now >= until:
-        if f():
-            return True
-    while now < until:
-        if f():
-            return True
-        now = time.time()
-        if now < until:
-            time.sleep(min(retry_duration, until - now))
-            now = time.time()
-    if raise_timeout:
-        raise ValueError(
-            f"ERROR. Function {f} timed out after {timeout} seconds. {tag}"
-        )
-    else:
-        return False
+class ExchangeBinding(BaseModel):
+    From: str
+    To: str
+    Key: str
 
 
 class GNodeStubRecorder(ActorBase):
@@ -58,6 +36,85 @@ class GNodeStubRecorder(ActorBase):
 
     def prepare_for_death(self) -> None:
         self.actor_main_stopped = True
+
+    def load_rabbit_exchange_bindings(self):
+        ch = self._consume_channel
+
+        for role in RabbitRole.values():
+            ch.exchange_declare(
+                exchange=f"{role}_tx",
+                exchange_type="topic",
+                durable=True,
+                internal=True,
+            )
+            ch.exchange_declare(
+                exchange=f"{role}mic_tx",
+                exchange_type="topic",
+                durable=True,
+                internal=False,
+            )
+        time.sleep(1)
+        bindings: List[ExchangeBinding] = [
+            ExchangeBinding(From="atomictnode", To="ear", Key="#"),
+            ExchangeBinding(
+                From="atomictnode",
+                To="supervisor",
+                Key="*.*.atomictnode.*.supervisor.*",
+            ),
+            ExchangeBinding(
+                From="atomictnode",
+                To="timecoordinator",
+                Key="*.*.atomictnode.*.timecoordinator.*",
+            ),
+            ExchangeBinding(From="gnode", To="ear", Key="#"),
+            ExchangeBinding(
+                From="gnode", To="supervisor", Key="*.*.gnode.*.supervisor.*"
+            ),
+            ExchangeBinding(
+                From="gnode", To="timecoordinator", Key="*.*.gnode.*.timecoordinator.*"
+            ),
+            ExchangeBinding(From="marketmaker", To="ear", Key="#"),
+            ExchangeBinding(
+                From="marketmaker",
+                To="supervisor",
+                Key="*.*.marketmaker.*.supervisor.*",
+            ),
+            ExchangeBinding(
+                From="marketmaker",
+                To="timecoordinator",
+                Key="*.*.marketmaker.*.timecoordinator.*",
+            ),
+            ExchangeBinding(From="supervisor", To="ear", Key="#"),
+            ExchangeBinding(
+                From="supervisor",
+                To="atomictnode",
+                Key="*.*.supervisor.*.atomictnode.*",
+            ),
+            ExchangeBinding(
+                From="supervisor",
+                To="marketmaker",
+                Key="*.*.supervisor.*.marketmaker.*",
+            ),
+            ExchangeBinding(
+                From="supervisor", To="supervisor", Key="*.*.supervisor*.supervisor.*"
+            ),
+            ExchangeBinding(
+                From="supervisor",
+                To="timecoordinator",
+                Key="*.*.supervisor.*.timecoordinator.*",
+            ),
+            ExchangeBinding(From="world", To="ear", Key="#"),
+            ExchangeBinding(
+                From="world", To="timecoordinator", Key="*.*.world.*.timecoordinator.*"
+            ),
+        ]
+
+        for binding in bindings:
+            ch.exchange_bind(
+                destination=f"{binding.To}_tx",
+                source=f"{binding.From}mic_tx",
+                routing_key=binding.Key,
+            )
 
     ########################
     ## Receives
@@ -125,3 +182,35 @@ class TimeCoordinatorStubRecorder(ActorBase):
 
     def prepare_for_death(self):
         self.actor_main_stopped = True
+
+
+def wait_for(
+    f: Callable[[], bool],
+    timeout: float,
+    tag: str = "",
+    raise_timeout: bool = True,
+    retry_duration: float = 0.1,
+) -> bool:
+    """Call function f() until it returns True or a timeout is reached. retry_duration specified the sleep time between
+    calls. If the timeout is reached before f return True, the function will either raise a ValueError (the default),
+    or, if raise_timeout==False, it will return False. Function f is guaranteed to be called at least once. If an
+    exception is raised the tag string will be attached to its message.
+    """
+    now = time.time()
+    until = now + timeout
+    if now >= until:
+        if f():
+            return True
+    while now < until:
+        if f():
+            return True
+        now = time.time()
+        if now < until:
+            time.sleep(min(retry_duration, until - now))
+            now = time.time()
+    if raise_timeout:
+        raise ValueError(
+            f"ERROR. Function {f} timed out after {timeout} seconds. {tag}"
+        )
+    else:
+        return False

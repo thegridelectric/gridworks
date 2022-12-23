@@ -8,6 +8,7 @@ from abc import ABC
 from abc import abstractmethod
 from enum import auto
 from typing import Dict
+from typing import List
 from typing import Optional
 from typing import no_type_check
 
@@ -37,6 +38,10 @@ class RabbitRole(StrEnum):
     supervisor = auto()
     timecoordinator = auto()
     world = auto()
+
+    @classmethod
+    def values(cls) -> List[str]:
+        return [elt.value for elt in cls]
 
 
 RoleByRabbitRole: Dict[RabbitRole, GNodeRole] = {
