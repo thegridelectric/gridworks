@@ -40,6 +40,13 @@ class GNodeStubRecorder(ActorBase):
     def load_rabbit_exchange_bindings(self):
         ch = self._consume_channel
 
+        ch.exchange_declare(
+            exchange="ear_tx",
+            exchange_type="topic",
+            durable=True,
+            internal=True,
+        )
+
         for role in RabbitRole.values():
             ch.exchange_declare(
                 exchange=f"{role}_tx",
@@ -53,6 +60,7 @@ class GNodeStubRecorder(ActorBase):
                 durable=True,
                 internal=False,
             )
+
         time.sleep(1)
         bindings: List[ExchangeBinding] = [
             ExchangeBinding(From="atomictnode", To="ear", Key="#"),
