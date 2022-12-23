@@ -46,7 +46,7 @@ class GNodeRole000SchemaEnum:
 
 
 class GNodeRole000(StrEnum):
-    Unknown = auto()
+    GNode = auto()
     TerminalAsset = auto()
     AtomicMeteringNode = auto()
     AtomicTNode = auto()
@@ -62,7 +62,7 @@ class GNodeRole000(StrEnum):
 
     @classmethod
     def default(cls) -> "GNodeRole000":
-        return cls.Unknown
+        return cls.GNode
 
     @classmethod
     def values(cls) -> List[str]:
@@ -85,7 +85,7 @@ class GNodeRoleMap:
         return cls.versioned_enum_to_type_dict[versioned_enum]
 
     type_to_versioned_enum_dict: Dict[str, GNodeRole000] = {
-        "00000000": GNodeRole000.Unknown,
+        "00000000": GNodeRole000.GNode,
         "bdeaa0b1": GNodeRole000.TerminalAsset,
         "8eb5b9e1": GNodeRole000.AtomicMeteringNode,
         "8021dcad": GNodeRole000.AtomicTNode,
@@ -101,7 +101,7 @@ class GNodeRoleMap:
     }
 
     versioned_enum_to_type_dict: Dict[GNodeRole000, str] = {
-        GNodeRole000.Unknown: "00000000",
+        GNodeRole000.GNode: "00000000",
         GNodeRole000.TerminalAsset: "bdeaa0b1",
         GNodeRole000.AtomicMeteringNode: "8eb5b9e1",
         GNodeRole000.AtomicTNode: "8021dcad",
@@ -214,7 +214,7 @@ class GNodeGt(BaseModel):
 
     @validator("Role")
     def _validator_role(cls, v: GNodeRole) -> GNodeRole:
-        return as_enum(v, GNodeRole, GNodeRole.Unknown)
+        return as_enum(v, GNodeRole, GNodeRole.GNode)
 
     _validator_g_node_registry_addr = predicate_validator(
         "GNodeRegistryAddr", property_format.is_algo_address_string_format

@@ -8,9 +8,11 @@ from abc import ABC
 from abc import abstractmethod
 from enum import auto
 from typing import Dict
+from typing import List
 from typing import Optional
 from typing import no_type_check
 
+import pendulum
 import pika  # type: ignore
 from fastapi_utils.enums import StrEnum
 
@@ -24,19 +26,27 @@ from gridworks.enums import UniverseType
 from gridworks.errors import SchemaError
 from gridworks.gw_config import GNodeSettings
 from gridworks.schemata import HeartbeatA
+from gridworks.schemata import HeartbeatA_Maker
 from gridworks.schemata import SimTimestep
+from gridworks.schemata import SimTimestep_Maker
 
 
 class RabbitRole(StrEnum):
     atomictnode = auto()
+    gnode = auto()
     marketmaker = auto()
     supervisor = auto()
     timecoordinator = auto()
     world = auto()
 
+    @classmethod
+    def values(cls) -> List[str]:
+        return [elt.value for elt in cls]
+
 
 RoleByRabbitRole: Dict[RabbitRole, GNodeRole] = {
     RabbitRole.atomictnode: GNodeRole.AtomicTNode,
+    RabbitRole.gnode: GNodeRole.GNode,
     RabbitRole.marketmaker: GNodeRole.MarketMaker,
     RabbitRole.supervisor: GNodeRole.Supervisor,
     RabbitRole.timecoordinator: GNodeRole.TimeCoordinator,
@@ -46,6 +56,7 @@ RoleByRabbitRole: Dict[RabbitRole, GNodeRole] = {
 
 RabbitRolebyRole: Dict[GNodeRole, RabbitRole] = {
     GNodeRole.AtomicTNode: RabbitRole.atomictnode,
+    GNodeRole.GNode: RabbitRole.gnode,
     GNodeRole.MarketMaker: RabbitRole.marketmaker,
     GNodeRole.Supervisor: RabbitRole.supervisor,
     GNodeRole.TimeCoordinator: RabbitRole.timecoordinator,
@@ -97,6 +108,10 @@ class ActorBase(ABC):
         self.g_node_role: GNodeRole = GNodeRole(settings.g_node_role_value)
         self.rabbit_role: RabbitRole = RabbitRolebyRole[self.g_node_role]
         self.universe_type: UniverseType = UniverseType(settings.universe_type_value)
+        # Used for tracking time in simulated worlds
+        self._time: float = time.time()
+        if self.universe_type == UniverseType.Dev:
+            self._time = settings.initial_time_unix_s
         self.actor_main_stopped: bool = False
 
         adder = "-F" + str(uuid.uuid4()).split("-")[0][0:3]
@@ -155,209 +170,14 @@ class ActorBase(ABC):
         self.stop_consumer()
         self.local_stop()
         self.consuming_thread.join()
-        self.publishing_thread.join()
+        # self.publishing_thread.join()
         self._stopping = False
         self._stopped = True
 
-    def local_stop() -> None:
+    def local_stop(self) -> None:
         """This should be overwritten in derived class if there is a requirement
         to stop the additional threads started in local_start"""
         pass
-
-    @no_type_check
-    def on_message(self, _unused_channel, basic_deliver, properties, body) -> None:
-        """Invoked by pika when a message is delivered from RabbitMQ. If a message
-        does not get here that you expect should get here, check the routing key
-        of the outbound message and the rabbitmq bindings.
-
-        Parses the TypeName of the message payload and the GNodeAlias of the sender.
-        If it recognizes the GNode and the TypeName then it sends the message on to
-        the check_routing function, which will be defined in a child class (e.g., the
-        GNodeFactoryActorBase if the actor is a GNodeFactory).
-
-        From RabbitMQ:  The
-        channel is passed for your convenience. The basic_deliver object that
-        is passed in carries the exchange, routing key, delivery tag and
-        a redelivered flag for the message. The properties passed in is an
-        instance of BasicProperties with the message properties and the body
-        is the message that was sent.
-        :param pika.channel.Channel _unused_channel: The channel object
-        :param pika.Spec.Basic.Deliver: basic_deliver method
-        :param pika.Spec.BasicProperties: properties
-        :param bytes body: The message body
-        """
-        self.latest_routing_key = basic_deliver.routing_key
-        LOGGER.debug(
-            f"{self.alias}: Got {basic_deliver.routing_key} with delivery tag {basic_deliver.delivery_tag}"
-        )
-        self.acknowledge_message(basic_deliver.delivery_tag)
-        try:
-            type_name = self.get_payload_type_name(basic_deliver)
-        except SchemaError:
-            return
-        self.type_name = type_name
-
-        if type_name not in api_types.version_by_type_name().keys():
-            self._latest_on_message_diagnostic = (
-                OnReceiveMessageDiagnostic.UNKNOWN_TYPE_NAME
-            )
-            LOGGER.warning(
-                f"IGNORING MESSAGE. {self._latest_on_message_diagnostic}: {type_name}"
-            )
-            return
-
-        try:
-            payload = api_types.TypeMakerByName[type_name].type_to_tuple(body)
-        except Exception as e:
-            LOGGER.warning(
-                f"TypeName for incoming message claimed to be {type_name}, but was not true! Failed to make a {api_types.TypeMakerByName[type_name].tuple}"
-            )
-            return
-
-        routing_key: str = basic_deliver.routing_key
-
-        try:
-            from_alias = self.from_alias_from_routing_key(routing_key)
-        except SchemaError as e:
-            self._latest_on_message_diagnostic = (
-                OnReceiveMessageDiagnostic.FROM_GNODE_DECODING_PROBLEM
-            )
-            LOGGER.warning(
-                f"IGNORING MESSAGE. {self._latest_on_message_diagnostic}: {e}"
-            )
-            return
-        try:
-            from_role = self.from_role_from_routing_key(routing_key)
-        except SchemaError as e:
-            self._latest_on_message_diagnostic = (
-                OnReceiveMessageDiagnostic.FROM_GNODE_DECODING_PROBLEM
-            )
-            LOGGER.warning(
-                f"IGNORING MESSAGE. {self._latest_on_message_diagnostic}: {e}"
-            )
-            return
-
-        self._latest_on_message_diagnostic = (
-            OnReceiveMessageDiagnostic.TO_DIRECT_ROUTING
-        )
-        self.route_message(
-            from_alias=from_alias,
-            from_role=from_role,
-            payload=payload,
-        )
-
-    @abstractmethod
-    def route_message(
-        self, from_alias: str, from_role: GNodeRole, payload: HeartbeatA
-    ) -> None:
-        raise NotImplementedError
-
-    @no_type_check
-    def send_message(
-        self,
-        payload: HeartbeatA,
-        message_category: MessageCategory = MessageCategory.RabbitJsonDirect,
-        to_role: Optional[GNodeRole] = None,
-        to_g_node_alias: Optional[str] = None,
-        radio_channel: Optional[str] = None,
-    ) -> OnSendMessageDiagnostic:
-        """Publish a direct message to another GNode in the registry world. The only type
-        of direct messages in the registry use json (i.e. no more streamlined serial encoding),
-        unlike in non-registry worlds.
-
-        Args:
-            payload: Any GridWorks schemata with a json content-type
-            that includes TypeName as a json key, and has as_type()
-            as an encoding method.
-            routing_key_type: for creating routing key
-            to_role (Optional[GNodeRole]): used if a direct message
-            to_g_node_alias (str): used if a direct message
-
-        Returns:
-            OnSendMessageDiagnostic: MESSAGE_SENT with success, otherwise some
-            description of why the message was not sent.
-        """
-
-        if self._stopping:
-            return OnSendMessageDiagnostic.STOPPING_SO_NOT_SENDING
-        if self._stopped:
-            return OnSendMessageDiagnostic.STOPPED_SO_NOT_SENDING
-
-        if "MessageId" in payload.as_dict():
-            correlation_id = payload.MessageId
-        else:
-            correlation_id = str(uuid.uuid4())
-
-        if message_category is MessageCategory.RabbitJsonDirect:
-            if not isinstance(to_role, GNodeRole):
-                raise Exception("Must include to_role for a direct message")
-            if not property_format.is_lrd_alias_format(to_g_node_alias):
-                raise Exception(
-                    f"to_g_node_alias must have LrdAliasFormat. Got {to_g_node_alias}"
-                )
-            routing_key = self.direct_routing_key(
-                to_role=to_role,
-                payload=payload,
-                to_g_node_alias=to_g_node_alias,
-            )
-
-            properties = pika.BasicProperties(
-                reply_to=self.queue_name,
-                app_id=self.alias,
-                type=message_category.RabbitJsonDirect,
-                correlation_id=correlation_id,
-            )
-        elif message_category is MessageCategory.RabbitJsonBroadcast:
-            routing_key = self.broadcast_routing_key(
-                payload=payload, radio_channel=radio_channel
-            )
-            properties = pika.BasicProperties(
-                reply_to=self.queue_name,
-                app_id=self.alias,
-                type=message_category.RabbitJsonBroadcast,
-                correlation_id=correlation_id,
-            )
-        else:
-            raise Exception(f"Does not handle MessageCategory {message_category}")
-
-        # if self._publish_channel is None:
-        #     LOGGER.error(f"No publish channel so not sending {routing_key}")
-        #     return OnSendMessageDiagnostic.CHANNEL_NOT_OPEN
-        # if not self._publish_channel.is_open:
-        #     LOGGER.error(f"Publish channel not open so not sending {routing_key}")
-        #     return OnSendMessageDiagnostic.CHANNEL_NOT_OPEN
-
-        if self._consume_channel is None:
-            LOGGER.error(f"No channel so not sending {routing_key}")
-            return OnSendMessageDiagnostic.CHANNEL_NOT_OPEN
-        if not self._consume_channel.is_open:
-            LOGGER.error(f"Channel not open so not sending {routing_key}")
-            return OnSendMessageDiagnostic.CHANNEL_NOT_OPEN
-
-        try:
-            self._consume_channel.basic_publish(
-                exchange=self._publish_exchange,
-                routing_key=routing_key,
-                body=payload.as_type(),
-                properties=properties,
-            )
-            # self._publish_channel.basic_publish(
-            #     exchange=self._publish_exchange,
-            #     routing_key=routing_key,
-            #     body=payload.as_type(),
-            #     properties=properties,
-            # )
-            LOGGER.debug(f" [x] Sent {payload.TypeName} w routing key {routing_key}")
-            return OnSendMessageDiagnostic.MESSAGE_SENT
-
-        except BaseException:
-            LOGGER.exception("Problem publishing w consume channel")
-            # LOGGER.exception("Problem w publish channel")
-            return OnSendMessageDiagnostic.UNKNOWN_ERROR
-
-    #####################
-    # Abstract methods
-    #####################
 
     @abstractmethod
     def prepare_for_death(self) -> None:
@@ -367,6 +187,9 @@ class ActorBase(ABC):
         beyond the two designed for publishing and consuming messages, shut those
         down in this method."""
         raise NotImplementedError
+
+    def __repr__(self) -> str:
+        return f"{self.alias}"
 
     ########################
     # Core Rabbit infrastructure
@@ -1064,13 +887,233 @@ class ActorBase(ABC):
 
         return RoleByRabbitRole[rabbit_role]
 
-    #################################################
-    # On receiving messages broadcast to all listners
-    #################################################
+    @no_type_check
+    def send_message(
+        self,
+        payload: HeartbeatA,
+        message_category: MessageCategory = MessageCategory.RabbitJsonDirect,
+        to_role: Optional[GNodeRole] = None,
+        to_g_node_alias: Optional[str] = None,
+        radio_channel: Optional[str] = None,
+    ) -> OnSendMessageDiagnostic:
+        """Publish a direct message to another GNode in the registry world. The only type
+        of direct messages in the registry use json (i.e. no more streamlined serial encoding),
+        unlike in non-registry worlds.
+
+        Args:
+            payload: Any GridWorks schemata with a json content-type
+            that includes TypeName as a json key, and has as_type()
+            as an encoding method.
+            routing_key_type: for creating routing key
+            to_role (Optional[GNodeRole]): used if a direct message
+            to_g_node_alias (str): used if a direct message
+
+        Returns:
+            OnSendMessageDiagnostic: MESSAGE_SENT with success, otherwise some
+            description of why the message was not sent.
+        """
+
+        if self._stopping:
+            return OnSendMessageDiagnostic.STOPPING_SO_NOT_SENDING
+        if self._stopped:
+            return OnSendMessageDiagnostic.STOPPED_SO_NOT_SENDING
+
+        if "MessageId" in payload.as_dict():
+            correlation_id = payload.MessageId
+        else:
+            correlation_id = str(uuid.uuid4())
+
+        if message_category is MessageCategory.RabbitJsonDirect:
+            if not isinstance(to_role, GNodeRole):
+                raise Exception("Must include to_role for a direct message")
+            if not property_format.is_lrd_alias_format(to_g_node_alias):
+                raise Exception(
+                    f"to_g_node_alias must have LrdAliasFormat. Got {to_g_node_alias}"
+                )
+            routing_key = self.direct_routing_key(
+                to_role=to_role,
+                payload=payload,
+                to_g_node_alias=to_g_node_alias,
+            )
+
+            properties = pika.BasicProperties(
+                reply_to=self.queue_name,
+                app_id=self.alias,
+                type=message_category.RabbitJsonDirect,
+                correlation_id=correlation_id,
+            )
+        elif message_category is MessageCategory.RabbitJsonBroadcast:
+            routing_key = self.broadcast_routing_key(
+                payload=payload, radio_channel=radio_channel
+            )
+            properties = pika.BasicProperties(
+                reply_to=self.queue_name,
+                app_id=self.alias,
+                type=message_category.RabbitJsonBroadcast,
+                correlation_id=correlation_id,
+            )
+        else:
+            raise Exception(f"Does not handle MessageCategory {message_category}")
+
+        # if self._publish_channel is None:
+        #     LOGGER.error(f"No publish channel so not sending {routing_key}")
+        #     return OnSendMessageDiagnostic.CHANNEL_NOT_OPEN
+        # if not self._publish_channel.is_open:
+        #     LOGGER.error(f"Publish channel not open so not sending {routing_key}")
+        #     return OnSendMessageDiagnostic.CHANNEL_NOT_OPEN
+
+        if self._consume_channel is None:
+            LOGGER.error(f"No channel so not sending {routing_key}")
+            return OnSendMessageDiagnostic.CHANNEL_NOT_OPEN
+        if not self._consume_channel.is_open:
+            LOGGER.error(f"Channel not open so not sending {routing_key}")
+            return OnSendMessageDiagnostic.CHANNEL_NOT_OPEN
+
+        try:
+            self._consume_channel.basic_publish(
+                exchange=self._publish_exchange,
+                routing_key=routing_key,
+                body=payload.as_type(),
+                properties=properties,
+            )
+            # self._publish_channel.basic_publish(
+            #     exchange=self._publish_exchange,
+            #     routing_key=routing_key,
+            #     body=payload.as_type(),
+            #     properties=properties,
+            # )
+            LOGGER.debug(f" [x] Sent {payload.TypeName} w routing key {routing_key}")
+            return OnSendMessageDiagnostic.MESSAGE_SENT
+
+        except BaseException:
+            LOGGER.exception("Problem publishing w consume channel")
+            # LOGGER.exception("Problem w publish channel")
+            return OnSendMessageDiagnostic.UNKNOWN_ERROR
 
     #################################################
-    # Various
+    # Receiving messages
     #################################################
 
-    def __repr__(self) -> str:
-        return f"{self.alias}"
+    @no_type_check
+    def on_message(self, _unused_channel, basic_deliver, properties, body) -> None:
+        """Invoked by pika when a message is delivered from RabbitMQ. If a message
+        does not get here that you expect should get here, check the routing key
+        of the outbound message and the rabbitmq bindings.
+
+        Parses the TypeName of the message payload and the GNodeAlias of the sender.
+        If it recognizes the GNode and the TypeName then it sends the message on to
+        the check_routing function, which will be defined in a child class (e.g., the
+        GNodeFactoryActorBase if the actor is a GNodeFactory).
+
+        From RabbitMQ:  The
+        channel is passed for your convenience. The basic_deliver object that
+        is passed in carries the exchange, routing key, delivery tag and
+        a redelivered flag for the message. The properties passed in is an
+        instance of BasicProperties with the message properties and the body
+        is the message that was sent.
+        :param pika.channel.Channel _unused_channel: The channel object
+        :param pika.Spec.Basic.Deliver: basic_deliver method
+        :param pika.Spec.BasicProperties: properties
+        :param bytes body: The message body
+        """
+        self.latest_routing_key = basic_deliver.routing_key
+        LOGGER.debug(
+            f"{self.alias}: Got {basic_deliver.routing_key} with delivery tag {basic_deliver.delivery_tag}"
+        )
+        self.acknowledge_message(basic_deliver.delivery_tag)
+        try:
+            type_name = self.get_payload_type_name(basic_deliver)
+        except SchemaError:
+            return
+        self.type_name = type_name
+
+        if type_name not in api_types.version_by_type_name().keys():
+            self._latest_on_message_diagnostic = (
+                OnReceiveMessageDiagnostic.UNKNOWN_TYPE_NAME
+            )
+            LOGGER.warning(
+                f"IGNORING MESSAGE. {self._latest_on_message_diagnostic}: {type_name}"
+            )
+            return
+
+        try:
+            payload = api_types.TypeMakerByName[type_name].type_to_tuple(body)
+        except Exception as e:
+            LOGGER.warning(
+                f"TypeName for incoming message claimed to be {type_name}, but was not true! Failed to make a {api_types.TypeMakerByName[type_name].tuple}"
+            )
+            return
+
+        routing_key: str = basic_deliver.routing_key
+
+        try:
+            from_alias = self.from_alias_from_routing_key(routing_key)
+        except SchemaError as e:
+            self._latest_on_message_diagnostic = (
+                OnReceiveMessageDiagnostic.FROM_GNODE_DECODING_PROBLEM
+            )
+            LOGGER.warning(
+                f"IGNORING MESSAGE. {self._latest_on_message_diagnostic}: {e}"
+            )
+            return
+        try:
+            from_role = self.from_role_from_routing_key(routing_key)
+        except SchemaError as e:
+            self._latest_on_message_diagnostic = (
+                OnReceiveMessageDiagnostic.FROM_GNODE_DECODING_PROBLEM
+            )
+            LOGGER.warning(
+                f"IGNORING MESSAGE. {self._latest_on_message_diagnostic}: {e}"
+            )
+            return
+
+        self._latest_on_message_diagnostic = (
+            OnReceiveMessageDiagnostic.TO_DIRECT_ROUTING
+        )
+        self.route_message(
+            from_alias=from_alias,
+            from_role=from_role,
+            payload=payload,
+        )
+
+    ########################
+    ## Receives
+    ########################
+
+    def route_message(
+        self, from_alias: str, from_role: GNodeRole, payload: HeartbeatA
+    ) -> None:
+        """This router should be overwritten by derived class based on the
+        messages received by that GNodeRole"""
+        if payload.TypeName == SimTimestep_Maker.type_name:
+            try:
+                self.timestep_from_timecoordinator(payload)
+            except:
+                LOGGER.exception("Error in timestep_from_timecoordinator")
+
+    ########################
+    ## Time related (simulated time)
+    ########################
+
+    def timestep_from_timecoordinator(self, payload: SimTimestep):
+        if self._time < payload.TimeUnixS:
+            self._time = payload.TimeUnixS
+            self.new_timestep(payload)
+            LOGGER.debug(f"Time is now {self.time_str()}")
+        elif self._time == payload.TimeUnixS:
+            self.repeat_timestep(payload)
+
+    def new_timestep(self, payload: SimTimestep) -> None:
+        LOGGER.info("New timestep")
+
+    def repeat_timestep(self, payload: SimTimestep) -> None:
+        LOGGER.info("Timestep received again in atn_actor_base")
+
+    def time(self) -> float:
+        if self.universe_type == UniverseType.Dev:
+            return self._time
+        else:
+            return time.time()
+
+    def time_str(self) -> str:
+        return pendulum.from_timestamp(self.time()).strftime("%m/%d/%Y, %H:%M")

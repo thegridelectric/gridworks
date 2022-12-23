@@ -8,8 +8,8 @@ services:
     networks:
       - "dev"
     hostname: rabbit
-    container_name: atn-dev-rabbit
-    image: "jessmillar/dev-world-rabbit-arm:chaos__bf5e8a4__20221206"
+    container_name: gw-dev-rabbit
+    image: "jessmillar/dev-world-rabbit-arm:chaos__06181e7__20221223"
     ports:
       - 1885:1885
       - 4369:4369
@@ -25,3 +25,4 @@ services:
       - RABBITMQ_PLUGINS=rabbitmq_management,rabbitmq_stomp,rabbitmq_web_stomp,rabbitmq_mqtt
     volumes:
       - ./for_docker/dev_rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./rabbitconfig/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro

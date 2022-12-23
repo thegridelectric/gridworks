@@ -4,7 +4,7 @@ from gridworks.enums import GNodeRole
 
 def test_g_node_role() -> None:
     assert set(GNodeRole.values()) == {
-        "Unknown",
+        "GNode",
         "TerminalAsset",
         "Scada",
         "PriceService",
@@ -19,4 +19,4 @@ def test_g_node_role() -> None:
         "Supervisor",
     }
 
-    assert GNodeRole.default() == GNodeRole.Unknown
+    assert GNodeRole.default() == GNodeRole.GNode

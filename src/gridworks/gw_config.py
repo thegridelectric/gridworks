@@ -52,14 +52,14 @@ class RabbitBrokerClient(BaseModel):
 
 
 class GNodeSettings(BaseSettings):
-    g_node_alias: str = "d1.isone.ver.keene.holly"
+    g_node_alias: str = "d1.isone.unknown.gnode"
     g_node_id: str = "e23eb2ec-4064-4921-89d4-b006edc81216"
     g_node_instance_id: str = "97eba574-bd20-45b5-bf82-9ba2f492d8f6"
-    g_node_role_value: str = "AtomicTNode"
+    g_node_role_value: str = "GNode"
     sk: SecretStr = SecretStr(
         "K6iB3AHmzSQ8wDE91QdUfaheDMEtf2WJUMYeeRptKxHiTxG3HC+iKpngXmi82y2r9uVPYwTI5aGiMhdXmPRxcQ=="
     )
-    my_super_alias: str = "d1.isone.ver.keene.super1"
+    my_super_alias: str = "d1.super1"
     time_coordinator_alias = "d1.time"
     initial_time_unix_s = pendulum.datetime(
         year=2020, month=1, day=1, hour=4, minute=20
