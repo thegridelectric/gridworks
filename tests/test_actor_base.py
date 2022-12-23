@@ -29,12 +29,12 @@ def test_actor_base():
         payload=payload, to_role=GNodeRole.Supervisor, to_g_node_alias=su.alias
     )
 
-    wait_for(lambda: su.messages_received > 0, 2, "supervisor received message")
+    wait_for(lambda: su.messages_received > 1, 2, "supervisor received message")
     if su.messages_received == 0:
         gn.stop()
         su.stop()
 
-    assert su.messages_received == 1
+    assert su.messages_received == 2
     assert su.messages_routed_internally == 1
     assert su.routing_to_super__heartbeat_a__worked
 
