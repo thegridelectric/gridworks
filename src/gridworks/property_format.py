@@ -411,3 +411,21 @@ def check_world_alias_matches_universe(g_node_alias: str, universe: str):
             raise ValueError(
                 f"World alias for dev universe must start with d. Got {world_alias}"
             )
+
+
+def is_world_instance_alias_format(candidate: str) -> bool:
+    try:
+        words = candidate.split("__")
+    except:
+        return False
+    try:
+        int(words[1])
+    except:
+        return False
+    try:
+        alias_words = words[0].split(".")
+    except:
+        return False
+    if len(alias_words) > 1:
+        return False
+    return True

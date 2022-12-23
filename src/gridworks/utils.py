@@ -1,4 +1,3 @@
-import json
 import logging
 import re
 import time
@@ -6,15 +5,13 @@ from typing import Any
 from typing import Optional
 from typing import no_type_check
 
-import gwmm.property_format as property_format
 import pendulum
-from gwmm.data_classes import MarketType
-from gwmm.enums import MessageCategory
-from gwmm.enums import MessageCategorySymbol
-from gwmm.errors import SchemaError
-from gwmm.schemata import MarketSlot
-from gwmm.schemata import MarketTypeGt_Maker
 from pydantic import BaseModel
+
+import gridworks.property_format as property_format
+from gridworks.enums import MessageCategory
+from gridworks.enums import MessageCategorySymbol
+from gridworks.errors import SchemaError
 
 
 DEFAULT_STEP_DURATION = 0.1
@@ -96,28 +93,6 @@ def message_category_from_symbol(symbol: MessageCategorySymbol) -> MessageCatego
     elif symbol == MessageCategorySymbol.get:
         category = MessageCategory.RestApiGet
     return category
-
-
-def name_from_market_slot(slot: MarketSlot) -> str:
-    return f"{slot.Type.Name.value}.{slot.MarketMakerAlias}.{slot.StartUnixS}"
-
-
-def market_slot_from_name(market_slot_name: str) -> MarketSlot:
-    """rt60gate30b.d1.isone.ver.keene.1577836800"""
-    if not property_format.is_market_slot_name_lrd_format(market_slot_name):
-        raise Exception(
-            f"market slot alias {market_slot_name} does not have market"
-            " slot alias lrd format!"
-        )
-    words = market_slot_name.split(".")
-    market_type_name = words[0]
-    market_type_dc = MarketType.by_id[market_type_name]
-    market_type = MarketTypeGt_Maker.dc_to_tuple(market_type_dc)
-    market_maker_alias = ".".join(words[1:-1])
-    slot_start = int(words[-1])
-    return MarketSlot(
-        Type=market_type, MarketMakerAlias=market_maker_alias, StartUnixS=slot_start
-    )
 
 
 def responsive_sleep(
