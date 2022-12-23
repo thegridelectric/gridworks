@@ -29,8 +29,10 @@ def test_actor_base():
         payload=payload, to_role=GNodeRole.Supervisor, to_g_node_alias=su.alias
     )
 
-    wait_for(lambda: su.messages_received > 1, 2, "supervisor received message")
-    if su.messages_received == 0:
+    success = wait_for(
+        lambda: su.messages_received > 1, 2, "supervisor received message"
+    )
+    if not success:
         gn.stop()
         su.stop()
 
