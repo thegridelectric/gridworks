@@ -2,9 +2,10 @@ import string
 import struct
 from typing import Any
 from typing import Callable
+from typing import List
 
-import algosdk
-import algosdk.abi
+import algosdk  # type: ignore[import]
+import algosdk.abi  # type: ignore[import]
 import pendulum
 import pydantic
 
@@ -44,7 +45,7 @@ def is_algo_address_string_format(candidate: str) -> bool:
     return True
 
 
-def check_is_algo_address_string_format(candidate: str):
+def check_is_algo_address_string_format(candidate: str) -> None:
     """Note: could use algosdk.encoding.is_valid_address instead.
     Leaving in for the moment to keep looking at algosdk.abi and understand
     how to use it.
@@ -85,7 +86,7 @@ def is_algo_private_key_format(candidate: str) -> bool:
     return True
 
 
-def check_is_algo_private_key_format(candidate: str):
+def check_is_algo_private_key_format(candidate: str) -> None:
     """The private key of a private/public Ed25519 key pair is transformed into an Algorand address,
     by adding a 4-byte checksum to the end of the public key and then encoding it
     in base32
@@ -110,7 +111,7 @@ def is_algo_msg_pack_encoded(candidate: str) -> bool:
     return True
 
 
-def check_is_algo_msg_pack_encoded(candidate: str):
+def check_is_algo_msg_pack_encoded(candidate: str) -> None:
     try:
         algosdk.encoding.future_msgpack_decode(candidate)
     except Exception as e:
@@ -135,7 +136,7 @@ def is_valid_asa_name(candidate: str) -> bool:
     return True
 
 
-def check_is_valid_asa_name(candidate: str):
+def check_is_valid_asa_name(candidate: str) -> None:
     try:
         l = len(candidate)
     except Exception as e:
@@ -146,7 +147,7 @@ def check_is_valid_asa_name(candidate: str):
         )
 
 
-def is_64_bit_hex(candidate) -> bool:
+def is_64_bit_hex(candidate: str) -> bool:
     if len(candidate) != 8:
         return False
     if not all(c in string.hexdigits for c in candidate):
@@ -154,22 +155,22 @@ def is_64_bit_hex(candidate) -> bool:
     return True
 
 
-def check_is_64_bit_hex(candidate):
+def check_is_64_bit_hex(candidate: str) -> None:
     if len(candidate) != 8:
         raise ValueError(f" {candidate} Must be length 8, not {len(candidate)}")
     if not all(c in string.hexdigits for c in candidate):
         raise ValueError("Must be hex digits")
 
 
-def is_bit(candidate) -> bool:
+def is_bit(candidate: int) -> bool:
     if candidate not in {0, 1}:
         return False
     return True
 
 
-def check_is_bit(candidate):
+def check_is_bit(candidate: int) -> None:
     if candidate not in {0, 1}:
-        raise ValueError(f"{e} must be either 0 or 1")
+        raise ValueError(f"{candidate} must be either 0 or 1")
 
 
 def is_lrd_alias_format(candidate: str) -> bool:
@@ -201,7 +202,7 @@ def is_lrd_alias_format(candidate: str) -> bool:
     return True
 
 
-def check_is_lrd_alias_format(candidate: str):
+def check_is_lrd_alias_format(candidate: str) -> None:
     """Lowercase AlphanumericStrings separated by dots (i.e. periods), with most
     significant word to the left.  I.e. `d1.ne` is the child of `d1`.
     Checking the format cannot verify the significance of words. All
@@ -213,14 +214,14 @@ def check_is_lrd_alias_format(candidate: str):
         ValueError: if candidate is not of lrd format (e.g. d1.iso.me.apple)
     """
     try:
-        x = candidate.split(".")
+        x: List[str] = candidate.split(".")
     except:
         raise ValueError("Failed to seperate into words with split'.'")
     first_word = x[0]
     first_char = first_word[0]
     if not first_char.isalpha():
         raise ValueError(
-            f"Most significant word must start with alphabet char. Got '{word}'"
+            f"Most significant word must start with alphabet char. Got '{first_word}'"
         )
     for word in x:
         if not word.isalnum():
@@ -275,52 +276,52 @@ def is_lrh_alias_format(candidate: str) -> bool:
     return True
 
 
-def is_positive_integer(candidate) -> bool:
+def is_positive_integer(candidate: int) -> bool:
     if not isinstance(candidate, int):
-        return False
+        return False  # type: ignore[unreachable]
     if candidate <= 0:
         return False
     return True
 
 
-def check_is_positive_integer(candidate):
+def check_is_positive_integer(candidate: int) -> None:
     if not isinstance(candidate, int):
         raise ValueError("Must be an integer")
     if candidate <= 0:
         raise ValueError("Must be positive integer")
 
 
-def is_reasonable_unix_time_ms(candidate) -> bool:
-    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp * 1000 > candidate:
+def is_reasonable_unix_time_ms(candidate: int) -> bool:
+    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp * 1000 > candidate:  # type: ignore[attr-defined]
         return False
-    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp * 1000 < candidate:
+    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp * 1000 < candidate:  # type: ignore[attr-defined]
         return False
     return True
 
 
-def check_is_reasonable_unix_time_ms(candidate):
-    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp * 1000 > candidate:
+def check_is_reasonable_unix_time_ms(candidate: int) -> None:
+    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp * 1000 > candidate:  # type: ignore[attr-defined]
         raise ValueError("ReasonableUnixTimeMs must be after 2000 AD")
-    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp * 1000 < candidate:
+    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp * 1000 < candidate:  # type: ignore[attr-defined]
         raise ValueError("ReasonableUnixTimeMs must be before 3000 AD")
 
 
-def is_reasonable_unix_time_s(candidate) -> bool:
-    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp > candidate:
+def is_reasonable_unix_time_s(candidate: int) -> bool:
+    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp > candidate:  # type: ignore[attr-defined]
         return False
-    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp < candidate:
+    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp < candidate:  # type: ignore[attr-defined]
         return False
     return True
 
 
-def check_is_reasonable_unix_time_s(candidate):
-    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp > candidate:
+def check_is_reasonable_unix_time_s(candidate: int) -> None:
+    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp > candidate:  # type: ignore[attr-defined]
         raise ValueError("ReasonableUnixTimeS must be after 2000 AD")
-    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp < candidate:
+    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp < candidate:  # type: ignore[attr-defined]
         raise ValueError("ReasonableUnixTimeS must be before 3000 AD")
 
 
-def is_unsigned_short(candidate) -> bool:
+def is_unsigned_short(candidate: int) -> bool:
     try:
         struct.pack("H", candidate)
     except:
@@ -328,14 +329,14 @@ def is_unsigned_short(candidate) -> bool:
     return True
 
 
-def check_is_unsigned_short(candidate):
+def check_is_unsigned_short(candidate: int) -> None:
     try:
         struct.pack("H", candidate)
     except:
         raise ValueError("requires 0 <= number <= 65535")
 
 
-def check_is_short_integer(candidate) -> bool:
+def is_short_integer(candidate: int) -> bool:
     try:
         struct.pack("h", candidate)
     except:
@@ -343,14 +344,14 @@ def check_is_short_integer(candidate) -> bool:
     return True
 
 
-def check_is_short_integer(candidate):
+def check_is_short_integer(candidate: int) -> None:
     try:
         struct.pack("h", candidate)
     except:
         raise ValueError("short format requires (-32767 -1) <= number <= 32767")
 
 
-def is_uuid_canonical_textual(candidate) -> bool:
+def is_uuid_canonical_textual(candidate: str) -> bool:
     try:
         x = candidate.split("-")
     except AttributeError:
@@ -375,7 +376,7 @@ def is_uuid_canonical_textual(candidate) -> bool:
     return True
 
 
-def check_is_uuid_canonical_textual(candidate):
+def check_is_uuid_canonical_textual(candidate: str) -> None:
     try:
         x = candidate.split("-")
     except AttributeError as e:
@@ -399,7 +400,7 @@ def check_is_uuid_canonical_textual(candidate):
         raise ValueError("Word 4 not of length 12")
 
 
-def check_world_alias_matches_universe(g_node_alias: str, universe: str):
+def check_world_alias_matches_universe(g_node_alias: str, universe: str) -> None:
     """
     Raises:
         ValueError: if g_node_alias is not LRD format or if first word does not match universe

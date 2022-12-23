@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from pydantic import validator
 
 import gridworks.property_format as property_format
-from gridworks.data_classes import GNode
+from gridworks.data_classes.g_node import GNode
 from gridworks.enums import GNodeRole
 from gridworks.enums import GNodeStatus
 from gridworks.errors import SchemaError
@@ -214,7 +214,7 @@ class GnodeGt(BaseModel):
 
     @validator("Role")
     def _validator_role(cls, v: GNodeRole) -> GNodeRole:
-        return as_enum(v, GNodeRole, GNodeRole.Unknown)
+        return as_enum(v, GNodeRole, GNodeRole.GNode)
 
     _validator_g_node_registry_addr = predicate_validator(
         "GNodeRegistryAddr", property_format.is_algo_address_string_format

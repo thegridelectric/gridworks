@@ -13,7 +13,7 @@ from typing import Optional
 from typing import no_type_check
 
 import pendulum
-import pika  # type: ignore
+import pika
 from fastapi_utils.enums import StrEnum
 
 import gridworks.api_types as api_types
@@ -236,9 +236,9 @@ class ActorBase(ABC):
         LOGGER.info("Connecting to %s", self._url)
         return pika.SelectConnection(
             parameters=pika.URLParameters(self._url),
-            on_open_callback=self.on_consumer_connection_open,
-            on_open_error_callback=self.on_consumer_connection_open_error,
-            on_close_callback=self.on_consumer_connection_closed,
+            on_open_callback=self.on_consumer_connection_open,  # type: ignore[arg-type]
+            on_open_error_callback=self.on_consumer_connection_open_error,  # type: ignore[arg-type]
+            on_close_callback=self.on_consumer_connection_closed,  # type: ignore[arg-type]
         )
 
     def close_consumer_connection(self) -> None:
@@ -251,8 +251,9 @@ class ActorBase(ABC):
                 LOGGER.info("Closing consume connection")
                 self._consume_connection.close()
 
-    @no_type_check
-    def on_consumer_connection_open(self, _unused_connection) -> None:
+    def on_consumer_connection_open(
+        self, _unused_connection: pika.SelectConnection
+    ) -> None:
         """This method is called by pika once the connection to RabbitMQ has
         been established. It passes the handle to the connection object in
         case we need it, but in this case, we'll just mark it unused.
@@ -261,8 +262,9 @@ class ActorBase(ABC):
         LOGGER.info("Connection opened")
         self.open_consume_channel()
 
-    @no_type_check
-    def on_consumer_connection_open_error(self, _unused_connection, err) -> None:
+    def on_consumer_connection_open_error(
+        self, _unused_connection: pika.SelectConnection, err: Exception
+    ) -> None:
         """This method is called by pika if the connection to RabbitMQ
         can't be established.
         :param pika.SelectConnection _unused_connection: The connection
@@ -271,8 +273,9 @@ class ActorBase(ABC):
         LOGGER.error(f"Consumer connection open failed: {err}")
         self.reconnect_consumer()
 
-    @no_type_check
-    def on_consumer_connection_closed(self, _unused_connection, reason) -> None:
+    def on_consumer_connection_closed(
+        self, _unused_connection: pika.SelectConnection, reason: Exception
+    ) -> None:
         """This method is invoked by pika when the connection to RabbitMQ is
         closed unexpectedly. Since it is unexpected, we will reconnect to
         RabbitMQ if it disconnects.
@@ -282,7 +285,7 @@ class ActorBase(ABC):
         """
         self._consume_channel = None
         if self._closing_consumer:
-            self._consume_connection.ioloop.stop()
+            self._consume_connection.ioloop.stop()  # type: ignore[union-attr]
         else:
             LOGGER.warning(f"Consumer connection closed, reconnect necessary: {reason}")
             self.reconnect_consumer()
@@ -503,7 +506,7 @@ class ActorBase(ABC):
             cb = functools.partial(
                 self.on_cancelconsumer_ok, userdata=self._consumer_tag
             )
-            self._consume_channel.basic_cancel(self._consumer_tag, cb)
+            self._consume_channel.basic_cancel(self._consumer_tag, cb)  # type: ignore[arg-type]
 
     @no_type_check
     def on_cancelconsumer_ok(self, _unused_frame, userdata) -> None:
@@ -1081,7 +1084,7 @@ class ActorBase(ABC):
     ########################
 
     def route_message(
-        self, from_alias: str, from_role: GNodeRole, payload: HeartbeatA
+        self, from_alias: str, from_role: GNodeRole, payload: SimTimestep
     ) -> None:
         """This router should be overwritten by derived class based on the
         messages received by that GNodeRole"""
@@ -1095,7 +1098,7 @@ class ActorBase(ABC):
     ## Time related (simulated time)
     ########################
 
-    def timestep_from_timecoordinator(self, payload: SimTimestep):
+    def timestep_from_timecoordinator(self, payload: SimTimestep) -> None:
         if self._time < payload.TimeUnixS:
             self._time = payload.TimeUnixS
             self.new_timestep(payload)
