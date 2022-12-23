@@ -12,16 +12,17 @@ from typing import List
 from typing import Optional
 from typing import Tuple
 from typing import Union
+from typing import no_type_check
 
 import dotenv
-from algosdk import account
+from algosdk import account  # type: ignore[import]
 from algosdk import encoding
 from algosdk import mnemonic
-from algosdk.future import transaction
-from algosdk.future.transaction import Multisig
+from algosdk.future import transaction  # type: ignore[import]
+from algosdk.future.transaction import Multisig  # type: ignore[import]
 from algosdk.future.transaction import MultisigTransaction
-from algosdk.kmd import KMDClient
-from algosdk.v2client.algod import AlgodClient
+from algosdk.kmd import KMDClient  # type: ignore[import]
+from algosdk.v2client.algod import AlgodClient  # type: ignore[import]
 from pyteal import Expr
 from pyteal import Mode
 from pyteal import compileTeal
@@ -36,6 +37,40 @@ LOG_FORMAT = (
     "-35s %(lineno) -5d: %(message)s"
 )
 LOGGER = logging.getLogger(__name__)
+
+
+def address_to_public_key(addr: str) -> str:
+    return str(base64.b32encode(encoding.decode_address(addr)).decode())
+
+
+def public_key_to_address(pubKey: str) -> str:
+    return str(encoding.encode_address(base64.b32decode(pubKey)))
+
+
+def string_2_32byte_hash(input_str: str) -> bytes:
+    return shake_256(input_str.encode("utf-8")).digest(32)
+
+
+def string_to_algo_addr(input_str: str) -> str:
+    """Encodes a string as an algorand address. Could be used to
+    overload mutable optional address fields in an asset (freeze,
+    reserve, clawback)
+
+    Args:
+        input_str: Aribtrary string.
+
+    Returns:
+        str: AlgoAddressStringFormat
+    """
+    fakeHash1 = string_2_32byte_hash(input_str)
+    fakeHash1_as_address = encoding.encode_address(fakeHash1)
+    assert encoding.is_valid_address(fakeHash1_as_address)
+    return str(fakeHash1_as_address)
+
+
+##############################################################################
+# App related helpers
+##############################################################################
 
 
 def decode_state(state_array: List[Any]) -> Dict[bytes, Union[int, bytes]]:
@@ -61,51 +96,27 @@ def decode_state(state_array: List[Any]) -> Dict[bytes, Union[int, bytes]]:
     return state
 
 
-def address_to_public_key(addr: str) -> str:
-    return base64.b32encode(encoding.decode_address(addr)).decode()
-
-
-def public_key_to_address(pubKey: str) -> str:
-    return encoding.encode_address(base64.b32decode(pubKey))
-
-
-def string_2_32byte_hash(input_str: str) -> str:
-    return shake_256(input_str.encode("utf-8")).digest(32)
-
-
-def string_to_algo_addr(input_str: str) -> str:
-    """Encodes a string as an algorand address. Could be used to
-    overload mutable optional address fields in an asset (freeze,
-    reserve, clawback)
+def get_app_global_state(
+    client: AlgodClient, app_id: int
+) -> Dict[bytes, Union[int, bytes]]:
+    """Returns the global state of an Algorand application
 
     Args:
-        input_str: Aribtrary string.
+        client: Any AlgodClient
+        app_id (int): the application id of the smart contract
 
     Returns:
-        str: AlgoAddressStringFormat
+        Dict[bytes, Union[int, bytes]]: Returns the decoded key/value
+        pairs of an app's global state (uints and bytes)
     """
-    fakeHash1 = string_2_32byte_hash(input_str)
-    fakeHash1_as_address = encoding.encode_address(fakeHash1)
-    assert encoding.is_valid_address(fakeHash1_as_address)
-    return fakeHash1_as_address
-
-
-##############################################################################
-# App related helpers
-##############################################################################
+    appInfo = client.application_info(app_id)
+    return decode_state(appInfo["params"]["global-state"])
 
 
 def fully_compile_contract(client: AlgodClient, contract: Expr) -> bytes:
     teal = compileTeal(contract, mode=Mode.Application, version=5)
     response = client.compile(teal)
     return base64.b64decode(response["result"])
-
-
-def get_app_global_state(
-    client: AlgodClient, app_id: int
-) -> Dict[bytes, Union[int, bytes]]:
-    appInfo = client.application_info(app_id)
-    return decode_state(appInfo["params"]["global-state"])
 
 
 ##############################################################################
@@ -181,14 +192,14 @@ class BasicAccount:
     @cached_property
     def address_as_bytes(self) -> bytes:
         """Also called public_key in algosdk"""
-        return encoding.decode_address(self.addr)
+        return bytes(encoding.decode_address(self.addr))
 
     @cached_property
     def mnemonic(self) -> str:
         """m stands for `mnemonic`, the string of 25 words
         that has equivalent information content to the private key
         """
-        return mnemonic.from_private_key(self._sk)
+        return str(mnemonic.from_private_key(self._sk))
 
     @cached_property
     def addr_short_hand(self) -> str:
@@ -210,12 +221,12 @@ class BasicAccount:
         """
         return cls(mnemonic.to_private_key(m))
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         if not isinstance(other, (BasicAccount)):
             return False
         return self._sk == other._sk and self._addr == other._addr
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"BasicAlgoAccount.\n  addr: {self.addr}\n  sk: {self.sk}"
 
 
@@ -248,24 +259,25 @@ class MultisigAccount:
         self.addresses: List[str] = list(addresses)
         self.validate()
 
-    def validate(self):
+    def validate(self) -> None:
         """Check if the account is valid by piggybacking on multiSig.validate"""
         msig = Multisig(
             version=self.version, threshold=self.threshold, addresses=self.addresses
         )
         msig.validate()
 
-    def address(self):
+    def address(self) -> str:
         """Return the account address, again piggybacking on multiSig"""
         msig = Multisig(
             version=self.version, threshold=self.threshold, addresses=self.addresses
         )
-        return msig.address()
+        return str(msig.address())
 
     @cached_property
     def address_as_bytes(self) -> bytes:
-        return encoding.decode_address(self.addr)
+        return encoding.decode_address(self.addr)  # type: ignore[no-any-return]
 
+    @no_type_check
     def __eq__(self, other):
         if not isinstance(other, (MultisigAccount)):
             return False
@@ -281,7 +293,7 @@ class MultisigAccount:
         msig = Multisig(
             version=self.version, threshold=self.threshold, addresses=self.addresses
         )
-        return msig.address()
+        return str(msig.address())
 
     @cached_property
     def addr_short_hand(self) -> str:
@@ -298,7 +310,7 @@ class MultisigAccount:
         )
         return MultisigTransaction(txn, msig)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"MultisigAccount.\n  version {self.version}, threshold {self.threshold} \n addresses: {self.addresses}"
 
 
@@ -321,7 +333,7 @@ class PendingTxnResponse:
         self.inner_txns: List[Any] = response.get("inner-txns", [])
         self.logs: List[bytes] = [base64.b64decode(l) for l in response.get("logs", [])]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         r = f"PendingTxnResponse: txid ..{self.tx_id[-6:]}\n"
         if self.asset_idx:
             r += f"     asset_index: {self.asset_idx}\n"
@@ -461,13 +473,13 @@ def micro_algos(addr: str) -> Optional[int]:
         settings.public.algod_address,
     )
     try:
-        microAlgoBalance = client.account_info(addr)["amount"]
+        microAlgoBalance: int = int(client.account_info(addr)["amount"])
     except:
         return None
     return microAlgoBalance
 
 
-def algos(addr: str) -> Optional[int]:
+def algos(addr: str) -> Optional[float]:
     """
     Args: acct (AlgoAccount): can also be a multiSig
 
@@ -482,7 +494,7 @@ def algos(addr: str) -> Optional[int]:
         settings.public.algod_address,
     )
     try:
-        microAlgoBalance = client.account_info(addr)["amount"]
+        microAlgoBalance: int = int(client.account_info(addr)["amount"])
     except:
         return None
     return round(microAlgoBalance / 10**6, 2)

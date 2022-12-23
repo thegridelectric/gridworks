@@ -1,5 +1,5 @@
 """Settings for the GNodeFactory, readable from environment and/or from env files."""
-
+import pendulum
 from pydantic import BaseModel
 from pydantic import BaseSettings
 from pydantic import SecretStr
@@ -42,4 +42,51 @@ class VanillaSettings(BaseSettings):
 
     class Config:
         env_prefix = "VANILLA_"
+        env_nested_delimiter = "__"
+
+
+class RabbitBrokerClient(BaseModel):
+    """Settings for connecting to a Rabbit Broker"""
+
+    url: SecretStr = SecretStr("amqp://smqPublic:smqPublic@localhost:5672/d1__1")
+
+
+class GNodeSettings(BaseSettings):
+    g_node_alias: str = "d1.isone.unknown.gnode"
+    g_node_id: str = "e23eb2ec-4064-4921-89d4-b006edc81216"
+    g_node_instance_id: str = "97eba574-bd20-45b5-bf82-9ba2f492d8f6"
+    g_node_role_value: str = "GNode"
+    sk: SecretStr = SecretStr(
+        "K6iB3AHmzSQ8wDE91QdUfaheDMEtf2WJUMYeeRptKxHiTxG3HC+iKpngXmi82y2r9uVPYwTI5aGiMhdXmPRxcQ=="
+    )
+    my_super_alias: str = "d1.super1"
+    time_coordinator_alias = "d1.time"
+    initial_time_unix_s = pendulum.datetime(
+        year=2020, month=1, day=1, hour=4, minute=20
+    ).int_timestamp
+    log_level: str = "INFO"
+    universe_type_value: str = "Dev"
+    rabbit: RabbitBrokerClient = RabbitBrokerClient()
+    public: Public = Public()
+    algo_api_secrets: AlgoApiSecrets = AlgoApiSecrets()
+
+    class Config:
+        env_prefix = "GNODE_"
+        env_nested_delimiter = "__"
+
+
+class SupervisorSettings(BaseSettings):
+    g_node_alias: str = "d1.isone.ver.keene.super1"
+    g_node_id: str = "664a3250-ce51-4fe3-9ce9-a4b6416451fb"
+    g_node_instance_id: str = "20e7edec-05e5-4152-bfec-ec21ddd2e3dd"
+    supervisor_container_id: str = "995b0334-9940-424f-8fb1-4745e52ba295"
+    g_node_role_value: str = "Supervisor"
+    my_time_coordinator_alias = "d1.time"
+    log_level: str = "INFO"
+    universe_type_value: str = "Dev"
+    world_instance_alias: str = "d1__1"
+    rabbit: RabbitBrokerClient = RabbitBrokerClient()
+
+    class Config:
+        env_prefix = "SUPER_"
         env_nested_delimiter = "__"
