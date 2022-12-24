@@ -16,7 +16,7 @@ import pendulum
 import pika
 from fastapi_utils.enums import StrEnum
 
-import gridworks.api_types as api_types
+import gridworks.base_api_types as base_api_types
 import gridworks.property_format as property_format
 import gridworks.utils as utils
 from gridworks.enums import GNodeRole
@@ -100,7 +100,11 @@ class ActorBase(ABC):
     def __init__(
         self,
         settings: GNodeSettings,
+        api_type_maker_by_name: Dict[
+            str, HeartbeatA_Maker
+        ] = base_api_types.TypeMakerByName,
     ):
+        self.api_type_maker_by_name = api_type_maker_by_name
         self.latest_routing_key: Optional[str] = None
         self.shutting_down: bool = False
         self.alias: str = settings.g_node_alias
@@ -717,7 +721,7 @@ class ActorBase(ABC):
 
     @no_type_check
     def get_payload_type_name(self, basic_deliver) -> str:
-        """The TypeName tis a string hat provides the strongly typed specification
+        """The TypeName is a string that provides the strongly typed specification
             (API/ABI) for the incoming message. This is similar to knowing
             the protobuf name/method or the ABI name/method.
 
@@ -1028,9 +1032,8 @@ class ActorBase(ABC):
             type_name = self.get_payload_type_name(basic_deliver)
         except SchemaError:
             return
-        self.type_name = type_name
 
-        if type_name not in api_types.version_by_type_name().keys():
+        if type_name not in self.api_type_maker_by_name.keys():
             self._latest_on_message_diagnostic = (
                 OnReceiveMessageDiagnostic.UNKNOWN_TYPE_NAME
             )
@@ -1040,10 +1043,10 @@ class ActorBase(ABC):
             return
 
         try:
-            payload = api_types.TypeMakerByName[type_name].type_to_tuple(body)
+            payload = self.api_type_maker_by_name[type_name].type_to_tuple(body)
         except Exception as e:
             LOGGER.warning(
-                f"TypeName for incoming message claimed to be {type_name}, but was not true! Failed to make a {api_types.TypeMakerByName[type_name].tuple}"
+                f"TypeName for incoming message claimed to be {type_name}, but was not true! Failed to make a {self.api_type_maker_by_name[type_name].tuple}"
             )
             return
 
