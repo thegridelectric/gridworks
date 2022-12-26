@@ -116,7 +116,7 @@ class ActorBase(ABC):
         self._time: float = time.time()
         if self.universe_type == UniverseType.Dev:
             self._time = settings.initial_time_unix_s
-        self.actor_main_stopped: bool = False
+        self.actor_main_running: bool = False
 
         adder = "-F" + str(uuid.uuid4()).split("-")[0][0:3]
         self.queue_name: str = self.alias + adder
@@ -162,35 +162,33 @@ class ActorBase(ABC):
     def local_start(self) -> None:
         """This should be overwritten in derived class for additional threads.
         It cannot assume the rabbit channels are established and that
-        messages can be received or sent."""
-        pass
+        messages can be received or sent.
+
+        Once started, set actor_main_stopped to True"""
+        self.actor_main_running = True
 
     def stop(self) -> None:
         self.shutting_down = True
         self.prepare_for_death()
-        while self.actor_main_stopped is False:
+        while self.actor_main_running is True:
             time.sleep(self.SHUTDOWN_INTERVAL)
+        self.local_stop()
         # self.stop_publisher()
         self.stop_consumer()
-        self.local_stop()
         self.consuming_thread.join()
         # self.publishing_thread.join()
         self._stopping = False
         self._stopped = True
 
-    def local_stop(self) -> None:
-        """This should be overwritten in derived class if there is a requirement
-        to stop the additional threads started in local_start"""
-        pass
-
     @abstractmethod
     def prepare_for_death(self) -> None:
-        """Once the agent is ready for its comms to be shut down it sets
-        actor_main_stopped  to True. Write stoic code, with your
-        agents ready for death at all times.  However, if there are threads running
-        beyond the two designed for publishing and consuming messages, shut those
-        down in this method."""
+        """Derived threads (in main) prepare to get joined"""
+        self.actor_main_running = False
         raise NotImplementedError
+
+    def local_stop(self) -> None:
+        """Join local threads"""
+        pass
 
     def __repr__(self) -> str:
         return f"{self.alias}"
@@ -209,7 +207,7 @@ class ActorBase(ABC):
         self._consuming = False
 
     def run_reconnecting_consumer(self) -> None:
-        while not self.actor_main_stopped:
+        while not self.actor_main_running:
             self.run_consumer()
             self._maybe_reconnect_consumer()
 
@@ -217,7 +215,7 @@ class ActorBase(ABC):
         if self.should_reconnect_consumer:
             self.stop_consumer()
             reconnect_delay = self._get_reconnect_delay()
-            if not self.actor_main_stopped:
+            if not self.actor_main_running:
                 LOGGER.info("Reconnecting after %d seconds", reconnect_delay)
             time.sleep(reconnect_delay)
             self.flush_consumer()

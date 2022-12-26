@@ -28,7 +28,7 @@ class GNodeStubRecorder(ActorBase):
         self.payloads = []
 
     def prepare_for_death(self) -> None:
-        self.actor_main_stopped = True
+        self.actor_main_running = False
 
     def load_rabbit_exchange_bindings(self):
         ch = self._consume_channel
@@ -151,7 +151,7 @@ class SupervisorStubRecorder(ActorBase):
             self.heartbeat_a_received(from_alias, from_role, payload)
 
     def prepare_for_death(self):
-        self.actor_main_stopped = True
+        self.actor_main_running = False
 
     def heartbeat_a_received(
         self, from_alias: str, from_role: GNodeRole, payload: HeartbeatA
@@ -182,7 +182,7 @@ class TimeCoordinatorStubRecorder(ActorBase):
                 self.gnode_ready = True
 
     def prepare_for_death(self):
-        self.actor_main_stopped = True
+        self.actor_main_running = False
 
 
 def wait_for(
