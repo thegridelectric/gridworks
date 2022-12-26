@@ -116,7 +116,7 @@ class ActorBase(ABC):
         self._time: float = time.time()
         if self.universe_type == UniverseType.Dev:
             self._time = settings.initial_time_unix_s
-        self.actor_main_stopped: bool = False
+        self.actor_main_stopped: bool = True
 
         adder = "-F" + str(uuid.uuid4()).split("-")[0][0:3]
         self.queue_name: str = self.alias + adder
@@ -154,16 +154,10 @@ class ActorBase(ABC):
         self._latest_on_message_diagnostic: Optional[OnReceiveMessageDiagnostic] = None
 
     def start(self) -> None:
-        self.consuming_thread.start()
-        # self.publishing_thread.start()
         self.local_start()
         self._stopped = False
-
-    def local_start(self) -> None:
-        """This should be overwritten in derived class for additional threads.
-        It cannot assume the rabbit channels are established and that
-        messages can be received or sent."""
-        pass
+        self.consuming_thread.start()
+        # self.publishing_thread.start()
 
     def stop(self) -> None:
         self.shutting_down = True
@@ -178,19 +172,25 @@ class ActorBase(ABC):
         self._stopping = False
         self._stopped = True
 
-    def local_stop(self) -> None:
-        """This should be overwritten in derived class if there is a requirement
-        to stop the additional threads started in local_start"""
-        pass
+    def local_start(self) -> None:
+        """This should be overwritten in derived class for additional threads.
+        It cannot assume the rabbit channels are established and that
+        messages can be received or sent."""
+        self.actor_main_stopped = False
 
     @abstractmethod
     def prepare_for_death(self) -> None:
-        """Once the agent is ready for its comms to be shut down it sets
-        actor_main_stopped  to True. Write stoic code, with your
-        agents ready for death at all times.  However, if there are threads running
-        beyond the two designed for publishing and consuming messages, shut those
-        down in this method."""
+        """Use actor_main_stopped to exit out of any threads in the derived class. Then
+        use local_stop to join those threads.
+
+        If there are no threads in the derived class, copy this method into the derived
+        class, get rid of the abstractmethod decorator, and delete the exception"""
+        self.actor_main_stopped = True
         raise NotImplementedError
+
+    def local_stop(self) -> None:
+        """Join any threads in the derived class."""
+        pass
 
     def __repr__(self) -> str:
         return f"{self.alias}"
