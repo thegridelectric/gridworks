@@ -13,16 +13,14 @@ def test_actor_base():
 
     gn = GNodeStubRecorder(settings)
     su = SupervisorStubRecorder(settings)
-    gn.start()
 
-    wait_for(lambda: gn._consume_connection, 2, "su._consume_connection exists")
-    wait_for(lambda: gn._consuming, 2, "supervisor is consuming")
+    gn.start()
+    wait_for(lambda: gn._consuming, 4, "gnode is consuming")
 
     gn.load_rabbit_exchange_bindings()
 
     su.start()
-    wait_for(lambda: gn._consume_connection, 2, "su._consume_connection exists")
-    wait_for(lambda: su._consuming, 2, "supervisor is consuming")
+    wait_for(lambda: su._consuming, 4, "supervisor is consuming")
 
     payload = HeartbeatA_Maker(my_hex=0, your_last_hex=0).tuple
     gn.send_message(
