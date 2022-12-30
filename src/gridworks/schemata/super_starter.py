@@ -18,14 +18,15 @@ from gridworks.schemata.supervisor_container_gt import SupervisorContainerGt_Mak
 
 class SuperStarter(BaseModel):
     SupervisorContainer: SupervisorContainerGt  #
-    GniList: List[GNodeInstanceGt]  #
+    GniList: List[GNodeInstanceGt]
+    #
     AliasWithKeyList: List[str]  #
     KeyList: List[str]  #
     TypeName: Literal["super.starter"] = "super.starter"
     Version: str = "000"
 
     @validator("GniList")
-    def _validator_gni_list(cls, v: List[GNodeInstanceGt]) -> List[GNodeInstanceGt]:
+    def _validator_gni_list(cls, v: List) -> List:
         for elt in v:
             if not isinstance(elt, GNodeInstanceGt):
                 raise ValueError(
@@ -34,7 +35,7 @@ class SuperStarter(BaseModel):
         return v
 
     @validator("AliasWithKeyList")
-    def _validator_alias_with_key_list(cls, v: List[str]) -> List[str]:
+    def _validator_alias_with_key_list(cls, v: List) -> List:
         for elt in v:
             if not property_format.is_lrd_alias_format(elt):
                 raise ValueError(

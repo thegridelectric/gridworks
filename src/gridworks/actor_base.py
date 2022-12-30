@@ -95,6 +95,7 @@ LOGGER.setLevel(logging.INFO)
 
 
 class ActorBase(ABC):
+    "This is the base class for GNodes, used to communicate via RabbitMQ"
     SHUTDOWN_INTERVAL = 0.1
 
     def __init__(
@@ -177,6 +178,12 @@ class ActorBase(ABC):
         It cannot assume the rabbit channels are established and that
         messages can be received or sent."""
         self.actor_main_stopped = False
+
+    def local_rabbit_startup(self) -> None:
+        """This should be overwritten in derived class for any additional rabbit
+        bindings. DO NOT start queues here.  It is called at the end of
+        self.start_consuming()"""
+        pass
 
     @abstractmethod
     def prepare_for_death(self) -> None:
@@ -446,13 +453,7 @@ class ActorBase(ABC):
         :param pika.frame.Method _unused_frame: The Basic.QosOk response frame
         """
         LOGGER.info("QOS set to: %d", self._prefetch_count)
-        self.local_rabbit_startup()
         self.start_consuming()
-
-    def local_rabbit_startup(self) -> None:
-        """This should be overwritten in derived class for any additional rabbit
-        bindings. DO NOT start queues here"""
-        pass
 
     @no_type_check
     def start_consuming(self) -> None:
@@ -471,6 +472,7 @@ class ActorBase(ABC):
         )
         self.was_consuming = True
         self._consuming = True
+        self.local_rabbit_startup()
 
     def add_on_cancel_consumer_callback(self) -> None:
         """Add a callback that will be invoked if RabbitMQ cancels the consumer

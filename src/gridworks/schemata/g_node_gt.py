@@ -25,9 +25,9 @@ class GNodeRole000SchemaEnum:
     symbols: List[str] = [
         "00000000",
         "bdeaa0b1",
-        "8eb5b9e1",
         "8021dcad",
         "304890c5",
+        "8eb5b9e1",
         "234cfaa2",
         "fec0c127",
         "3901c7d2",
@@ -48,9 +48,9 @@ class GNodeRole000SchemaEnum:
 class GNodeRole000(StrEnum):
     GNode = auto()
     TerminalAsset = auto()
-    AtomicMeteringNode = auto()
     AtomicTNode = auto()
     MarketMaker = auto()
+    AtomicMeteringNode = auto()
     ConductorTopologyNode = auto()
     InterconnectionComponent = auto()
     World = auto()
@@ -87,9 +87,9 @@ class GNodeRoleMap:
     type_to_versioned_enum_dict: Dict[str, GNodeRole000] = {
         "00000000": GNodeRole000.GNode,
         "bdeaa0b1": GNodeRole000.TerminalAsset,
-        "8eb5b9e1": GNodeRole000.AtomicMeteringNode,
         "8021dcad": GNodeRole000.AtomicTNode,
         "304890c5": GNodeRole000.MarketMaker,
+        "8eb5b9e1": GNodeRole000.AtomicMeteringNode,
         "234cfaa2": GNodeRole000.ConductorTopologyNode,
         "fec0c127": GNodeRole000.InterconnectionComponent,
         "3901c7d2": GNodeRole000.World,
@@ -103,9 +103,9 @@ class GNodeRoleMap:
     versioned_enum_to_type_dict: Dict[GNodeRole000, str] = {
         GNodeRole000.GNode: "00000000",
         GNodeRole000.TerminalAsset: "bdeaa0b1",
-        GNodeRole000.AtomicMeteringNode: "8eb5b9e1",
         GNodeRole000.AtomicTNode: "8021dcad",
         GNodeRole000.MarketMaker: "304890c5",
+        GNodeRole000.AtomicMeteringNode: "8eb5b9e1",
         GNodeRole000.ConductorTopologyNode: "234cfaa2",
         GNodeRole000.InterconnectionComponent: "fec0c127",
         GNodeRole000.World: "3901c7d2",
