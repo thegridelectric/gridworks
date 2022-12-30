@@ -306,7 +306,7 @@ class GNodeInstanceGt_Maker:
         else:
             dc = GNodeInstance(
                 g_node_instance_id=t.GNodeInstanceId,
-                g_node=GNodeGt_Maker.tuple_to_dc(t.GNode),
+                g_node=t.GNode,
                 strategy=t.Strategy,
                 status=t.Status,
                 supervisor_container_id=t.SupervisorContainerId,
@@ -321,7 +321,7 @@ class GNodeInstanceGt_Maker:
     def dc_to_tuple(cls, dc: GNodeInstance) -> GNodeInstanceGt:
         t = GNodeInstanceGt_Maker(
             g_node_instance_id=dc.g_node_instance_id,
-            g_node=GNodeGt_Maker.dc_to_tuple(dc.g_node),
+            g_node=dc.g_node,
             strategy=dc.strategy,
             status=dc.status,
             supervisor_container_id=dc.supervisor_container_id,

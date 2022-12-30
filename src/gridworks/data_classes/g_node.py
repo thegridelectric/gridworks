@@ -46,6 +46,28 @@ class GNode:
         component_id: Optional[str] = None,
         display_name: Optional[str] = None,
     ):
+        """GNodes are the basic building blocks of GridWorks
+
+        Args:
+            g_node_id (str): _description_
+            alias (str): _description_
+            status (GNodeStatus): _description_
+            role (GNodeRole): _description_
+            g_node_registry_addr (str): _description_
+            prev_alias (Optional[str], optional): _description_. Defaults to None.
+            gps_point_id (Optional[str], optional): _description_. Defaults to None.
+            ownership_deed_nft_id (Optional[int], optional): _description_. Defaults to None.
+            ownership_deed_validator_addr (Optional[str], optional): _description_. Defaults to None.
+            owner_addr (Optional[str], optional): _description_. Defaults to None.
+            daemon_addr (Optional[str], optional): _description_. Defaults to None.
+            trading_rights_nft_id (Optional[int], optional): _description_. Defaults to None.
+            component_id (Optional[str], optional): _description_. Defaults to None.
+            display_name (Optional[str], optional): _description_. Defaults to None.
+
+        Raises:
+            DcError: _description_
+            DcError: _description_
+        """
         self.g_node_id = g_node_id
         self.alias = alias
         if not isinstance(status, GNodeStatus):
