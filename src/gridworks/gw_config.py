@@ -69,6 +69,9 @@ class GNodeSettings(BaseSettings):
     rabbit: RabbitBrokerClient = RabbitBrokerClient()
     public: Public = Public()
     algo_api_secrets: AlgoApiSecrets = AlgoApiSecrets()
+    minute_cron_file: str = "cron_last_minute.txt"
+    hour_cron_file: str = "cron_last_hour.txt"
+    day_cron_file: str = "cron_last_day.txt"
 
     class Config:
         env_prefix = "GNODE_"
