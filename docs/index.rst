@@ -20,7 +20,7 @@ Installation
 ^^^^^^^^^^^
 
 .. note::
-    GridWorks requires python 3.10 or higher.
+    gridworks requires python 3.10 or higher.
 
 
 .. code-block:: console
