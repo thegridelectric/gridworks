@@ -57,4 +57,4 @@ The thermal storage in these systems allow them to buy energy from the grid when
 
 - This type of system requires sophisticated Forward-Looking Optimization techniques, using weather and price forecasts to plan future energy purchases and react in real time to unexpected weather and/or market conditions.
 
-The [Transactive Heat Pilot in Maine](story#freedom-me) will demonstrate the ability of the GridWorks TER platform to keep houses warm, reduce curtailment of wind farms, and lower the cost of home heating for thousands of people in and around Millinocket.
+The [Transactive Heat Pilot in Maine](story) will demonstrate the ability of the GridWorks TER platform to keep houses warm, reduce curtailment of wind farms, and lower the cost of home heating for thousands of people in and around Millinocket.

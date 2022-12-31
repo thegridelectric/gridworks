@@ -8,7 +8,7 @@ and it can mean energy withdrawn from the grid over a period of time.
 
 In this section, we are going to focus on the economics of the electric grid and of energy markets, and redefine generation as “supply” and load as “demand,” in the classic economic sense of supply and demand in a market.
 
-This is a felicitous definition, because just like in the physics of the grid where Generation must equal Load, in economics Supply must equal Demand.
+This is a felicitous definition, because just like in the physics of the grid where generation must equal load, in economics supply must equal demand.
 
 Prior to the deregulation of electricity markets in the US in the 1980s, large electric utilities were vertically integrated, owning the entire grid from generators (and sometimes even coal mines) to the electric meter attached to the outside of your house. These utilities kept the grid in balance by dispatching their own generators so that generation = load.
 
