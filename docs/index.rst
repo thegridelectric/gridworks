@@ -4,7 +4,7 @@ GridWorks
 GridWorks uses distributed actors to balance the electric grid. What does this mean?  In today's world, more
 power comes from highly variable power sources such as wind and solar. And yet, the number
 of electrons going into the grid must match the number coming out.  This is where GridWorks comes in.
-GridWorks technology enables any electrical appliance or device with some patience or storage to provide grid
+GridWorks technology enables electrical devices with some embedded storage or with flexibility to provide grid
 balancing. Furthermore, GridWorks allows these appliances to be more thrifty, using electricity when
 it is cheap and green.
 
