@@ -72,3 +72,11 @@ on the scale of 20 homes. If the solution proves to keep people warm and is cost
 are poised to roll out rapidly at scale after that.
 
 ### Freedom ME
+
+To support this real demonstration, GridWorks has developed open-source
+[SCADA code](https://github.com/thegridelectric/gw-scada-spaceheat-python) (based on our previous experience at [VCharge](https://www.greentechmedia.com/articles/read/vcharge-turning-hot-bricks-into-grid-batteries), where we designed and deploying SCADA systems as retrofits for thousands of ceramic brick thermal stoage heaters). We have also agreed to build prototype SCADA boxes (built with off-the-shelf parts,
+with a raspberry Pi 4 as the brain) for the first several dozen installations.
+
+**Dec 30 2022** The first SCADA is deployed in Freedom Maine! The thermal storage and heat pump have also been installed, waiting on some upgrades to the heat distribution system before going live.
+
+![alt_text](images/freedom-apple-thermal-store.png)

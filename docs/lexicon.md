@@ -1,5 +1,7 @@
 # GridWorks lexicon
 
+[AggregatedTNode](aggregated-t-node)
+
 [AtomicTNode](atomic-t-node)
 
 [CoreGNodeRole](core-g-node-role)

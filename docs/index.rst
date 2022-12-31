@@ -39,7 +39,7 @@ Installation
 
 .. toctree::
     :hidden:
-    :maxdepth: 2
+    :maxdepth: 3
     :caption: Domain
 
     Physics <physics>
