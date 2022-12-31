@@ -2,15 +2,15 @@
 
 ## Transactive Energy Resources
 
-We start with a reiterating definition.
+We start with definition from the [lexicon](transactive-energy-resource):
 
-A [Transactive Energy Resource](transactive-energy-resource) (TER) is a physical resource capable of 24-7, real-time, geographically localized response to grid conditions that can significantly shift and adapt its pattern of electric power use and/or generation with negligible negative consequences on its primary use.
+A **Transactive Energy Resource** (or TER) is a physical resource capable of 24-7, real-time, geographically localized response to grid conditions that can significantly shift and adapt its pattern of electric power use and/or generation with negligible negative consequences on its primary use.
 
 Aggregations of Transactive Load have the potential to significantly mitigate the problems that are encountered on an electric grid with significant amounts of renewable generation.
 
 - They do this by fundamentally altering the behavior of electric load on the grid, turning it from a fixed burden that must be served by some generator into a powerful and flexible resource that can be used to balance the grid on timescales varying from days to milliseconds.
 
-** What is needed?**
+**What is needed?**
 
 Several things need to change for load to become Transactive and begin to solve the problem of renewables integration on the world’s electric grids.
 
