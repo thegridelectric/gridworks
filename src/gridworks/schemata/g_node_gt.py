@@ -35,6 +35,7 @@ class GNodeRole000SchemaEnum:
         "88112a93",
         "674ad859",
         "2161739f",
+        "db57d184",
         "1dce1efd",
     ]
 
@@ -58,6 +59,7 @@ class GNodeRole000(StrEnum):
     Supervisor = auto()
     Scada = auto()
     PriceService = auto()
+    AggregatedTNode = auto()
     WeatherService = auto()
 
     @classmethod
@@ -97,6 +99,7 @@ class GNodeRoleMap:
         "88112a93": GNodeRole000.Supervisor,
         "674ad859": GNodeRole000.Scada,
         "2161739f": GNodeRole000.PriceService,
+        "db57d184": GNodeRole000.AggregatedTNode,
         "1dce1efd": GNodeRole000.WeatherService,
     }
 
@@ -113,6 +116,7 @@ class GNodeRoleMap:
         GNodeRole000.Supervisor: "88112a93",
         GNodeRole000.Scada: "674ad859",
         GNodeRole000.PriceService: "2161739f",
+        GNodeRole000.AggregatedTNode: "db57d184",
         GNodeRole000.WeatherService: "1dce1efd",
     }
 

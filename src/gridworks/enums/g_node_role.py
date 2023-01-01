@@ -9,6 +9,7 @@ class GNodeRole(StrEnum):
     TerminalAsset = auto()
     Scada = auto()
     PriceService = auto()
+    AggregatedTNode = auto()
     WeatherService = auto()
     AtomicTNode = auto()
     MarketMaker = auto()
