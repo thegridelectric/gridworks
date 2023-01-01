@@ -35,7 +35,6 @@ Installation
     :caption: Demo
 
     Story <story>
-    Cast <cast>
 
 .. toctree::
     :hidden:
