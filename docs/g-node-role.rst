@@ -17,12 +17,13 @@ The GNodeRole is the *flavor* of GNode, describing the basic function of that GN
     - `AtomicMeteringNode <atomic-metering-node.html>`_
     - `ConductorTopologyNode <conductor-topology-node.html>`_
     - `InterconnectionComponent <interconnection-component.html>`_
-    - `World <gridworks-world.html>`_
+    - `World <world-role.html>`_
     - `TimeCoordinator <time-coordinator.html>`_
     - `Supervisor <supervisor.html>`_
     - `Scada <scada.html>`_
     - `PriceService <price-service.html>`_
     - `WeatherService <weather-service.html>`_
+    - `AggregatedTNode <aggregated-t-node.html>`_
 
 
 `Back to Lexicon <lexicon.html>`_

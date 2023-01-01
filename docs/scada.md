@@ -13,4 +13,7 @@ The functions of the SCADA are pretty straightforward and obvious, given the goa
 2. Let its AtomicTNode call the shots on how the TerminalAsset uses (or provides) electrical power, whenever the two are communicating; and
 3. Do a decent job of running the TerminalAsset on its own when it loses communications with its AtomicTNode.
 
+Go [here](https://github.com/thegridelectric/gw-scada-spaceheat-python) to
+examine an example of SCADA software for a thermal storage heating system.
+
 _Back to [Lexicon](lexicon.md)_
