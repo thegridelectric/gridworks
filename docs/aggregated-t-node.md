@@ -2,7 +2,7 @@
 
 An **AggregatedTNode** ("T" for Transactive) is an aggregation of [AtomicTNodes](atomic-t-node).
 
-The individual AtomicTNodes within the AggregatedTNode must share the same [MarketMaker](market-maker) GNode.
+The individual AtomicTNodes within the AggregatedTNode must share the same [MarketMaker](market-maker) [GNode](g-node).
 The MarketMaker for an AtomicTNode is the first MarketMaker encountered when walking up the GNodeTree branch
 from the AtomicTNode - that is, the youngest MarketMaker ancestor of the AtomicTNode).
 

@@ -1,0 +1,56 @@
+gwapi: 0.0.1
+
+type_name: "g.node.gt"
+version: "000"
+owner: gridworks@gridworks-consulting.com
+description: Used as sub-type in messages between actors sharing information about GNodes
+enums:
+  GNodeStatus100SchemaEnum:
+    type: string
+    oneOf:
+      - title: Unknown
+        const: "00000000"
+        description: Unknown status
+      - title: Pending
+        const: "153d3475"
+        description: GNode has been created by the GNodeFactory, but is not ready for use in Gridworks. For example, an AtomicTNode is pending until it owns TaTradingRights.
+      - title: Active
+        const: "a2cfc2f7"
+        description: GNode can be used in Gridworks, either as a passive object or as an actor
+    default: "00000000"
+  GNodeRole000SchemaEnum:
+    type: string
+    oneOf:
+      - title: GNode
+        const: "00000000"
+        description: The degraded GNodeRole used as default value
+      - title: TerminalAsset
+        const: "bdeaa0b1"
+        description: A GNode of this role is a Gridworks avatar for a physical TransactiveDevices. See https://gridworks.readthedocs.io/en/latest/terminal-asset.html
+    default: "00000000"
+formats:
+  LeftRightDot:
+    type: string
+    description: Lowercase alphanumeric words separated by periods; most significant word (on the left) must start with an alphabet charecter.
+    example: "dw1.isone.me.freedom.apple"
+properties:
+  GNodeId:
+    type: string
+    format: UuidCanonicalTextual
+    description: Immutable unique identifier
+    required: true
+  Alias:
+    type: string
+    format: LeftRightDot
+    description: Mutable, strutured identifier that helps capture electric grid topology
+  Status:
+    type: GNodeStatus100SchemaEnum
+    description: The GNode's Status indicates its lifecycle state.
+  Role:
+    type: GNodeRole000SchemaEnum
+    description: The role of the GNode indicates how it functions in Gridworks. See https://gridworks.readthedocs.io/en/latest/g-node-role.html
+
+axioms:
+  Axiom1:
+    title: Active Parent
+    description: Before a GNode can be created, its parent must exist and have GNodeStatus Active.

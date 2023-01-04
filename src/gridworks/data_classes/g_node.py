@@ -65,8 +65,7 @@ class GNode:
             display_name (Optional[str], optional): _description_. Defaults to None.
 
         Raises:
-            DcError: _description_
-            DcError: _description_
+            DcError: If status is not a GNodeStatus enum, or role is not a GNodeRole enum
         """
         self.g_node_id = g_node_id
         self.alias = alias
@@ -133,6 +132,7 @@ class GNode:
             - prev_alias is None, OR
             - the parent as suggested by prev_alias is not Active and/or
             does not exist.
+
         Returns:
             BaseGNode.   Parent BaseGNode
               - If the parent as suggested by the alias exists as an
@@ -141,6 +141,9 @@ class GNode:
               as an active GNode, returns that.
             None.
               - If alias is one word long (i.e. root of world)
+
+
+
         """
         if self.is_root():
             return None
@@ -158,5 +161,5 @@ class GNode:
         return parent_pending_alias_update
 
     def children(self) -> List["GNode"]:
-        """Returns the list of BaseGnodes identifying this node as parent"""
+        """Returns the list of BaseGnodes identifying this node as parent."""
         return list(filter(lambda x: x.parent() == self, GNode.by_alias.values()))

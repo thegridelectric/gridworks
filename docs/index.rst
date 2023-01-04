@@ -39,7 +39,7 @@ is a distributed simulation, it needs a method of handling time. That's done by 
 
 
 Installation
-^^^^^^^^^^^
+^^^^^^^^^^^^^
 
 .. note::
     gridworks requires python 3.10 or higher.
@@ -48,7 +48,6 @@ Installation
 .. code-block:: console
 
     (venv)$ pip install gridworks
-
 
 
 .. toctree::
@@ -76,16 +75,22 @@ Installation
     APIs and ABIs <api-and-abi>
     Lexicon <lexicon>
 
+.. toctree::
+    :hidden:
+    :maxdepth: 2
+    :caption: API docs
+
+    Schemata APIs <apis/schemata>
 
 .. toctree::
     :hidden:
     :maxdepth: 2
-    :caption: Generated Docs
+    :caption: SDK docs
 
     ActorBase <actor>
+    DataClasses <data-classes>
+    Enums <enums>
     Schemata <schemata>
-
-
 
 .. toctree::
     :hidden:

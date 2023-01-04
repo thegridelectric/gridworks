@@ -292,7 +292,7 @@ class ActorBase(ABC):
         RabbitMQ if it disconnects.
         :param pika.connection.Connection connection: The closed connection obj
         :param Exception reason: exception representing reason for loss of
-            connection.
+        connection.
         """
         self._consume_channel = None
         if self._closing_consumer:
@@ -610,7 +610,7 @@ class ActorBase(ABC):
         RabbitMQ if it disconnects.
         :param pika.connection.Connection connection: The closed connection obj
         :param Exception reason: exception representing reason for loss of
-            connection.
+        connection.
         """
         self._publish_channel = None
         if self._stopping:
