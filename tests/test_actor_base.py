@@ -2,7 +2,7 @@ import time
 
 from gridworks.enums import GNodeRole
 from gridworks.gw_config import GNodeSettings
-from gridworks.schemata import HeartbeatA_Maker
+from gridworks.types import HeartbeatA_Maker
 from tests.utils import GNodeStubRecorder
 from tests.utils import SupervisorStubRecorder
 from tests.utils import wait_for

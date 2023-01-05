@@ -5,14 +5,14 @@ import pytest
 from pydantic import ValidationError
 
 from gridworks.errors import SchemaError
-from gridworks.schemata import Ready_Maker as Maker
+from gridworks.types import Ready_Maker as Maker
 
 
 def test_ready_generated() -> None:
     d = {
-        "TimeUnixS": 1669757715,
         "FromGNodeAlias": "d1.time",
         "FromGNodeInstanceId": "eac00c51-d944-4829-aaca-847bca1b8438",
+        "TimeUnixS": 1669757715,
         "TypeName": "ready",
         "Version": "001",
     }
@@ -32,9 +32,9 @@ def test_ready_generated() -> None:
 
     # test Maker init
     t = Maker(
-        time_unix_s=gtuple.TimeUnixS,
         from_g_node_alias=gtuple.FromGNodeAlias,
         from_g_node_instance_id=gtuple.FromGNodeInstanceId,
+        time_unix_s=gtuple.TimeUnixS,
     ).tuple
     assert t == gtuple
 
@@ -48,17 +48,17 @@ def test_ready_generated() -> None:
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    del d2["TimeUnixS"]
-    with pytest.raises(SchemaError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d)
     del d2["FromGNodeAlias"]
     with pytest.raises(SchemaError):
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
     del d2["FromGNodeInstanceId"]
+    with pytest.raises(SchemaError):
+        Maker.dict_to_tuple(d2)
+
+    d2 = dict(d)
+    del d2["TimeUnixS"]
     with pytest.raises(SchemaError):
         Maker.dict_to_tuple(d2)
 

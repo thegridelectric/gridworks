@@ -6,7 +6,7 @@ from pydantic import ValidationError
 
 from gridworks.enums import SupervisorContainerStatus
 from gridworks.errors import SchemaError
-from gridworks.schemata import SupervisorContainerGt_Maker as Maker
+from gridworks.types import SupervisorContainerGt_Maker as Maker
 
 
 def test_supervisor_container_gt_generated() -> None:

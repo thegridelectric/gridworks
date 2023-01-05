@@ -22,4 +22,4 @@ form a spanning tree of the known topoogy of the electric grid, and a sub-tree o
 In SDK:
 
   - TODO: hyperlink to GNode dataclass inside the SDK  `Data Classes <data-classes.html>`_
-  - TODO: hyperlink to GNodeGt inside the SDK `Schemata <schemata.html>`_
+  - TODO: hyperlink to GNodeGt inside the SDK `Types <types.html>`_

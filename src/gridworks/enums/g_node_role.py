@@ -5,8 +5,6 @@ from fastapi_utils.enums import StrEnum
 
 
 class GNodeRole(StrEnum):
-    """Doc string for GNodeRole"""
-
     GNode = auto()
     TerminalAsset = auto()
     Scada = auto()
@@ -22,16 +20,10 @@ class GNodeRole(StrEnum):
     TimeCoordinator = auto()
     Supervisor = auto()
 
-    def sample_method(self) -> None:
-        """This is a sample method"""
-        pass
-
     @classmethod
     def default(cls) -> "GNodeRole":
-        """Default docstring"""
         return cls.GNode
 
     @classmethod
     def values(cls) -> List[str]:
-        """values docstring"""
         return [elt.value for elt in cls]

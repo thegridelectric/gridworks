@@ -6,3 +6,4 @@ Schemata APIs
    :caption: JSON API DOCS
 
     g.node.gt <g-node-gt>
+    ready <ready>

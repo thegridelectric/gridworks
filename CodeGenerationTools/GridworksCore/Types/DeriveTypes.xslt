@@ -49,7 +49,7 @@
                         </xsl:call-template>
                     </xsl:variable>
                     <FileSetFile>
-                                <xsl:element name="RelativePath"><xsl:text>../../../src/gridworks/schemata/</xsl:text>
+                                <xsl:element name="RelativePath"><xsl:text>../../../src/gridworks/types/</xsl:text>
                                 <xsl:value-of select="translate($local-alias,'.','_')"/><xsl:text>.py</xsl:text></xsl:element>
 
                         <OverwriteMode><xsl:value-of select="$overwrite-mode"/></OverwriteMode>
@@ -118,7 +118,7 @@ from gridworks.errors import SchemaError
 
 <xsl:if test="(IsType = 'true')">
 <xsl:text>
-from gridworks.schemata.</xsl:text>
+from gridworks.types.</xsl:text>
 <xsl:call-template name="python-case">
     <xsl:with-param name="camel-case-text" select="translate(SubMessageFormatAliasRoot,'.','_')"  />
 </xsl:call-template>
@@ -127,7 +127,7 @@ from gridworks.schemata.</xsl:text>
     <xsl:with-param name="mp-schema-text" select="SubMessageFormatAliasRoot" />
 </xsl:call-template>
 <xsl:text>
-from gridworks.schemata.</xsl:text>
+from gridworks.types.</xsl:text>
 <xsl:call-template name="python-case">
     <xsl:with-param name="camel-case-text" select="translate(SubMessageFormatAliasRoot,'.','_')"  />
 </xsl:call-template>

@@ -1,11 +1,11 @@
-"""Tests heartbeat.a type, version 001"""
+"""Tests heartbeat.a type, version 100"""
 import json
 
 import pytest
 from pydantic import ValidationError
 
 from gridworks.errors import SchemaError
-from gridworks.schemata import HeartbeatA_Maker as Maker
+from gridworks.types import HeartbeatA_Maker as Maker
 
 
 def test_heartbeat_a_generated() -> None:
@@ -13,7 +13,7 @@ def test_heartbeat_a_generated() -> None:
         "MyHex": "a",
         "YourLastHex": "j",
         "TypeName": "heartbeat.a",
-        "Version": "001",
+        "Version": "100",
     }
 
     with pytest.raises(SchemaError):
@@ -66,3 +66,17 @@ def test_heartbeat_a_generated() -> None:
     d2 = dict(d, TypeName="not the type alias")
     with pytest.raises(ValidationError):
         Maker.dict_to_tuple(d2)
+
+    ######################################
+    # SchemaError raised if primitive attributes do not have appropriate property_format
+    ######################################
+
+    d2 = dict(d, MyHex="g")
+    with pytest.raises(ValidationError):
+        Maker.dict_to_tuple(d2)
+
+    d2 = dict(d, YourLastHex="g")
+    with pytest.raises(ValidationError):
+        Maker.dict_to_tuple(d2)
+
+    # End of Test

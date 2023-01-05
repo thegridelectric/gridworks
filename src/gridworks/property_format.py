@@ -25,6 +25,21 @@ def predicate_validator(
     return pydantic.validator(field_name, allow_reuse=True)(_validator)
 
 
+def is_hex_char(v: str) -> bool:
+    """HexChar format: single-char string in '0123456789abcdefABCDEF'
+
+    Returns:
+        bool: True if HexChar, false else
+    """
+    if not isinstance(v, str):
+        return False
+    if len(v) > 1:
+        return False
+    if v not in "0123456789abcdefABCDEF":
+        return False
+    return True
+
+
 def is_algo_address_string_format(candidate: str) -> bool:
     """The public key of a private/public Ed25519 key pairis transformed into an Algorand address,
     by adding a 4-byte checksum to the end of the public key and then encoding it
@@ -173,7 +188,7 @@ def check_is_bit(candidate: int) -> None:
         raise ValueError(f"{candidate} must be either 0 or 1")
 
 
-def is_lrd_alias_format(candidate: str) -> bool:
+def is_left_right_dot(candidate: str) -> bool:
     """Lowercase AlphanumericStrings separated by dots (i.e. periods), with most
     significant word to the left.  I.e. `d1.ne` is the child of `d1`.
     Checking the format cannot verify the significance of words. All
@@ -202,7 +217,7 @@ def is_lrd_alias_format(candidate: str) -> bool:
     return True
 
 
-def check_is_lrd_alias_format(candidate: str) -> None:
+def check_is_left_right_dot(candidate: str) -> None:
     """Lowercase AlphanumericStrings separated by dots (i.e. periods), with most
     significant word to the left.  I.e. `d1.ne` is the child of `d1`.
     Checking the format cannot verify the significance of words. All
@@ -405,7 +420,7 @@ def check_world_alias_matches_universe(g_node_alias: str, universe: str) -> None
     Raises:
         ValueError: if g_node_alias is not LRD format or if first word does not match universe
     """
-    check_is_lrd_alias_format(g_node_alias)
+    check_is_left_right_dot(g_node_alias)
     world_alias = g_node_alias.split(".")[0]
     if universe == "dev":
         if world_alias[0] != "d":

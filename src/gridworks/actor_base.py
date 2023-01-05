@@ -25,10 +25,10 @@ from gridworks.enums import MessageCategorySymbol
 from gridworks.enums import UniverseType
 from gridworks.errors import SchemaError
 from gridworks.gw_config import GNodeSettings
-from gridworks.schemata import HeartbeatA
-from gridworks.schemata import HeartbeatA_Maker
-from gridworks.schemata import SimTimestep
-from gridworks.schemata import SimTimestep_Maker
+from gridworks.types import HeartbeatA
+from gridworks.types import HeartbeatA_Maker
+from gridworks.types import SimTimestep
+from gridworks.types import SimTimestep_Maker
 
 
 class RabbitRole(StrEnum):
@@ -762,7 +762,7 @@ class ActorBase(ABC):
         if radio_channel is None:
             return f"{msg_type}.{from_alias_lrh}.{from_role}.{type_name_lrh}"
         else:
-            if not property_format.is_lrd_alias_format(radio_channel):
+            if not property_format.is_left_right_dot(radio_channel):
                 raise Exception(
                     f"radio_channel must have LrdAliasFormat. Got {radio_channel}"
                 )
@@ -910,7 +910,7 @@ class ActorBase(ABC):
         unlike in non-registry worlds.
 
         Args:
-            payload: Any GridWorks schemata with a json content-type
+            payload: Any GridWorks types with a json content-type
             that includes TypeName as a json key, and has as_type()
             as an encoding method.
             routing_key_type: for creating routing key
@@ -935,7 +935,7 @@ class ActorBase(ABC):
         if message_category is MessageCategory.RabbitJsonDirect:
             if not isinstance(to_role, GNodeRole):
                 raise Exception("Must include to_role for a direct message")
-            if not property_format.is_lrd_alias_format(to_g_node_alias):
+            if not property_format.is_left_right_dot(to_g_node_alias):
                 raise Exception(
                     f"to_g_node_alias must have LrdAliasFormat. Got {to_g_node_alias}"
                 )

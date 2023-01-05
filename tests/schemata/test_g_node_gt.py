@@ -7,7 +7,7 @@ from pydantic import ValidationError
 from gridworks.enums import GNodeRole
 from gridworks.enums import GNodeStatus
 from gridworks.errors import SchemaError
-from gridworks.schemata import GNodeGt_Maker as Maker
+from gridworks.types import GNodeGt_Maker as Maker
 
 
 def test_g_node_gt_generated() -> None:

@@ -65,14 +65,15 @@ Installation
     Physics <physics>
     Economics <economics>
     Transactive Energy <transactive>
+    Blockchain <blockchain>
 
 .. toctree::
     :hidden:
     :maxdepth: 2
     :caption: Code Support
 
-    Hello World <hello-gridworks>
-    APIs and ABIs <api-and-abi>
+    Hello GridWorks <hello-gridworks>
+    APIs,SDKs, ABIs <api-sdk-abi>
     Lexicon <lexicon>
 
 .. toctree::
@@ -80,7 +81,7 @@ Installation
     :maxdepth: 2
     :caption: API docs
 
-    Schemata APIs <apis/schemata>
+    Type APIs <apis/types>
 
 .. toctree::
     :hidden:
@@ -90,7 +91,7 @@ Installation
     ActorBase <actor>
     DataClasses <data-classes>
     Enums <enums>
-    Schemata <schemata>
+    Types <sdk-types>
 
 .. toctree::
     :hidden:

@@ -57,7 +57,7 @@ def dot_to_underscore(candidate: str) -> str:
         significant word still on the left.
     """
     try:
-        property_format.check_is_lrd_alias_format(candidate)
+        property_format.check_is_left_right_dot(candidate)
     except SchemaError as e:
         raise SchemaError(f"{candidate} not LrdAliasFormat: {e}!")
 

@@ -3,15 +3,15 @@ from typing import Dict
 from typing import List
 from typing import no_type_check
 
-from gridworks.schemata import GNodeGt_Maker
-from gridworks.schemata import GNodeInstanceGt_Maker
-from gridworks.schemata import HeartbeatA_Maker
-from gridworks.schemata import Ready_Maker
-from gridworks.schemata import SimTimestep_Maker
-from gridworks.schemata import SuperStarter_Maker
-from gridworks.schemata import SupervisorContainerGt_Maker
-from gridworks.schemata import TavalidatorcertAlgoCreate_Maker
-from gridworks.schemata import TavalidatorcertAlgoTransfer_Maker
+from gridworks.types import GNodeGt_Maker
+from gridworks.types import GNodeInstanceGt_Maker
+from gridworks.types import HeartbeatA_Maker
+from gridworks.types import Ready_Maker
+from gridworks.types import SimTimestep_Maker
+from gridworks.types import SuperStarter_Maker
+from gridworks.types import SupervisorContainerGt_Maker
+from gridworks.types import TavalidatorcertAlgoCreate_Maker
+from gridworks.types import TavalidatorcertAlgoTransfer_Maker
 
 
 TypeMakerByName: Dict[str, HeartbeatA_Maker] = {}
@@ -45,7 +45,7 @@ def version_by_type_name() -> Dict[str, str]:
     v: Dict[str, str] = {
         "g.node.gt": "000",
         "g.node.instance.gt": "000",
-        "heartbeat.a": "001",
+        "heartbeat.a": "100",
         "ready": "001",
         "sim.timestep": "000",
         "super.starter": "000",
@@ -66,7 +66,7 @@ def status_by_versioned_type_name() -> Dict[str, str]:
     v: Dict[str, str] = {
         "g.node.gt.000": "Pending",
         "g.node.instance.gt.000": "Pending",
-        "heartbeat.a.001": "Pending",
+        "heartbeat.a.100": "Pending",
         "ready.001": "Pending",
         "sim.timestep.000": "Pending",
         "super.starter.000": "Pending",
