@@ -11,7 +11,7 @@ from gridworks.types import HeartbeatA_Maker as Maker
 def test_heartbeat_a_generated() -> None:
     d = {
         "MyHex": "a",
-        "YourLastHex": "j",
+        "YourLastHex": "b",
         "TypeName": "heartbeat.a",
         "Version": "100",
     }
