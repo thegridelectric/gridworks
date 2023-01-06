@@ -1,23 +1,21 @@
-"""Tests supervisor.container.gt type, version 000"""
+"""Tests initial.tadeed.algo.optin type, version 002"""
 import json
 
 import pytest
 from pydantic import ValidationError
 
-from gridworks.enums import SupervisorContainerStatus
 from gridworks.errors import SchemaError
-from gridworks.types import SupervisorContainerGt_Maker as Maker
+from gridworks.types import InitialTadeedAlgoOptin_Maker as Maker
 
 
-def test_supervisor_container_gt_generated() -> None:
+def test_initial_tadeed_algo_optin_generated() -> None:
     d = {
-        "SupervisorContainerId": "da2dafe0-b5c8-4c36-984c-ae653a29bfcc",
-        "StatusGtEnumSymbol": "00000000",
-        "WorldInstanceAlias": "d1__1",
-        "SupervisorGNodeInstanceId": "aac80de4-91cf-48e7-9bef-d469eba989ad",
-        "SupervisorGNodeAlias": "d1.super1",
-        "TypeName": "supervisor.container.gt",
-        "Version": "000",
+        "TerminalAssetAlias": "d1.isone.ver.keene.holly.ta",
+        "TaOwnerAddr": "KXGT6JIRJQR4GCSS647KL2OSSKBZ3FSYJDIXJEGAF7TZLN4JF4DGDDX4BI",
+        "ValidatorAddr": "7QQT4GN3ZPAQEFCNWF5BMF7NULVK3CWICZVT4GM3BQRISD52YEDLWJ4MII",
+        "SignedInitialDaemonFundingTxn": "gqRtc2lng6ZzdWJzaWeSgaJwa8Qgi1hzb1WaDzF+215cR8xmiRfUQMrnjqHtQV5PiFBAUtmConBrxCD8IT4Zu8vBAhRNsXoWF+2i6q2KyBZrPhmbDCKJD7rBBqFzxEAEp8UcTEJSyTmgw96/mCnNHKfhkdYMCD5jxWejHRmPCrR8U9z/FBVsoCGbjDTTk2L1k7n/eVlumEk/M1KSe48Jo3RocgKhdgGjdHhuiaRhcGFyhaJhbq9Nb2xseSBNZXRlcm1haWSiYXXZKWh0dHA6Ly9sb2NhbGhvc3Q6NTAwMC9tb2xseWNvL3doby13ZS1hcmUvoW3EIItYc29Vmg8xftteXEfMZokX1EDK546h7UFeT4hQQFLZoXQBonVupVZMRFRSo2ZlZc0D6KJmdlGjZ2VuqnNhbmRuZXQtdjGiZ2jEIC/iF+bI4LU6UTgG4SIxyD10PS0/vNAEa93OC5SVRFn6omx2zQQ5pG5vdGXEK01vbGx5IEluYyBUZWxlbWV0cnkgU3VydmV5b3JzIGFuZCBQdXJ2ZXlvcnOjc25kxCDHZxhdCT2TxxxZlZ/H5mIku1s4ulDm3EmU6dYKXCWEB6R0eXBlpGFjZmc=",
+        "TypeName": "initial.tadeed.algo.optin",
+        "Version": "002",
     }
 
     with pytest.raises(SchemaError):
@@ -35,11 +33,10 @@ def test_supervisor_container_gt_generated() -> None:
 
     # test Maker init
     t = Maker(
-        supervisor_container_id=gtuple.SupervisorContainerId,
-        status=gtuple.Status,
-        world_instance_alias=gtuple.WorldInstanceAlias,
-        supervisor_g_node_instance_id=gtuple.SupervisorGNodeInstanceId,
-        supervisor_g_node_alias=gtuple.SupervisorGNodeAlias,
+        terminal_asset_alias=gtuple.TerminalAssetAlias,
+        ta_owner_addr=gtuple.TaOwnerAddr,
+        validator_addr=gtuple.ValidatorAddr,
+        signed_initial_daemon_funding_txn=gtuple.SignedInitialDaemonFundingTxn,
     ).tuple
     assert t == gtuple
 
@@ -53,36 +50,28 @@ def test_supervisor_container_gt_generated() -> None:
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    del d2["SupervisorContainerId"]
+    del d2["TerminalAssetAlias"]
     with pytest.raises(SchemaError):
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    del d2["StatusGtEnumSymbol"]
+    del d2["TaOwnerAddr"]
     with pytest.raises(SchemaError):
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    del d2["WorldInstanceAlias"]
+    del d2["ValidatorAddr"]
     with pytest.raises(SchemaError):
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    del d2["SupervisorGNodeInstanceId"]
-    with pytest.raises(SchemaError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d)
-    del d2["SupervisorGNodeAlias"]
+    del d2["SignedInitialDaemonFundingTxn"]
     with pytest.raises(SchemaError):
         Maker.dict_to_tuple(d2)
 
     ######################################
     # Behavior on incorrect types
     ######################################
-
-    d2 = dict(d, StatusGtEnumSymbol="hi")
-    Maker.dict_to_tuple(d2).Status = SupervisorContainerStatus.default()
 
     ######################################
     # SchemaError raised if TypeName is incorrect
@@ -96,15 +85,7 @@ def test_supervisor_container_gt_generated() -> None:
     # SchemaError raised if primitive attributes do not have appropriate property_format
     ######################################
 
-    d2 = dict(d, SupervisorContainerId="d4be12d5-33ba-4f1f-b9e5")
-    with pytest.raises(ValidationError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d, SupervisorGNodeInstanceId="d4be12d5-33ba-4f1f-b9e5")
-    with pytest.raises(ValidationError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d, SupervisorGNodeAlias="a.b-h")
+    d2 = dict(d, TerminalAssetAlias="a.b-h")
     with pytest.raises(ValidationError):
         Maker.dict_to_tuple(d2)
 

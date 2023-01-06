@@ -5,11 +5,21 @@ Python pydantic class corresponding to  json type ```tavalidatorcert.algo.create
 .. autoclass:: gridworks.types.TavalidatorcertAlgoCreate
     :members:
 
+**ValidatorAddr**:
+    - Description: The address of the pending TaValidator
+    - Format: AlgoAddressStringFormat
+
+**HalfSignedCertCreationMtx**:
+    - Description: Algo multi-transaction for certificate creation, with 1 of 2 signatures
+    - Format: AlgoMsgPackEncoded
+
+.. autoclass:: gridworks.types.tavalidatorcert_algo_create.check_is_algo_address_string_format
+    :members:
 
 
-**HalfSignedCertCreationMtx**: This string is an encoded (algosdk.encoding.msgpack_encode) multiSigTransaction (mtx) signed by the pendingValidator. The mtx.txn is a AssetCreateTxn with sender=multi, total=1, frozen=False, manager=gnf.admin, unit_name="VLDTR", asset_name=valid asset name (str <= 32 char) chosen by pendingValidator, url= string chosen by pendingValidator.
+.. autoclass:: gridworks.types.tavalidatorcert_algo_create.check_is_algo_msg_pack_encoded
+    :members:
 
-**ValidatorAddr**: The address of the pending TerminalAsset validator.
 
 .. autoclass:: gridworks.types.TavalidatorcertAlgoCreate_Maker
     :members:

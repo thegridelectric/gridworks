@@ -13,6 +13,18 @@ watch the beginning of the GridWorks story in `this 5 minute video <https://www.
 and then go through the `demo <story.html>`_ sequence, where we walk through a 10 MW simulation of transactive heating in
 and around wind farms in New England - wind farms that are getting curtailed off more than 20% of the year.
 
+To learn how using and contributing to GridWorks can support a cost-effective and rapid transition to a sustainable future:
+
+- Watch the beginning of the GridWorks story in `this 5 minute video <https://www.youtube.com/watch?v=5QFNQcp2Yzs>`_
+- Try some `Hello World <hello-gridworks.html>`_ examples
+- Walk through this `10 MW simulation <story.html>`_ of how GridWorks, if deployed in new heating systems, could cut home heating costs in half while reducing or eliminating the curtailing (i.e. turning off and wasting) of wind power
+- Learn the ropes of `GridWorks Communications <api-sdk-abi.html>`_
+
+Algorand Blockchain Mechanics
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Gridworks runs markets between distributed actors acting as avatars for physical devices on the grid. It needs a foundation of trustless, secure, scalabe validation and authentication. Out of the gate, you will need to understand how to work with the Algorand blockchain. If Algorand
+development is new to you or you want a refresher, consider starting `here <blockchain.html>`_.
 
 **GridWorks SDKs**
 
@@ -73,7 +85,7 @@ Installation
     :caption: Code Support
 
     Hello GridWorks <hello-gridworks>
-    APIs,SDKs, ABIs <api-sdk-abi>
+    APIs, SDKs, ABIs <api-sdk-abi>
     Lexicon <lexicon>
 
 .. toctree::
@@ -88,7 +100,10 @@ Installation
     :maxdepth: 2
     :caption: SDK docs
 
-    ActorBase <actor>
+    ActorBase <actor-base>
+    AlgoUtils <algo-utils>
+    ApiUtils <api-utils>
+    Config <gw-config>
     DataClasses <data-classes>
     Enums <enums>
     Types <sdk-types>

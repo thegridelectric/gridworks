@@ -1,0 +1,83 @@
+{
+  "gwapi": "001",
+  "type_name": "initial.tadeed.algo.transfer",
+  "version": "000",
+  "owner": "gridworks@gridworks-consulting.com",
+  "description": "TaValidator sends to GNodeFactory after validating Transactive Device. Once the TaValidator has done the initial on-site inspection of the Transactive Device including its location and the type and quality of its power and energy metering, the TaValidator lets the GNodeFactory know by sending this message. Note the message also includes the lat/lon of the Transactive Device. On receiving and validating this message, the GNodeFactory will co-sign the transfer and send the TaDeed to the TaDaemon address. In addition, the GNodeFactory creates and sends a TaTradingRights certificate to the TaDaemon address. Only once the GNodeFactory has verified that the TaDaemon address owns the TaDeed and TaTradingRights will it change the GNodeStatus of the associated TerminalAsset from Pending to Active. [GNodeStatus](https://gridworks.readthedocs.io/en/latest/g-node-status.html) [TaDeed](https://gridworks.readthedocs.io/en/latest/ta-deed.html) [TaTradingRights](https://gridworks.readthedocs.io/en/latest/ta-trading-rights.html) [TaValidator](https://gridworks.readthedocs.io/en/latest/ta-validator.html) [TerminalAsset](https://gridworks.readthedocs.io/en/latest/terminal-asset.html) [Transactive Device](https://gridworks.readthedocs.io/en/latest/transactive-device.html)",
+  "formats": {
+    "AlgoAddressStringFormat": {
+      "type": "string",
+      "description": "String of length 32, characters are all base32 digits.",
+      "example": "RNMHG32VTIHTC7W3LZOEPTDGREL5IQGK46HKD3KBLZHYQUCAKLMT4G5ALI"
+    },
+    "AlgoMsgPackEncoded": {
+      "type": "string",
+      "description": "Error is not thrown with algosdk.encoding.future_msg_decode(candidate)",
+      "example": "gqRtc2lng6ZzdWJzaWeSgaJwa8Qgi1hzb1WaDzF+215cR8xmiRfUQMrnjqHtQV5PiFBAUtmConBrxCD8IT4Zu8vBAhRNsXoWF+2i6q2KyBZrPhmbDCKJD7rBBqFzxEAEp8UcTEJSyTmgw96/mCnNHKfhkdYMCD5jxWejHRmPCrR8U9z/FBVsoCGbjDTTk2L1k7n/eVlumEk/M1KSe48Jo3RocgKhdgGjdHhuiaRhcGFyhaJhbq9Nb2xseSBNZXRlcm1haWSiYXXZKWh0dHA6Ly9sb2NhbGhvc3Q6NTAwMC9tb2xseWNvL3doby13ZS1hcmUvoW3EIItYc29Vmg8xftteXEfMZokX1EDK546h7UFeT4hQQFLZoXQBonVupVZMRFRSo2ZlZc0D6KJmdlGjZ2VuqnNhbmRuZXQtdjGiZ2jEIC/iF+bI4LU6UTgG4SIxyD10PS0/vNAEa93OC5SVRFn6omx2zQQ5pG5vdGXEK01vbGx5IEluYyBUZWxlbWV0cnkgU3VydmV5b3JzIGFuZCBQdXJ2ZXlvcnOjc25kxCDHZxhdCT2TxxxZlZ/H5mIku1s4ulDm3EmU6dYKXCWEB6R0eXBlpGFjZmc="
+    }
+  },
+  "properties": {
+    "MicroLat": {
+      "type": "integer",
+      "title": "",
+      "description": "The Latitude of the Transactive Device, times 10^6",
+      "required": true
+    },
+    "MicroLon": {
+      "type": "integer",
+      "title": "",
+      "description": "The Longitude of the Transactive Device, times 10^6",
+      "required": true
+    },
+    "ValidatorAddr": {
+      "type": "string",
+      "format": "AlgoAddressStringFormat",
+      "title": "",
+      "description": "The Algoand address for the TaValidator who validated the location, metering and type of the Transactive Device.",
+      "required": true
+    },
+    "TaDaemonAddr": {
+      "type": "string",
+      "format": "AlgoAddressStringFormat",
+      "title": "",
+      "description": "The Algorand address for the TaDaemon which will own the TaDeed and initially the TaTradingRights), as well as holding funds on behalf of the TaOwner.",
+      "required": true
+    },
+    "TaOwnerAddr": {
+      "type": "string",
+      "format": "AlgoAddressStringFormat",
+      "title": "",
+      "description": "The Algorand address of the entity owning the Transactive Device, and thus also the TerminalAsset",
+      "required": true
+    },
+    "FirstDeedTransferMtx": {
+      "type": "string",
+      "format": "AlgoMsgPackEncoded",
+      "title": "",
+      "description": "The half-signed multi transaction for transferring the TaDeed to the TaDaemon.",
+      "required": true
+    },
+    "TypeName": {
+      "type": "string",
+      "value": "initial.tadeed.algo.transfer.000",
+      "title": "The type name"
+    },
+    "Version": {
+      "type": "string",
+      "title": "The type version",
+      "default": "000",
+      "required": true
+    }
+  },
+  "axioms": {
+    "Axiom1": {
+      "title": "Is correct Multisig",
+      "description": "Decoded FirstDeedTransferMtx must have type MultisigTransaction from the 2-sig MultiAccount [GnfAdminAddr, ValidatorAddr].",
+      "url": "https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr"
+    },
+    "Axiom2": {
+      "title": "TaDaemon funded by TaOwner",
+      "description": "The TaDaemonAddr was created with funding from the TaOwnerAddr, and has sufficient funding according to the GNodeFactory."
+    }
+  }
+}

@@ -49,11 +49,6 @@ and this is captured in their cell membranes. An actor's APIs specify how it com
 at and beyond its cell membranes. An SDK, in contrast,  is like an internal organelle
 capable of generating valid messages to be sent out of the membrane.
 
-The Purpose of This SDK
-^^^^^^^^^^^^^^^^^^^^^^^^
-This SDK, paired with its `API &lt;apis/types.html&gt;`_, is part of a Gridworks tutorial
-application designed to teach the basic mechanics of communication in GridWorks.
-Go `here &lt;api-sdk-abi.html&gt;`_ for instructions.
 
 .. automodule:: gridworks.types
 

@@ -1,29 +1,19 @@
-"""Tests super.starter type, version 000"""
+"""Tests heartbeat.a type, version 100"""
 import json
 
 import pytest
 from pydantic import ValidationError
 
 from gridworks.errors import SchemaError
-from gridworks.types import SuperStarter_Maker as Maker
+from gridworks.types import HeartbeatA_Maker as Maker
 
 
-def test_super_starter_generated() -> None:
+def test_heartbeat_a_generated() -> None:
     d = {
-        "SupervisorContainer": {
-            "SupervisorContainerId": "995b0334-9940-424f-8fb1-4745e52ba295",
-            "WorldInstanceAlias": "d1__1",
-            "SupervisorGNodeInstanceId": "20e7edec-05e5-4152-bfec-ec21ddd2e3dd",
-            "SupervisorGNodeAlias": "d1.isone.ver.keene.super1",
-            "TypeName": "supervisor.container.gt",
-            "Version": "000",
-            "StatusGtEnumSymbol": "f48cff43",
-        },
-        "GniList": [],
-        "AliasWithKeyList": [],
-        "KeyList": [],
-        "TypeName": "super.starter",
-        "Version": "000",
+        "MyHex": "a",
+        "YourLastHex": 2,
+        "TypeName": "heartbeat.a",
+        "Version": "100",
     }
 
     with pytest.raises(SchemaError):
@@ -41,10 +31,8 @@ def test_super_starter_generated() -> None:
 
     # test Maker init
     t = Maker(
-        supervisor_container=gtuple.SupervisorContainer,
-        gni_list=gtuple.GniList,
-        alias_with_key_list=gtuple.AliasWithKeyList,
-        key_list=gtuple.KeyList,
+        my_hex=gtuple.MyHex,
+        your_last_hex=gtuple.YourLastHex,
     ).tuple
     assert t == gtuple
 
@@ -58,40 +46,18 @@ def test_super_starter_generated() -> None:
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    del d2["SupervisorContainer"]
+    del d2["MyHex"]
     with pytest.raises(SchemaError):
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    del d2["GniList"]
-    with pytest.raises(SchemaError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d)
-    del d2["AliasWithKeyList"]
-    with pytest.raises(SchemaError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d)
-    del d2["KeyList"]
+    del d2["YourLastHex"]
     with pytest.raises(SchemaError):
         Maker.dict_to_tuple(d2)
 
     ######################################
     # Behavior on incorrect types
     ######################################
-
-    d2 = dict(d, GniList="Not a list.")
-    with pytest.raises(SchemaError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d, GniList=["Not a list of dicts"])
-    with pytest.raises(SchemaError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d, GniList=[{"Failed": "Not a GtSimpleSingleStatus"}])
-    with pytest.raises(SchemaError):
-        Maker.dict_to_tuple(d2)
 
     ######################################
     # SchemaError raised if TypeName is incorrect
@@ -105,7 +71,11 @@ def test_super_starter_generated() -> None:
     # SchemaError raised if primitive attributes do not have appropriate property_format
     ######################################
 
-    d2 = dict(d, AliasWithKeyList=["a.b-h"])
+    d2 = dict(d, MyHex="g")
+    with pytest.raises(ValidationError):
+        Maker.dict_to_tuple(d2)
+
+    d2 = dict(d, YourLastHex="g")
     with pytest.raises(ValidationError):
         Maker.dict_to_tuple(d2)
 

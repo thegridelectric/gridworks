@@ -1,7 +1,7 @@
 GNodeInstance
 =============
 
-A **GNodeInstance** is the one of the layers of abtraction connecting a GNode with a running app in
+A **GNodeInstance** is the one of the layers of abstraction connecting a GNode with a running app in
 a Docker container.  At any point in time, a GNode can be represented by only
 one GNodeInstance.
 

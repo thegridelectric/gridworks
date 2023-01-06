@@ -429,19 +429,49 @@ def check_world_alias_matches_universe(g_node_alias: str, universe: str) -> None
             )
 
 
-def is_world_instance_alias_format(candidate: str) -> bool:
+def check_is_world_instance_name_format(candidate: str) -> None:
+    """
+    WorldInstanceName format: A single alphanumerical word starting
+    with an alphabet char (the root GNodeAlias) and an integer,
+    seperated by '__'. For example 'd1__1'
+
+    Raises:
+        ValueError: if not WorldInstanceNameFormat format
+    """
     try:
         words = candidate.split("__")
     except:
+        raise ValueError(f"{v} is not split by '__'")
+    if len(words) != 2:
+        raise ValueError(f"{v} not 2 words separated by '__'")
+    try:
+        int(words[1])
+    except:
+        raise ValueError(f"{v} second word not an int")
+
+    root_g_node_alias = words[0]
+    first_char = root_g_node_alias[0]
+    if not first_char.isalpha():
+        raise ValueError(f"{v} first word must be alph char")
+    if not root_g_node_alias.isalnum():
+        raise ValueError(f"{v} first word must be alphanumeric")
+
+
+def is_world_instance_name_format(candidate: str) -> bool:
+    try:
+        words = candidate.split("__")
+    except:
+        return False
+    if len(words) != 2:
         return False
     try:
         int(words[1])
     except:
         return False
     try:
-        alias_words = words[0].split(".")
+        root_g_node_alias_words = words[0].split(".")
     except:
         return False
-    if len(alias_words) > 1:
+    if len(root_g_node_alias_words) > 1:
         return False
     return True

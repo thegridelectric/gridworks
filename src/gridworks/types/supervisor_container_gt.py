@@ -8,13 +8,12 @@ from typing import Literal
 
 from fastapi_utils.enums import StrEnum
 from pydantic import BaseModel
+from pydantic import Field
 from pydantic import validator
 
-import gridworks.property_format as property_format
 from gridworks.enums import SupervisorContainerStatus
 from gridworks.errors import SchemaError
 from gridworks.message import as_enum
-from gridworks.property_format import predicate_validator
 
 
 class SupervisorContainerStatus000SchemaEnum:
@@ -104,36 +103,160 @@ class SupervisorContainerStatusMap:
     }
 
 
+def check_is_world_instance_name_format(v: str) -> None:
+    """
+    WorldInstanceName format: A single alphanumerical word starting
+    with an alphabet char (the root GNodeAlias) and an integer,
+    seperated by '__'. For example 'd1__1'
+
+    Raises:
+        ValueError: if not WorldInstanceNameFormat format
+    """
+    try:
+        words = v.split("__")
+    except:
+        raise ValueError(f"{v} is not split by '__'")
+    if len(words) != 2:
+        raise ValueError(f"{v} not 2 words separated by '__'")
+    try:
+        int(words[1])
+    except:
+        raise ValueError(f"{v} second word not an int")
+
+    root_g_node_alias = words[0]
+    first_char = root_g_node_alias[0]
+    if not first_char.isalpha():
+        raise ValueError(f"{v} first word must be alph char")
+    if not root_g_node_alias.isalnum():
+        raise ValueError(f"{v} first word must be alphanumeric")
+
+
+def check_is_uuid_canonical_textual(v: str) -> None:
+    """
+    UuidCanonicalTextual format:  A string of hex words separated by hyphens
+    of length 8-4-4-4-12.
+
+    Raises:
+        ValueError: if not UuidCanonicalTextual format
+    """
+    try:
+        x = v.split("-")
+    except AttributeError as e:
+        raise ValueError(f"Failed to split on -: {e}")
+    if len(x) != 5:
+        raise ValueError(f"{v} split by '-' did not have 5 words")
+    for hex_word in x:
+        try:
+            int(hex_word, 16)
+        except ValueError:
+            raise ValueError(f"Words of {v} are not all hex")
+    if len(x[0]) != 8:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[1]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[2]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[3]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[4]) != 12:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+
+
+def check_is_left_right_dot(v: str) -> None:
+    """
+    LeftRightDot format: Lowercase alphanumeric words separated by periods,
+    most significant word (on the left) starting with an alphabet character.
+
+    Raises:
+        ValueError: if not LeftRightDot format
+    """
+    from typing import List
+
+    try:
+        x: List[str] = v.split(".")
+    except:
+        raise ValueError(f"Failed to seperate {v} into words with split'.'")
+    first_word = x[0]
+    first_char = first_word[0]
+    if not first_char.isalpha():
+        raise ValueError(f"Most significant word of {v} must start with alphabet char.")
+    for word in x:
+        if not word.isalnum():
+            raise ValueError(f"words of {v} split by by '.' must be alphanumeric.")
+    if not v.islower():
+        raise ValueError(f"All characters of {v} must be lowercase.")
+
+
 class SupervisorContainerGt(BaseModel):
-    SupervisorContainerId: str  #
-    Status: SupervisorContainerStatus  #
-    WorldInstanceAlias: str  #
-    SupervisorGNodeInstanceId: str  #
-    SupervisorGNodeAlias: str  #
+    """Used to send and receive updates about SupervisorContainers.
+
+    Sent from a GNodeRegistry to a World, and used also by the World as it spawns
+    GNodeInstances in docker instances (i.e., the SupervisorContainers).
+    [More info](https://gridworks.readthedocs.io/en/latest/supervisor.html).
+    """
+
+    SupervisorContainerId: str = Field(
+        title="Id of the docker SupervisorContainer",
+    )
+    Status: SupervisorContainerStatus = Field(
+        title="Status",
+    )
+    WorldInstanceName: str = Field(
+        title="Name of the WorldInstance",
+        description="For example, d1__1 is a potential name for a World whose World GNode has alias d1.",
+    )
+    SupervisorGNodeInstanceId: str = Field(
+        title="Id of the SupervisorContainer's prime actor (aka the Supervisor GNode)",
+    )
+    SupervisorGNodeAlias: str = Field(
+        title="Alias of the SupervisorContainer's prime actor (aka the Supervisor GNode)",
+    )
     TypeName: Literal["supervisor.container.gt"] = "supervisor.container.gt"
     Version: str = "000"
 
-    _validator_supervisor_container_id = predicate_validator(
-        "SupervisorContainerId", property_format.is_uuid_canonical_textual
-    )
+    @validator("SupervisorContainerId")
+    def _check_supervisor_container_id(cls, v: str) -> str:
+        try:
+            check_is_uuid_canonical_textual(v)
+        except ValueError as e:
+            raise ValueError(
+                f"SupervisorContainerId failed UuidCanonicalTextual format validation: {e}"
+            )
+        return v
 
     @validator("Status")
-    def _validator_status(
-        cls, v: SupervisorContainerStatus
-    ) -> SupervisorContainerStatus:
+    def _check_status(cls, v: SupervisorContainerStatus) -> SupervisorContainerStatus:
         return as_enum(v, SupervisorContainerStatus, SupervisorContainerStatus.Unknown)
 
-    _validator_world_instance_alias = predicate_validator(
-        "WorldInstanceAlias", property_format.is_world_instance_alias_format
-    )
+    @validator("WorldInstanceName")
+    def _check_world_instance_name(cls, v: str) -> str:
+        try:
+            check_is_world_instance_name_format(v)
+        except ValueError as e:
+            raise ValueError(
+                f"WorldInstanceName failed WorldInstanceNameFormat format validation: {e}"
+            )
+        return v
 
-    _validator_supervisor_g_node_instance_id = predicate_validator(
-        "SupervisorGNodeInstanceId", property_format.is_uuid_canonical_textual
-    )
+    @validator("SupervisorGNodeInstanceId")
+    def _check_supervisor_g_node_instance_id(cls, v: str) -> str:
+        try:
+            check_is_uuid_canonical_textual(v)
+        except ValueError as e:
+            raise ValueError(
+                f"SupervisorGNodeInstanceId failed UuidCanonicalTextual format validation: {e}"
+            )
+        return v
 
-    _validator_supervisor_g_node_alias = predicate_validator(
-        "SupervisorGNodeAlias", property_format.is_left_right_dot
-    )
+    @validator("SupervisorGNodeAlias")
+    def _check_supervisor_g_node_alias(cls, v: str) -> str:
+        try:
+            check_is_left_right_dot(v)
+        except ValueError as e:
+            raise ValueError(
+                f"SupervisorGNodeAlias failed LeftRightDot format validation: {e}"
+            )
+        return v
 
     def as_dict(self) -> Dict[str, Any]:
         d = self.dict()
@@ -156,14 +279,14 @@ class SupervisorContainerGt_Maker:
         self,
         supervisor_container_id: str,
         status: SupervisorContainerStatus,
-        world_instance_alias: str,
+        world_instance_name: str,
         supervisor_g_node_instance_id: str,
         supervisor_g_node_alias: str,
     ):
         self.tuple = SupervisorContainerGt(
             SupervisorContainerId=supervisor_container_id,
             Status=status,
-            WorldInstanceAlias=world_instance_alias,
+            WorldInstanceName=world_instance_name,
             SupervisorGNodeInstanceId=supervisor_g_node_instance_id,
             SupervisorGNodeAlias=supervisor_g_node_alias,
             #
@@ -171,10 +294,16 @@ class SupervisorContainerGt_Maker:
 
     @classmethod
     def tuple_to_type(cls, tuple: SupervisorContainerGt) -> str:
+        """
+        Given a Python class object, returns the serialized JSON type object
+        """
         return tuple.as_type()
 
     @classmethod
     def type_to_tuple(cls, t: str) -> SupervisorContainerGt:
+        """
+        Given a serialized JSON type object, returns the Python class object
+        """
         try:
             d = json.loads(t)
         except TypeError:
@@ -196,8 +325,8 @@ class SupervisorContainerGt_Maker:
             )
         else:
             d2["Status"] = SupervisorContainerStatus.default()
-        if "WorldInstanceAlias" not in d2.keys():
-            raise SchemaError(f"dict {d2} missing WorldInstanceAlias")
+        if "WorldInstanceName" not in d2.keys():
+            raise SchemaError(f"dict {d2} missing WorldInstanceName")
         if "SupervisorGNodeInstanceId" not in d2.keys():
             raise SchemaError(f"dict {d2} missing SupervisorGNodeInstanceId")
         if "SupervisorGNodeAlias" not in d2.keys():
@@ -208,7 +337,7 @@ class SupervisorContainerGt_Maker:
         return SupervisorContainerGt(
             SupervisorContainerId=d2["SupervisorContainerId"],
             Status=d2["Status"],
-            WorldInstanceAlias=d2["WorldInstanceAlias"],
+            WorldInstanceName=d2["WorldInstanceName"],
             SupervisorGNodeInstanceId=d2["SupervisorGNodeInstanceId"],
             SupervisorGNodeAlias=d2["SupervisorGNodeAlias"],
             TypeName=d2["TypeName"],

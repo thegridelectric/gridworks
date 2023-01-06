@@ -1,19 +1,21 @@
-"""Tests heartbeat.a type, version 100"""
+"""Tests gw.cert.id type, version 000"""
 import json
 
 import pytest
 from pydantic import ValidationError
 
+from gridworks.enums import AlgoCertType
 from gridworks.errors import SchemaError
-from gridworks.types import HeartbeatA_Maker as Maker
+from gridworks.types import GwCertId_Maker as Maker
 
 
-def test_heartbeat_a_generated() -> None:
+def test_gw_cert_id_generated() -> None:
     d = {
-        "MyHex": "a",
-        "YourLastHex": "b",
-        "TypeName": "heartbeat.a",
-        "Version": "100",
+        "TypeGtEnumSymbol": "086b5165",
+        "Idx": 10,
+        "Addr": "7QQT4GN3ZPAQEFCNWF5BMF7NULVK3CWICZVT4GM3BQRISD52YEDLWJ4MII",
+        "TypeName": "gw.cert.id",
+        "Version": "000",
     }
 
     with pytest.raises(SchemaError):
@@ -31,8 +33,9 @@ def test_heartbeat_a_generated() -> None:
 
     # test Maker init
     t = Maker(
-        my_hex=gtuple.MyHex,
-        your_last_hex=gtuple.YourLastHex,
+        type=gtuple.Type,
+        idx=gtuple.Idx,
+        addr=gtuple.Addr,
     ).tuple
     assert t == gtuple
 
@@ -46,18 +49,34 @@ def test_heartbeat_a_generated() -> None:
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    del d2["MyHex"]
+    del d2["TypeGtEnumSymbol"]
     with pytest.raises(SchemaError):
         Maker.dict_to_tuple(d2)
 
+    ######################################
+    # Optional attributes can be removed from type
+    ######################################
+
     d2 = dict(d)
-    del d2["YourLastHex"]
-    with pytest.raises(SchemaError):
-        Maker.dict_to_tuple(d2)
+    if "Idx" in d2.keys():
+        del d2["Idx"]
+    Maker.dict_to_tuple(d2)
+
+    d2 = dict(d)
+    if "Addr" in d2.keys():
+        del d2["Addr"]
+    Maker.dict_to_tuple(d2)
 
     ######################################
     # Behavior on incorrect types
     ######################################
+
+    d2 = dict(d, TypeGtEnumSymbol="hi")
+    Maker.dict_to_tuple(d2).Type = AlgoCertType.default()
+
+    d2 = dict(d, Idx="10.1")
+    with pytest.raises(ValidationError):
+        Maker.dict_to_tuple(d2)
 
     ######################################
     # SchemaError raised if TypeName is incorrect
@@ -66,17 +85,3 @@ def test_heartbeat_a_generated() -> None:
     d2 = dict(d, TypeName="not the type alias")
     with pytest.raises(ValidationError):
         Maker.dict_to_tuple(d2)
-
-    ######################################
-    # SchemaError raised if primitive attributes do not have appropriate property_format
-    ######################################
-
-    d2 = dict(d, MyHex="g")
-    with pytest.raises(ValidationError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d, YourLastHex="g")
-    with pytest.raises(ValidationError):
-        Maker.dict_to_tuple(d2)
-
-    # End of Test

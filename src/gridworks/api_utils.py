@@ -1,9 +1,13 @@
+"""Helpers for working with GridWorks specific Algorand certificates and Smart
+Contracts. Heavily used in API Type validation. """
+
 from typing import Optional
 
 import dotenv
 from algosdk import encoding
 from algosdk.future.transaction import MultisigTransaction
 from algosdk.v2client.algod import AlgodClient
+from pydantic import BaseModel
 
 import gridworks.algo_utils as algo_utils
 import gridworks.gw_config as config
@@ -14,7 +18,8 @@ from gridworks.errors import SchemaError
 def get_discoverer_account_with_admin(
     discoverer_addr: str,
 ) -> algo_utils.MultisigAccount:
-    """Returns the 2-sig multi [discoverer, gnf_admin_addr]
+    """
+    Returns the 2-sig multi [discoverer, gnf_admin_addr]
     address for a GridWorks Discoverer.
 
     :param str discoverer_addr: The Algorand address of the Discoverer
@@ -37,7 +42,8 @@ def get_discoverer_account_with_admin(
 def get_validator_account_with_admin(
     validator_addr: str,
 ) -> algo_utils.MultisigAccount:
-    """Returns the 2-sig multi [gnf_admin_addr, validator_addr]
+    """
+    Returns the 2-sig multi [gnf_admin_addr, validator_addr]
     address for a GridWorks Validator.
 
     :param str validator_addr: The Algorand address of the Discoverer
@@ -57,38 +63,40 @@ def get_validator_account_with_admin(
     )
 
 
-def check_validator_multi_has_enough_algos(validator_addr: str) -> None:
-    """Raises exception if the 2-sig multi [gnf admin, validator] account does not have
-    gnf_validator_funding_threshold_algos
-    (set publicly by the Gnf and available in config.Algo())
+def check_validator_multi_has_enough_algos(ta_validator_addr: str) -> None:
+    """
+    Raises exception if the 2-sig multi [GNfAdminAddr, ta_validator_addr] insufficiently funded.
+    Set publicly by the GNodeFactory, available in gw_config.Public env variable
 
     Args:
         validator_addr: the public address of the pending validator
 
     Raises:
-        SchemaError if joint account does not have gnf_validator_funding_threshold_algos.
+        SchemaError if joint account does not have Public.gnf_validator_funding_threshold_algos.
 
     """
     try:
-        property_format.check_is_algo_address_string_format(validator_addr)
+        property_format.check_is_algo_address_string_format(ta_validator_addr)
     except SchemaError:
         raise Exception(
-            f"called with validatorAddr not of AlgoAddressStringFormat: \n{validator_addr}"
+            f"called with ta_validator_addr not of AlgoAddressStringFormat: \n{validator_addr}"
         )
     min_algos = config.Public().gnf_validator_funding_threshold_algos
-    multi: algo_utils.MultisigAccount = get_validator_account_with_admin(validator_addr)
+    multi: algo_utils.MultisigAccount = get_validator_account_with_admin(
+        ta_validator_addr
+    )
     if algo_utils.algos(multi.addr) is None:
         raise SchemaError(
-            f"multi  ..{multi.addr[-6:]}  for validator ..{validator_addr[-6:]} is unfunded. Requires {min_algos} Algos."
+            f"multi  ..{multi.addr[-6:]}  for validator ..{ta_validator_addr[-6:]} is unfunded. Requires {min_algos} Algos."
         )
     if algo_utils.algos(multi.addr) < min_algos:
         raise SchemaError(
-            f"multi  ..{multi.addr[-6:]}  for validator ..{validator_addr[-6:]} has {algo_utils.algos(multi.addr)} Algos. Requires {min_algos} Algos. "
+            f"multi  ..{multi.addr[-6:]}  for validator ..{ta_validator_addr[-6:]} has {algo_utils.algos(multi.addr)} Algos. Requires {min_algos} Algos. "
         )
 
 
 def check_mtx_subsig(mtx: MultisigTransaction, signer_addr) -> None:
-    """Throws a SchemaError if the signerAddr is not a signer for mtx or did not sign.
+    """Throws a SchemaError if the signer_addr is not a signer for mtx or did not sign.
     TODO: add error if the signature does not match the txn.
     """
     signer_pk = encoding.decode_address(signer_addr)
@@ -98,15 +106,16 @@ def check_mtx_subsig(mtx: MultisigTransaction, signer_addr) -> None:
 
     if not signer_pk in sig_by_public_key.keys():
         raise SchemaError(
-            f"signerAddr ..{signer_addr[-6:]} not a signer for multisig!!"
+            f"signer_addr ..{signer_addr[-6:]} not a signer for multisig!!"
         )
     if sig_by_public_key[signer_pk] is None:
-        raise SchemaError(f"signerAddr ..{signer_addr[-6:]} did not sign!")
+        raise SchemaError(f"signer_addr ..{signer_addr[-6:]} did not sign!")
     # TODO: check that the signature is for THIS transaction
 
 
 def get_validator_cert_idx(validator_addr: str) -> Optional[int]:
-    """Looks for an asset in the validatorMsig account that is a
+    """
+    Looks for an asset in the validatorMsig account that is a
     validator certificate (based on unit name).
 
     Args:
@@ -161,7 +170,31 @@ def is_validator(acct_addr: str) -> bool:
         return True
 
 
-def get_tatrading_rights_idx(terminal_asset_alias: str) -> Optional[int]:
+class GwCertId(BaseModel):
+    """
+    Some GridWorks certificates  (TaDeed, TaTradingRights) can be either Algorand
+    Standard Assets or Algorand Smart Signatures. ASAs have an integer (asset index)
+    as their unique identifiers, and the Smart Signatures have a string (Algo public
+    address). This is a wrapper for both.
+    """
+
+    Type: str
+    Idx: Optional[int]
+    Addr: Optional[str]
+
+
+def get_tatrading_rights_id(terminal_asset_alias: str) -> Optional[GwCertId]:
+    """
+    Returns unique identifier for TaTradingRights
+
+    Args:
+        terminal_asset_alias (str): The GNodeAlias of the TerminalAsset that
+        the TaTradingRights are for
+
+    Returns:
+        Optional[GwCertId]: returns None if no TaTradingRights
+        are found
+    """
     settings = config.VanillaSettings(_env_file=dotenv.find_dotenv())
     client: AlgodClient = AlgodClient(
         settings.algo_api_secrets.algod_token.get_secret_value(),
@@ -185,7 +218,7 @@ def get_tatrading_rights_idx(terminal_asset_alias: str) -> Optional[int]:
         return this_ta_trading_rights[0]["index"]
 
 
-def get_tadeed_idx(terminal_asset_alias, validator_addr: str) -> Optional[int]:
+def get_tadeed_idx(terminal_asset_alias: str, validator_addr: str) -> Optional[int]:
     """Looks for an asset created in the 2-sig [Gnf Admin, validator_addr] account
      that is a tadeed for terminal_asset_alias.
 
