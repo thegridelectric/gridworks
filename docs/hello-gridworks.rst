@@ -20,7 +20,7 @@ actors communicate via:
 
 
 Hello Rabbit
-^^^^^^^^^^^^
+^^^^^^^^^^^^^
 
 Here is a simple example of the first. Before running, start a development world rabbit broker. From
 the top level of this repo:
@@ -36,7 +36,7 @@ Wait for the `rabbit admin page <http://0.0.0.0:15672/>`_ to load (username/pass
 
 
 Hello Algorand
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
 
 Hello FastAPI
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^

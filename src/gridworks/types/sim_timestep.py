@@ -1,4 +1,4 @@
-"""Type ready, version 001"""
+"""Type sim.timestep, version 000"""
 import json
 from typing import Any
 from typing import Dict
@@ -12,19 +12,33 @@ from gridworks.errors import SchemaError
 from gridworks.property_format import predicate_validator
 
 
-class Ready(BaseModel):
-    TimeUnixS: int  #
+class SimTimestep(BaseModel):
     FromGNodeAlias: str  #
     FromGNodeInstanceId: str  #
-    TypeName: Literal["ready"] = "ready"
-    Version: str = "001"
+    TimeUnixS: int  #
+    TimestepCreatedMs: int  #
+    MessageId: str  #
+    TypeName: Literal["sim.timestep"] = "sim.timestep"
+    Version: str = "000"
 
     _validator_from_g_node_alias = predicate_validator(
-        "FromGNodeAlias", property_format.is_lrd_alias_format
+        "FromGNodeAlias", property_format.is_left_right_dot
     )
 
     _validator_from_g_node_instance_id = predicate_validator(
         "FromGNodeInstanceId", property_format.is_uuid_canonical_textual
+    )
+
+    _validator_time_unix_s = predicate_validator(
+        "TimeUnixS", property_format.is_reasonable_unix_time_s
+    )
+
+    _validator_timestep_created_ms = predicate_validator(
+        "TimestepCreatedMs", property_format.is_reasonable_unix_time_ms
+    )
+
+    _validator_message_id = predicate_validator(
+        "MessageId", property_format.is_uuid_canonical_textual
     )
 
     def as_dict(self) -> Dict[str, Any]:
@@ -35,26 +49,33 @@ class Ready(BaseModel):
         return json.dumps(self.as_dict())
 
 
-class Ready_Maker:
-    type_name = "ready"
-    version = "001"
+class SimTimestep_Maker:
+    type_name = "sim.timestep"
+    version = "000"
 
     def __init__(
-        self, time_unix_s: int, from_g_node_alias: str, from_g_node_instance_id: str
+        self,
+        from_g_node_alias: str,
+        from_g_node_instance_id: str,
+        time_unix_s: int,
+        timestep_created_ms: int,
+        message_id: str,
     ):
-        self.tuple = Ready(
-            TimeUnixS=time_unix_s,
+        self.tuple = SimTimestep(
             FromGNodeAlias=from_g_node_alias,
             FromGNodeInstanceId=from_g_node_instance_id,
+            TimeUnixS=time_unix_s,
+            TimestepCreatedMs=timestep_created_ms,
+            MessageId=message_id,
             #
         )
 
     @classmethod
-    def tuple_to_type(cls, tuple: Ready) -> str:
+    def tuple_to_type(cls, tuple: SimTimestep) -> str:
         return tuple.as_type()
 
     @classmethod
-    def type_to_tuple(cls, t: str) -> Ready:
+    def type_to_tuple(cls, t: str) -> SimTimestep:
         try:
             d = json.loads(t)
         except TypeError:
@@ -64,21 +85,27 @@ class Ready_Maker:
         return cls.dict_to_tuple(d)
 
     @classmethod
-    def dict_to_tuple(cls, d: dict[str, Any]) -> Ready:
+    def dict_to_tuple(cls, d: dict[str, Any]) -> SimTimestep:
         d2 = dict(d)
-        if "TimeUnixS" not in d2.keys():
-            raise SchemaError(f"dict {d2} missing TimeUnixS")
         if "FromGNodeAlias" not in d2.keys():
             raise SchemaError(f"dict {d2} missing FromGNodeAlias")
         if "FromGNodeInstanceId" not in d2.keys():
             raise SchemaError(f"dict {d2} missing FromGNodeInstanceId")
+        if "TimeUnixS" not in d2.keys():
+            raise SchemaError(f"dict {d2} missing TimeUnixS")
+        if "TimestepCreatedMs" not in d2.keys():
+            raise SchemaError(f"dict {d2} missing TimestepCreatedMs")
+        if "MessageId" not in d2.keys():
+            raise SchemaError(f"dict {d2} missing MessageId")
         if "TypeName" not in d2.keys():
             raise SchemaError(f"dict {d2} missing TypeName")
 
-        return Ready(
-            TimeUnixS=d2["TimeUnixS"],
+        return SimTimestep(
             FromGNodeAlias=d2["FromGNodeAlias"],
             FromGNodeInstanceId=d2["FromGNodeInstanceId"],
+            TimeUnixS=d2["TimeUnixS"],
+            TimestepCreatedMs=d2["TimestepCreatedMs"],
+            MessageId=d2["MessageId"],
             TypeName=d2["TypeName"],
-            Version="001",
+            Version="000",
         )

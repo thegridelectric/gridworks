@@ -1,5 +1,7 @@
- Validator
- ==========
+
+Validator
+============
+
 
 A **Validator** is an entity authorized to validate Transactive Devices.
 Anyone can become a validator, once they have gone through the
@@ -31,18 +33,6 @@ in evaluating efficiency progams and Demand Response progams.
    :align: left
 
 
-.. automodule:: gridworks.schemata
-
-.. automodule:: gridworks.tavalidatorcert_algo_create
-    :members:
-
-.. autoclass:: TavalidatorcertAlgoCreate
-    :members:
-
-.. automodule:: gridworks.tavalidatorcert_algo_transfer
-    :members:
-
-.. autoclass:: TavalidatorcertAlgoTransfer
-    :members:
+TODO: add link to the relevant APIs and SDKs
 
 `Back to Lexicon <lexicon.html>`_

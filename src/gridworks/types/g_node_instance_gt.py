@@ -18,8 +18,8 @@ from gridworks.enums import StrategyName
 from gridworks.errors import SchemaError
 from gridworks.message import as_enum
 from gridworks.property_format import predicate_validator
-from gridworks.schemata.g_node_gt import GNodeGt
-from gridworks.schemata.g_node_gt import GNodeGt_Maker
+from gridworks.types.g_node_gt import GNodeGt
+from gridworks.types.g_node_gt import GNodeGt_Maker
 
 
 class GniStatus000SchemaEnum:

@@ -2,7 +2,7 @@ from gridworks.actor_base import ActorBase
 from gridworks.enums import GNodeRole
 from gridworks.enums import MessageCategory
 from gridworks.gw_config import GNodeSettings
-from gridworks.schemata import HeartbeatA_Maker
+from gridworks.types import HeartbeatA_Maker
 
 
 class HelloGNode(ActorBase):

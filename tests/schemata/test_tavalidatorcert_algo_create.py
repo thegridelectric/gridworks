@@ -5,7 +5,7 @@ import pytest
 from pydantic import ValidationError
 
 from gridworks.errors import SchemaError
-from gridworks.schemata import TavalidatorcertAlgoCreate_Maker as Maker
+from gridworks.types import TavalidatorcertAlgoCreate_Maker as Maker
 
 
 def test_tavalidatorcert_algo_create_generated() -> None:

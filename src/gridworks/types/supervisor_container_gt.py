@@ -132,7 +132,7 @@ class SupervisorContainerGt(BaseModel):
     )
 
     _validator_supervisor_g_node_alias = predicate_validator(
-        "SupervisorGNodeAlias", property_format.is_lrd_alias_format
+        "SupervisorGNodeAlias", property_format.is_left_right_dot
     )
 
     def as_dict(self) -> Dict[str, Any]:

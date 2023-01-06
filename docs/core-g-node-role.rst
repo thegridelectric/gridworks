@@ -1,5 +1,5 @@
 CoreGNodeRole
-----------
+-------------
 
 The CoreGNodeRole are a pared-down version of `GNodeRole <g-node-role>`_, restricted to:
 
