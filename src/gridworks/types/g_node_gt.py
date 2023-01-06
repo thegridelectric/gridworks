@@ -7,6 +7,8 @@ from typing import List
 from typing import Literal
 from typing import Optional
 
+import algosdk  # type: ignore[import]
+import algosdk.abi  # type: ignore[import]
 from fastapi_utils.enums import StrEnum
 from pydantic import BaseModel
 from pydantic import validator
@@ -18,6 +20,76 @@ from gridworks.enums import GNodeStatus
 from gridworks.errors import SchemaError
 from gridworks.message import as_enum
 from gridworks.property_format import predicate_validator
+
+
+def check_is_uuid_canonical_textual(v: str) -> None:
+    """UuidCanonicalTextual format:  A string of hex words separated
+    by hyphens of length 8-4-4-4-12.
+
+    Raises:
+        ValueError: if v is not UuidCanonicalTextual format
+    """
+    try:
+        x = v.split("-")
+    except AttributeError as e:
+        raise ValueError(f"Failed to split on -: {e}")
+    if len(x) != 5:
+        raise ValueError(f"{v} split by '-' did not have 5 words")
+    for hex_word in x:
+        try:
+            int(hex_word, 16)
+        except ValueError:
+            raise ValueError(f"Words of {v} are not all hex")
+    if len(x[0]) != 8:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[1]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[2]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[3]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[4]) != 12:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+
+
+def check_is_left_right_dot(v: str) -> None:
+    """LeftRightDot format: Lowercase alphanumeric words separated by periods,
+    most significant word (on the left) starting with an alphabet character.
+
+    Raises:
+        ValueError: if v is not LeftRightDot format
+    """
+    from typing import List
+
+    try:
+        x: List[str] = v.split(".")
+    except:
+        raise ValueError(f"Failed to seperate {v} into words with split'.'")
+    first_word = x[0]
+    first_char = first_word[0]
+    if not first_char.isalpha():
+        raise ValueError(f"Most significant word of {v} must start with alphabet char.")
+    for word in x:
+        if not word.isalnum():
+            raise ValueError(f"words of {v} split by by '.' must be alphanumeric.")
+    if not v.islower():
+        raise ValueError(f"All characters of {v} must be lowercase. ")
+
+
+def check_is_algo_address_string_format(v: str) -> None:
+    """AlgoAddressStringFormat: The public key of a private/public Ed25519 key pair,
+    transformed into an Algorand address, by adding a 4-byte checksum to the end of
+    the public key and then encoding it in base32.
+
+    Raises:
+        ValueError: if v is not AlgoAddressStringFormat
+    """
+
+    at = algosdk.abi.AddressType()
+    try:
+        result = at.decode(at.encode(candidate))
+    except Exception as e:
+        raise ValueError(f"Not AlgoAddressStringFormat: {e}")
 
 
 class GNodeRole000SchemaEnum:
@@ -189,6 +261,17 @@ class GNodeStatusMap:
 
 
 class GNodeGt(BaseModel):
+    """Class for sending and receiving lifecycle updates about GNodes.
+
+    GNodes are the building blocks of Gridworks. They have slowly-changing state
+    that must be kept in sync across a distributed system. Therefore, they require
+    a global registry to act as Single Source of Truth (SSoT). This class is used for
+    that SSoT to share information with actors about their GNodes, and the GNodes
+    that they will observe and communicate with.
+
+    `More info <https://gridworks.readthedocs.io/en/latest/g-node.html>`_
+    """
+
     GNodeId: str  #
     Alias: str  #
     Status: GNodeStatus  #
@@ -210,7 +293,7 @@ class GNodeGt(BaseModel):
         "GNodeId", property_format.is_uuid_canonical_textual
     )
 
-    _validator_alias = predicate_validator("Alias", property_format.is_lrd_alias_format)
+    _validator_alias = predicate_validator("Alias", property_format.is_left_right_dot)
 
     @validator("Status")
     def _validator_status(cls, v: GNodeStatus) -> GNodeStatus:
@@ -228,8 +311,8 @@ class GNodeGt(BaseModel):
     def _validator_prev_alias(cls, v: Optional[str]) -> Optional[str]:
         if v is None:
             return v
-        if not property_format.is_lrd_alias_format(v):
-            raise ValueError(f"PrevAlias {v} must have LrdAliasFormat")
+        if not property_format.is_left_right_dot(v):
+            raise ValueError(f"PrevAlias {v} must have LeftRightDot")
         return v
 
     @validator("GpsPointId")

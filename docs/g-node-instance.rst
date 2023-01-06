@@ -16,29 +16,29 @@ is responsible for killing and re-spawning any subordinate that fails to receive
 or send messages in a reasonable timeframe.
 
 
-.. module:: gridworks.schemata
+.. module:: gridworks.types
 
-.. automodule:: gridworks.schemata.g_node_instance_gt
+.. automodule:: gridworks.types.g_node_instance_gt
     :members:
 
 .. autoclass:: GNodeInstanceGt
     :members:
 
-.. module:: gridworks.schemata
+.. module:: gridworks.types
 
 .. autoclass:: SupervisorContainerGt
     :members:
 
-.. automodule:: gridworks.schemata.supervisor_container_gt
+.. automodule:: gridworks.types.supervisor_container_gt
     :members:
 
-.. module:: gridworks.schemata
+.. module:: gridworks.types
 
 .. autoclass:: SupervisorContainerGt
     :members:
 
 
-.. automodule:: gridworks.schemata.heartbeat_a
+.. automodule:: gridworks.types.heartbeat_a
     :members:
 
 .. autoclass:: HeartbeatA

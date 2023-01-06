@@ -38,7 +38,7 @@
                     </xsl:if>
                     </xsl:variable>
                 <FileSetFile>
-                            <xsl:element name="RelativePath"><xsl:text>../../../../tests/schemata/test_</xsl:text>
+                            <xsl:element name="RelativePath"><xsl:text>../../../../tests/types/test_</xsl:text>
                             <xsl:value-of select="translate($type-name,'.','_')"/><xsl:text>.py</xsl:text></xsl:element>
 
                     <OverwriteMode><xsl:value-of select="$overwrite-mode"/></OverwriteMode>
@@ -53,7 +53,7 @@ import pytest
 from pydantic import ValidationError
 
 from gridworks.errors import SchemaError
-from gridworks.schemata import </xsl:text>
+from gridworks.types import </xsl:text>
 <xsl:value-of select="$class-name"/><xsl:text>_Maker as Maker</xsl:text>
 <xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Alias) !='')  and (count(TypesThatUse[text()=$schema-id])>0)]">
 <xsl:text>

@@ -10,10 +10,10 @@ from pydantic import validator
 
 import gridworks.property_format as property_format
 from gridworks.errors import SchemaError
-from gridworks.schemata.g_node_instance_gt import GNodeInstanceGt
-from gridworks.schemata.g_node_instance_gt import GNodeInstanceGt_Maker
-from gridworks.schemata.supervisor_container_gt import SupervisorContainerGt
-from gridworks.schemata.supervisor_container_gt import SupervisorContainerGt_Maker
+from gridworks.types.g_node_instance_gt import GNodeInstanceGt
+from gridworks.types.g_node_instance_gt import GNodeInstanceGt_Maker
+from gridworks.types.supervisor_container_gt import SupervisorContainerGt
+from gridworks.types.supervisor_container_gt import SupervisorContainerGt_Maker
 
 
 class SuperStarter(BaseModel):
@@ -37,9 +37,9 @@ class SuperStarter(BaseModel):
     @validator("AliasWithKeyList")
     def _validator_alias_with_key_list(cls, v: List) -> List:
         for elt in v:
-            if not property_format.is_lrd_alias_format(elt):
+            if not property_format.is_left_right_dot(elt):
                 raise ValueError(
-                    f"failure of predicate is_lrd_alias_format() on elt {elt} of AliasWithKeyList"
+                    f"failure of predicate is_left_right_dot() on elt {elt} of AliasWithKeyList"
                 )
         return v
 

@@ -10,7 +10,7 @@ from pydantic import validator
 from gridworks.errors import SchemaError
 
 
-class HeartbeatA(BaseModel):
+class HeartbeatA001(BaseModel):
     MyHex: str  #
     YourLastHex: str  #
     TypeName: Literal["heartbeat.a"] = "heartbeat.a"
@@ -24,23 +24,23 @@ class HeartbeatA(BaseModel):
         return json.dumps(self.as_dict())
 
 
-class HeartbeatA_Maker:
+class HeartbeatA001_Maker:
     type_name = "heartbeat.a"
     version = "001"
 
     def __init__(self, my_hex: str, your_last_hex: str):
-        self.tuple = HeartbeatA(
+        self.tuple = HeartbeatA001(
             MyHex=my_hex,
             YourLastHex=your_last_hex,
             #
         )
 
     @classmethod
-    def tuple_to_type(cls, tuple: HeartbeatA) -> str:
+    def tuple_to_type(cls, tuple: HeartbeatA001) -> str:
         return tuple.as_type()
 
     @classmethod
-    def type_to_tuple(cls, t: str) -> HeartbeatA:
+    def type_to_tuple(cls, t: str) -> HeartbeatA001:
         try:
             d = json.loads(t)
         except TypeError:
@@ -50,7 +50,7 @@ class HeartbeatA_Maker:
         return cls.dict_to_tuple(d)
 
     @classmethod
-    def dict_to_tuple(cls, d: dict[str, Any]) -> HeartbeatA:
+    def dict_to_tuple(cls, d: dict[str, Any]) -> HeartbeatA001:
         d2 = dict(d)
         if "MyHex" not in d2.keys():
             raise SchemaError(f"dict {d2} missing MyHex")
@@ -59,7 +59,7 @@ class HeartbeatA_Maker:
         if "TypeName" not in d2.keys():
             raise SchemaError(f"dict {d2} missing TypeName")
 
-        return HeartbeatA(
+        return HeartbeatA001(
             MyHex=d2["MyHex"],
             YourLastHex=d2["YourLastHex"],
             TypeName=d2["TypeName"],

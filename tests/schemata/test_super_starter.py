@@ -5,7 +5,7 @@ import pytest
 from pydantic import ValidationError
 
 from gridworks.errors import SchemaError
-from gridworks.schemata import SuperStarter_Maker as Maker
+from gridworks.types import SuperStarter_Maker as Maker
 
 
 def test_super_starter_generated() -> None:

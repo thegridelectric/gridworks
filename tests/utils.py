@@ -10,9 +10,9 @@ from gridworks.actor_base import ActorBase
 from gridworks.actor_base import RabbitRole
 from gridworks.enums import GNodeRole
 from gridworks.gw_config import GNodeSettings
-from gridworks.schemata import HeartbeatA
-from gridworks.schemata import Ready
-from gridworks.schemata import Ready_Maker
+from gridworks.types import HeartbeatA
+from gridworks.types import Ready
+from gridworks.types import Ready_Maker
 
 
 class ExchangeBinding(BaseModel):

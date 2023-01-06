@@ -5,7 +5,7 @@ import pytest
 from pydantic import ValidationError
 
 from gridworks.errors import SchemaError
-from gridworks.schemata import SimTimestep_Maker as Maker
+from gridworks.types import SimTimestep_Maker as Maker
 
 
 def test_sim_timestep_generated() -> None:
