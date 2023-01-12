@@ -12,10 +12,11 @@ from gridworks.errors import SchemaError
 
 
 def check_is_hex_char(v: str) -> None:
-    """HexChar format: single-char string in '0123456789abcdefABCDEF'
+    """
+    HexChar format: single-char string in '0123456789abcdefABCDEF'
 
     Raises:
-        ValueError: if v is not HexChar format
+        ValueError: if not HexChar format
     """
     if not isinstance(v, str):
         raise ValueError(f"{v} must be a hex char, but not even a string")
@@ -28,26 +29,25 @@ def check_is_hex_char(v: str) -> None:
 class HeartbeatA(BaseModel):
     """Used to check that an actor can both send and receive messages.
 
-    For use between two actors sending direct messages to each other,
+    Payload for direct messages sent back and forth between actors,
     for example a Supervisor and one of its subordinates.
 
-    `More info <https://gridworks.readthedocs.io/en/latest/g-node-instance.html>`_
-
+    [More info](https://gridworks.readthedocs.io/en/latest/g-node-instance.html).
     """
 
     MyHex: str = Field(
         title="Hex character getting sent",
-        description="HexChar format",
+        default="0",
     )
     YourLastHex: str = Field(
         title="Last hex character received from heartbeat partner",
-        description="HexChar format",
-    )  #
+        default="0",
+    )
     TypeName: Literal["heartbeat.a"] = "heartbeat.a"
     Version: str = "100"
 
     @validator("MyHex")
-    def _validator_my_hex(cls, v: str) -> str:
+    def _check_my_hex(cls, v: str) -> str:
         try:
             check_is_hex_char(v)
         except ValueError as e:
@@ -55,7 +55,7 @@ class HeartbeatA(BaseModel):
         return v
 
     @validator("YourLastHex")
-    def _validator_your_last_hex(cls, v: str) -> str:
+    def _check_your_last_hex(cls, v: str) -> str:
         try:
             check_is_hex_char(v)
         except ValueError as e:
@@ -67,18 +67,10 @@ class HeartbeatA(BaseModel):
         return d
 
     def as_type(self) -> str:
-        """
-        Returns:
-            str: corresponding serialized json string of type ```heartbeat.a```
-        """
         return json.dumps(self.as_dict())
 
 
 class HeartbeatA_Maker:
-    """Helper for translating between json ```heartbeat.a``` types
-    and python ```HeartbeatA``` tuples.
-    """
-
     type_name = "heartbeat.a"
     version = "100"
 
@@ -92,22 +84,14 @@ class HeartbeatA_Maker:
     @classmethod
     def tuple_to_type(cls, tuple: HeartbeatA) -> str:
         """
-        Args:
-             tuple (HeartbeatA)
-
-        Returns:
-            str:  corresponding serialized json string of type ```heartbeat.a```
+        Given a Python class object, returns the serialized JSON type object
         """
         return tuple.as_type()
 
     @classmethod
     def type_to_tuple(cls, t: str) -> HeartbeatA:
         """
-        Args:
-            t (str): Serialized json string of type ```heartbeat.a```
-
-        Returns:
-            HeartbeatA: corresponding HeartbeatA object
+        Given a serialized JSON type object, returns the Python class object
         """
         try:
             d = json.loads(t)

@@ -5,26 +5,118 @@ from typing import Dict
 from typing import Literal
 
 from pydantic import BaseModel
+from pydantic import Field
+from pydantic import root_validator
 from pydantic import validator
 
-import gridworks.property_format as property_format
 from gridworks.errors import SchemaError
-from gridworks.property_format import predicate_validator
+
+
+def check_is_algo_address_string_format(v: str) -> None:
+    """
+    AlgoAddressStringFormat format: The public key of a private/public Ed25519
+    key pair, transformed into an  Algorand address, by adding a 4-byte checksum
+    to the end of the public key and then encoding in base32.
+
+    Raises:
+        ValueError: if not AlgoAddressStringFormat format
+    """
+    import algosdk
+
+    at = algosdk.abi.AddressType()
+    try:
+        result = at.decode(at.encode(v))
+    except Exception as e:
+        raise ValueError(f"Not AlgoAddressStringFormat: {e}")
+
+
+def check_is_algo_msg_pack_encoded(v: str) -> None:
+    """
+    AlgoMSgPackEncoded format: the format of an  transaction sent to
+    the Algorand blockchain.
+
+    Raises:
+        ValueError: if not AlgoMSgPackEncoded  format
+    """
+    import algosdk
+
+    try:
+        algosdk.encoding.future_msgpack_decode(v)
+    except Exception as e:
+        raise ValueError(f"Not AlgoMsgPackEncoded format: {e}")
 
 
 class TavalidatorcertAlgoCreate(BaseModel):
-    ValidatorAddr: str  #
-    HalfSignedCertCreationMtx: str  #
+    """Used for Step 1 of TaValidator certification.
+
+    Meant to be sent from a pending TaValidator  to the GNodeFactory (Gnf), to
+    initiate the process of certifying the pending TaValidator.
+    [More info](https://gridworks.readthedocs.io/en/latest/ta-validator.html).
+    """
+
+    ValidatorAddr: str = Field(
+        title="The address of the pending TaValidator",
+    )
+    HalfSignedCertCreationMtx: str = Field(
+        title="Algo multi-transaction for certificate creation, with 1 of 2 signatures",
+    )
     TypeName: Literal["tavalidatorcert.algo.create"] = "tavalidatorcert.algo.create"
     Version: str = "000"
 
-    _validator_validator_addr = predicate_validator(
-        "ValidatorAddr", property_format.is_algo_address_string_format
-    )
+    @validator("ValidatorAddr")
+    def check_validator_addr(cls, v: str) -> str:
+        """
+        Axiom 5: Uniqueness.
+        There must not already be a ValidatorCert belonging to the  2-sig [GnfAdminAddr, ValidatorAddr] address.
+        """
+        try:
+            check_is_algo_address_string_format(v)
+        except ValueError as e:
+            raise ValueError(
+                f"ValidatorAddr failed AlgoAddressStringFormat format validation: {e}"
+            )
+        raise NotImplementedError("Implement axiom(s)")
+        return v
 
-    _validator_half_signed_cert_creation_mtx = predicate_validator(
-        "HalfSignedCertCreationMtx", property_format.is_algo_msg_pack_encoded
-    )
+    @validator("HalfSignedCertCreationMtx")
+    def check_half_signed_cert_creation_mtx(cls, v: str) -> str:
+        """
+        Axioms 2, 3:
+
+        Axiom 2: Is AssetConfigTxn.
+        The transaction must have type AssetConfigTxn.
+
+        Axiom 3: Is ValidatorCert.
+        For the asset getting created: total = 1, unit_name=VLDTR, manager is GnfAdminAddr,
+        asset_name and url not blank.
+        [More info](https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate)
+        """
+        try:
+            check_is_algo_msg_pack_encoded(v)
+        except ValueError as e:
+            raise ValueError(
+                f"HalfSignedCertCreationMtx failed AlgoMsgPackEncoded format validation: {e}"
+            )
+        raise NotImplementedError("Implement axiom(s)")
+        return v
+
+    @root_validator(pre=True)
+    def check_axiom_1(cls, v: dict) -> dict:
+        """
+        Axiom 1: Is correct Multisig.
+        Decoded HalfSignedCertCreationMtx must have type MultisigTransaction from the
+        2-sig MultiAccount  [GnfAdminAddr, ValidatorAddr].
+        [More info](https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr)
+        """
+        raise NotImplementedError("Implement check for axiom 1")
+
+    @root_validator
+    def check_axiom_4(cls, v: dict) -> dict:
+        """
+        Axiom 4: TaValidator has signed.
+        ValidatorAddr must have signed the HalfSignedCertCreationMtx.
+        """
+        raise NotImplementedError("Implement check for axiom 4")
 
     def as_dict(self) -> Dict[str, Any]:
         d = self.dict()
@@ -47,10 +139,16 @@ class TavalidatorcertAlgoCreate_Maker:
 
     @classmethod
     def tuple_to_type(cls, tuple: TavalidatorcertAlgoCreate) -> str:
+        """
+        Given a Python class object, returns the serialized JSON type object
+        """
         return tuple.as_type()
 
     @classmethod
     def type_to_tuple(cls, t: str) -> TavalidatorcertAlgoCreate:
+        """
+        Given a serialized JSON type object, returns the Python class object
+        """
         try:
             d = json.loads(t)
         except TypeError:

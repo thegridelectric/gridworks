@@ -7,89 +7,16 @@ from typing import List
 from typing import Literal
 from typing import Optional
 
-import algosdk  # type: ignore[import]
-import algosdk.abi  # type: ignore[import]
 from fastapi_utils.enums import StrEnum
 from pydantic import BaseModel
+from pydantic import Field
 from pydantic import validator
 
-import gridworks.property_format as property_format
 from gridworks.data_classes.g_node import GNode
 from gridworks.enums import GNodeRole
 from gridworks.enums import GNodeStatus
 from gridworks.errors import SchemaError
 from gridworks.message import as_enum
-from gridworks.property_format import predicate_validator
-
-
-def check_is_uuid_canonical_textual(v: str) -> None:
-    """UuidCanonicalTextual format:  A string of hex words separated
-    by hyphens of length 8-4-4-4-12.
-
-    Raises:
-        ValueError: if v is not UuidCanonicalTextual format
-    """
-    try:
-        x = v.split("-")
-    except AttributeError as e:
-        raise ValueError(f"Failed to split on -: {e}")
-    if len(x) != 5:
-        raise ValueError(f"{v} split by '-' did not have 5 words")
-    for hex_word in x:
-        try:
-            int(hex_word, 16)
-        except ValueError:
-            raise ValueError(f"Words of {v} are not all hex")
-    if len(x[0]) != 8:
-        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
-    if len(x[1]) != 4:
-        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
-    if len(x[2]) != 4:
-        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
-    if len(x[3]) != 4:
-        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
-    if len(x[4]) != 12:
-        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
-
-
-def check_is_left_right_dot(v: str) -> None:
-    """LeftRightDot format: Lowercase alphanumeric words separated by periods,
-    most significant word (on the left) starting with an alphabet character.
-
-    Raises:
-        ValueError: if v is not LeftRightDot format
-    """
-    from typing import List
-
-    try:
-        x: List[str] = v.split(".")
-    except:
-        raise ValueError(f"Failed to seperate {v} into words with split'.'")
-    first_word = x[0]
-    first_char = first_word[0]
-    if not first_char.isalpha():
-        raise ValueError(f"Most significant word of {v} must start with alphabet char.")
-    for word in x:
-        if not word.isalnum():
-            raise ValueError(f"words of {v} split by by '.' must be alphanumeric.")
-    if not v.islower():
-        raise ValueError(f"All characters of {v} must be lowercase. ")
-
-
-def check_is_algo_address_string_format(v: str) -> None:
-    """AlgoAddressStringFormat: The public key of a private/public Ed25519 key pair,
-    transformed into an Algorand address, by adding a 4-byte checksum to the end of
-    the public key and then encoding it in base32.
-
-    Raises:
-        ValueError: if v is not AlgoAddressStringFormat
-    """
-
-    at = algosdk.abi.AddressType()
-    try:
-        result = at.decode(at.encode(candidate))
-    except Exception as e:
-        raise ValueError(f"Not AlgoAddressStringFormat: {e}")
 
 
 class GNodeRole000SchemaEnum:
@@ -107,8 +34,8 @@ class GNodeRole000SchemaEnum:
         "88112a93",
         "674ad859",
         "2161739f",
-        "db57d184",
         "1dce1efd",
+        "db57d184",
     ]
 
     @classmethod
@@ -131,8 +58,8 @@ class GNodeRole000(StrEnum):
     Supervisor = auto()
     Scada = auto()
     PriceService = auto()
-    AggregatedTNode = auto()
     WeatherService = auto()
+    AggregatedTNode = auto()
 
     @classmethod
     def default(cls) -> "GNodeRole000":
@@ -171,8 +98,8 @@ class GNodeRoleMap:
         "88112a93": GNodeRole000.Supervisor,
         "674ad859": GNodeRole000.Scada,
         "2161739f": GNodeRole000.PriceService,
-        "db57d184": GNodeRole000.AggregatedTNode,
         "1dce1efd": GNodeRole000.WeatherService,
+        "db57d184": GNodeRole000.AggregatedTNode,
     }
 
     versioned_enum_to_type_dict: Dict[GNodeRole000, str] = {
@@ -188,8 +115,8 @@ class GNodeRoleMap:
         GNodeRole000.Supervisor: "88112a93",
         GNodeRole000.Scada: "674ad859",
         GNodeRole000.PriceService: "2161739f",
-        GNodeRole000.AggregatedTNode: "db57d184",
         GNodeRole000.WeatherService: "1dce1efd",
+        GNodeRole000.AggregatedTNode: "db57d184",
     }
 
 
@@ -260,103 +187,259 @@ class GNodeStatusMap:
     }
 
 
+def check_is_uuid_canonical_textual(v: str) -> None:
+    """
+    UuidCanonicalTextual format:  A string of hex words separated by hyphens
+    of length 8-4-4-4-12.
+
+    Raises:
+        ValueError: if not UuidCanonicalTextual format
+    """
+    try:
+        x = v.split("-")
+    except AttributeError as e:
+        raise ValueError(f"Failed to split on -: {e}")
+    if len(x) != 5:
+        raise ValueError(f"{v} split by '-' did not have 5 words")
+    for hex_word in x:
+        try:
+            int(hex_word, 16)
+        except ValueError:
+            raise ValueError(f"Words of {v} are not all hex")
+    if len(x[0]) != 8:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[1]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[2]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[3]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[4]) != 12:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+
+
+def check_is_left_right_dot(v: str) -> None:
+    """
+    LeftRightDot format: Lowercase alphanumeric words separated by periods,
+    most significant word (on the left) starting with an alphabet character.
+
+    Raises:
+        ValueError: if not LeftRightDot format
+    """
+    from typing import List
+
+    try:
+        x: List[str] = v.split(".")
+    except:
+        raise ValueError(f"Failed to seperate {v} into words with split'.'")
+    first_word = x[0]
+    first_char = first_word[0]
+    if not first_char.isalpha():
+        raise ValueError(f"Most significant word of {v} must start with alphabet char.")
+    for word in x:
+        if not word.isalnum():
+            raise ValueError(f"words of {v} split by by '.' must be alphanumeric.")
+    if not v.islower():
+        raise ValueError(f"All characters of {v} must be lowercase.")
+
+
+def check_is_algo_address_string_format(v: str) -> None:
+    """
+    AlgoAddressStringFormat format: The public key of a private/public Ed25519
+    key pair, transformed into an  Algorand address, by adding a 4-byte checksum
+    to the end of the public key and then encoding in base32.
+
+    Raises:
+        ValueError: if not AlgoAddressStringFormat format
+    """
+    import algosdk
+
+    at = algosdk.abi.AddressType()
+    try:
+        result = at.decode(at.encode(v))
+    except Exception as e:
+        raise ValueError(f"Not AlgoAddressStringFormat: {e}")
+
+
 class GNodeGt(BaseModel):
-    """Class for sending and receiving lifecycle updates about GNodes.
+    """Used to send and receive updates about GNodes.
 
     GNodes are the building blocks of Gridworks. They have slowly-changing state
     that must be kept in sync across a distributed system. Therefore, they require
     a global registry to act as Single Source of Truth (SSoT). This class is used for
     that SSoT to share information with actors about their GNodes, and the GNodes
     that they will observe and communicate with.
-
-    `More info <https://gridworks.readthedocs.io/en/latest/g-node.html>`_
+    [More info](https://gridworks.readthedocs.io/en/latest/g-node.html).
     """
 
-    GNodeId: str  #
-    Alias: str  #
-    Status: GNodeStatus  #
-    Role: GNodeRole  #
-    GNodeRegistryAddr: str  #
-    PrevAlias: Optional[str] = None
-    GpsPointId: Optional[str] = None
-    OwnershipDeedNftId: Optional[int] = None
-    OwnershipDeedValidatorAddr: Optional[str] = None
-    OwnerAddr: Optional[str] = None
-    DaemonAddr: Optional[str] = None
-    TradingRightsNftId: Optional[int] = None
-    ComponentId: Optional[str] = None
-    DisplayName: Optional[str] = None
+    GNodeId: str = Field(
+        title="Immutable identifier for GNode",
+    )
+    Alias: str = Field(
+        title="Structured mutable identifier for GNode",
+        description="The GNode Aliases are used for organizing how actors in Gridworks communicate. Together, they also encode the known topology of the electric grid. [More info](https://gridworks.readthedocs.io/en/latest/g-node-alias.html).",
+    )
+    Status: GNodeStatus = Field(
+        title="Lifecycle indicator",
+    )
+    Role: GNodeRole = Field(
+        title="Role within Gridworks",
+        description=" [More info](https://gridworks.readthedocs.io/en/latest/g-node-role.html).",
+    )
+    GNodeRegistryAddr: str = Field(
+        title="Algorand address for GNodeRegistry",
+        description="For actors in a Gridworks world, the GNodeRegistry is the Single Source of Truth for existence and updates to GNodes. [More info](https://gridworks.readthedocs.io/en/latest/g-node-registry.html).",
+    )
+    PrevAlias: Optional[str] = Field(
+        title="Previous GNodeAlias",
+        description="As the topology of the grid updates, GNodeAliases will change to reflect that. This may happen a handful of times over the life of a GNode.",
+        default=None,
+    )
+    GpsPointId: Optional[str] = Field(
+        title="Lat/lon of GNode",
+        description="Some GNodes, in particular those acting as avatars for physical devices that are part of or are attached to the electric grid, have physical locations. These locations are used to help validate the grid topology.",
+        default=None,
+    )
+    ComponentId: Optional[str] = Field(
+        title="Unique identifier for GNode's Component",
+        description="Used if a GNode is an avatar for a physical device. The serial number of a device is different from its make/model. The ComponentId captures the specific instance of the device.",
+        default=None,
+    )
+    DisplayName: Optional[str] = Field(
+        title="Display Name",
+        default=None,
+    )
+    OwnershipDeedNftId: Optional[int] = Field(
+        title="Algorand Id of ASA Deed",
+        description="The Id of the TaDeed Algorand Standard Asset if the GNode is a TerminalAsset. [More info](https://gridworks.readthedocs.io/en/latest/ta-deed.html).",
+        default=None,
+    )
+    OwnerAddr: Optional[str] = Field(
+        title="Algorand address of the deed owner",
+        default=None,
+    )
+    OwnershipDeedValidatorAddr: Optional[str] = Field(
+        title="Algorand address of Validator",
+        description="Deeds are issued by the GNodeFactory, in partnership with third party Validators. [More info](https://gridworks.readthedocs.io/en/latest/ta-validator.html).",
+        default=None,
+    )
+    DaemonAddr: Optional[str] = Field(
+        title="Algorand address of the daemon app",
+        description="Some GNodes have Daemon applications associated to them to handle blockchain operations.",
+        default=None,
+    )
+    TradingRightsNftId: Optional[int] = Field(
+        title="Algorand Id of ASA TradingRights",
+        description="The Id of the TradingRights Algorand Standard Asset.",
+        default=None,
+    )
     TypeName: Literal["g.node.gt"] = "g.node.gt"
     Version: str = "000"
 
-    _validator_g_node_id = predicate_validator(
-        "GNodeId", property_format.is_uuid_canonical_textual
-    )
+    @validator("GNodeId")
+    def _check_g_node_id(cls, v: str) -> str:
+        try:
+            check_is_uuid_canonical_textual(v)
+        except ValueError as e:
+            raise ValueError(
+                f"GNodeId failed UuidCanonicalTextual format validation: {e}"
+            )
+        return v
 
-    _validator_alias = predicate_validator("Alias", property_format.is_left_right_dot)
+    @validator("Alias")
+    def _check_alias(cls, v: str) -> str:
+        try:
+            check_is_left_right_dot(v)
+        except ValueError as e:
+            raise ValueError(f"Alias failed LeftRightDot format validation: {e}")
+        return v
 
     @validator("Status")
-    def _validator_status(cls, v: GNodeStatus) -> GNodeStatus:
+    def _check_status(cls, v: GNodeStatus) -> GNodeStatus:
         return as_enum(v, GNodeStatus, GNodeStatus.Unknown)
 
     @validator("Role")
-    def _validator_role(cls, v: GNodeRole) -> GNodeRole:
+    def _check_role(cls, v: GNodeRole) -> GNodeRole:
         return as_enum(v, GNodeRole, GNodeRole.GNode)
 
-    _validator_g_node_registry_addr = predicate_validator(
-        "GNodeRegistryAddr", property_format.is_algo_address_string_format
-    )
+    @validator("GNodeRegistryAddr")
+    def _check_g_node_registry_addr(cls, v: str) -> str:
+        try:
+            check_is_algo_address_string_format(v)
+        except ValueError as e:
+            raise ValueError(
+                f"GNodeRegistryAddr failed AlgoAddressStringFormat format validation: {e}"
+            )
+        return v
 
     @validator("PrevAlias")
-    def _validator_prev_alias(cls, v: Optional[str]) -> Optional[str]:
+    def _check_prev_alias(cls, v: Optional[str]) -> Optional[str]:
         if v is None:
             return v
-        if not property_format.is_left_right_dot(v):
-            raise ValueError(f"PrevAlias {v} must have LeftRightDot")
+        try:
+            check_is_left_right_dot(v)
+        except ValueError as e:
+            raise ValueError(f"PrevAlias failed LeftRightDot format validation: {e}")
         return v
 
     @validator("GpsPointId")
-    def _validator_gps_point_id(cls, v: Optional[str]) -> Optional[str]:
+    def _check_gps_point_id(cls, v: Optional[str]) -> Optional[str]:
         if v is None:
             return v
-        if not property_format.is_uuid_canonical_textual(v):
-            raise ValueError(f"GpsPointId {v} must have UuidCanonicalTextual")
-        return v
-
-    @validator("OwnershipDeedNftId")
-    def _validator_ownership_deed_nft_id(cls, v: Optional[int]) -> Optional[int]:
-        if v is None:
-            return v
-        if not property_format.is_positive_integer(v):
-            raise ValueError(f"OwnershipDeedNftId {v} must have PositiveInteger")
-        return v
-
-    @validator("OwnershipDeedValidatorAddr")
-    def _validator_ownership_deed_validator_addr(
-        cls, v: Optional[str]
-    ) -> Optional[str]:
-        if v is None:
-            return v
-        if not property_format.is_algo_address_string_format(v):
+        try:
+            check_is_uuid_canonical_textual(v)
+        except ValueError as e:
             raise ValueError(
-                f"OwnershipDeedValidatorAddr {v} must have AlgoAddressStringFormat"
+                f"GpsPointId failed UuidCanonicalTextual format validation: {e}"
+            )
+        return v
+
+    @validator("ComponentId")
+    def _check_component_id(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        try:
+            check_is_uuid_canonical_textual(v)
+        except ValueError as e:
+            raise ValueError(
+                f"ComponentId failed UuidCanonicalTextual format validation: {e}"
             )
         return v
 
     @validator("OwnerAddr")
-    def _validator_owner_addr(cls, v: Optional[str]) -> Optional[str]:
+    def _check_owner_addr(cls, v: Optional[str]) -> Optional[str]:
         if v is None:
             return v
-        if not property_format.is_algo_address_string_format(v):
-            raise ValueError(f"OwnerAddr {v} must have AlgoAddressStringFormat")
+        try:
+            check_is_algo_address_string_format(v)
+        except ValueError as e:
+            raise ValueError(
+                f"OwnerAddr failed AlgoAddressStringFormat format validation: {e}"
+            )
+        return v
+
+    @validator("OwnershipDeedValidatorAddr")
+    def _check_ownership_deed_validator_addr(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        try:
+            check_is_algo_address_string_format(v)
+        except ValueError as e:
+            raise ValueError(
+                f"OwnershipDeedValidatorAddr failed AlgoAddressStringFormat format validation: {e}"
+            )
         return v
 
     @validator("DaemonAddr")
-    def _validator_daemon_addr(cls, v: Optional[str]) -> Optional[str]:
+    def _check_daemon_addr(cls, v: Optional[str]) -> Optional[str]:
         if v is None:
             return v
-        if not property_format.is_algo_address_string_format(v):
-            raise ValueError(f"DaemonAddr {v} must have AlgoAddressStringFormat")
+        try:
+            check_is_algo_address_string_format(v)
+        except ValueError as e:
+            raise ValueError(
+                f"DaemonAddr failed AlgoAddressStringFormat format validation: {e}"
+            )
         return v
 
     def as_dict(self) -> Dict[str, Any]:
@@ -371,20 +454,20 @@ class GNodeGt(BaseModel):
             del d["PrevAlias"]
         if d["GpsPointId"] is None:
             del d["GpsPointId"]
-        if d["OwnershipDeedNftId"] is None:
-            del d["OwnershipDeedNftId"]
-        if d["OwnershipDeedValidatorAddr"] is None:
-            del d["OwnershipDeedValidatorAddr"]
-        if d["OwnerAddr"] is None:
-            del d["OwnerAddr"]
-        if d["DaemonAddr"] is None:
-            del d["DaemonAddr"]
-        if d["TradingRightsNftId"] is None:
-            del d["TradingRightsNftId"]
         if d["ComponentId"] is None:
             del d["ComponentId"]
         if d["DisplayName"] is None:
             del d["DisplayName"]
+        if d["OwnershipDeedNftId"] is None:
+            del d["OwnershipDeedNftId"]
+        if d["OwnerAddr"] is None:
+            del d["OwnerAddr"]
+        if d["OwnershipDeedValidatorAddr"] is None:
+            del d["OwnershipDeedValidatorAddr"]
+        if d["DaemonAddr"] is None:
+            del d["DaemonAddr"]
+        if d["TradingRightsNftId"] is None:
+            del d["TradingRightsNftId"]
         return d
 
     def as_type(self) -> str:
@@ -404,13 +487,13 @@ class GNodeGt_Maker:
         g_node_registry_addr: str,
         prev_alias: Optional[str],
         gps_point_id: Optional[str],
-        ownership_deed_nft_id: Optional[int],
-        ownership_deed_validator_addr: Optional[str],
-        owner_addr: Optional[str],
-        daemon_addr: Optional[str],
-        trading_rights_nft_id: Optional[int],
         component_id: Optional[str],
         display_name: Optional[str],
+        ownership_deed_nft_id: Optional[int],
+        owner_addr: Optional[str],
+        ownership_deed_validator_addr: Optional[str],
+        daemon_addr: Optional[str],
+        trading_rights_nft_id: Optional[int],
     ):
         self.tuple = GNodeGt(
             GNodeId=g_node_id,
@@ -420,22 +503,28 @@ class GNodeGt_Maker:
             GNodeRegistryAddr=g_node_registry_addr,
             PrevAlias=prev_alias,
             GpsPointId=gps_point_id,
-            OwnershipDeedNftId=ownership_deed_nft_id,
-            OwnershipDeedValidatorAddr=ownership_deed_validator_addr,
-            OwnerAddr=owner_addr,
-            DaemonAddr=daemon_addr,
-            TradingRightsNftId=trading_rights_nft_id,
             ComponentId=component_id,
             DisplayName=display_name,
+            OwnershipDeedNftId=ownership_deed_nft_id,
+            OwnerAddr=owner_addr,
+            OwnershipDeedValidatorAddr=ownership_deed_validator_addr,
+            DaemonAddr=daemon_addr,
+            TradingRightsNftId=trading_rights_nft_id,
             #
         )
 
     @classmethod
     def tuple_to_type(cls, tuple: GNodeGt) -> str:
+        """
+        Given a Python class object, returns the serialized JSON type object
+        """
         return tuple.as_type()
 
     @classmethod
     def type_to_tuple(cls, t: str) -> GNodeGt:
+        """
+        Given a serialized JSON type object, returns the Python class object
+        """
         try:
             d = json.loads(t)
         except TypeError:
@@ -469,20 +558,20 @@ class GNodeGt_Maker:
             d2["PrevAlias"] = None
         if "GpsPointId" not in d2.keys():
             d2["GpsPointId"] = None
-        if "OwnershipDeedNftId" not in d2.keys():
-            d2["OwnershipDeedNftId"] = None
-        if "OwnershipDeedValidatorAddr" not in d2.keys():
-            d2["OwnershipDeedValidatorAddr"] = None
-        if "OwnerAddr" not in d2.keys():
-            d2["OwnerAddr"] = None
-        if "DaemonAddr" not in d2.keys():
-            d2["DaemonAddr"] = None
-        if "TradingRightsNftId" not in d2.keys():
-            d2["TradingRightsNftId"] = None
         if "ComponentId" not in d2.keys():
             d2["ComponentId"] = None
         if "DisplayName" not in d2.keys():
             d2["DisplayName"] = None
+        if "OwnershipDeedNftId" not in d2.keys():
+            d2["OwnershipDeedNftId"] = None
+        if "OwnerAddr" not in d2.keys():
+            d2["OwnerAddr"] = None
+        if "OwnershipDeedValidatorAddr" not in d2.keys():
+            d2["OwnershipDeedValidatorAddr"] = None
+        if "DaemonAddr" not in d2.keys():
+            d2["DaemonAddr"] = None
+        if "TradingRightsNftId" not in d2.keys():
+            d2["TradingRightsNftId"] = None
         if "TypeName" not in d2.keys():
             raise SchemaError(f"dict {d2} missing TypeName")
 
@@ -494,13 +583,13 @@ class GNodeGt_Maker:
             GNodeRegistryAddr=d2["GNodeRegistryAddr"],
             PrevAlias=d2["PrevAlias"],
             GpsPointId=d2["GpsPointId"],
-            OwnershipDeedNftId=d2["OwnershipDeedNftId"],
-            OwnershipDeedValidatorAddr=d2["OwnershipDeedValidatorAddr"],
-            OwnerAddr=d2["OwnerAddr"],
-            DaemonAddr=d2["DaemonAddr"],
-            TradingRightsNftId=d2["TradingRightsNftId"],
             ComponentId=d2["ComponentId"],
             DisplayName=d2["DisplayName"],
+            OwnershipDeedNftId=d2["OwnershipDeedNftId"],
+            OwnerAddr=d2["OwnerAddr"],
+            OwnershipDeedValidatorAddr=d2["OwnershipDeedValidatorAddr"],
+            DaemonAddr=d2["DaemonAddr"],
+            TradingRightsNftId=d2["TradingRightsNftId"],
             TypeName=d2["TypeName"],
             Version="000",
         )
@@ -518,13 +607,13 @@ class GNodeGt_Maker:
                 g_node_registry_addr=t.GNodeRegistryAddr,
                 prev_alias=t.PrevAlias,
                 gps_point_id=t.GpsPointId,
-                ownership_deed_nft_id=t.OwnershipDeedNftId,
-                ownership_deed_validator_addr=t.OwnershipDeedValidatorAddr,
-                owner_addr=t.OwnerAddr,
-                daemon_addr=t.DaemonAddr,
-                trading_rights_nft_id=t.TradingRightsNftId,
                 component_id=t.ComponentId,
                 display_name=t.DisplayName,
+                ownership_deed_nft_id=t.OwnershipDeedNftId,
+                owner_addr=t.OwnerAddr,
+                ownership_deed_validator_addr=t.OwnershipDeedValidatorAddr,
+                daemon_addr=t.DaemonAddr,
+                trading_rights_nft_id=t.TradingRightsNftId,
             )
 
         return dc
@@ -539,13 +628,13 @@ class GNodeGt_Maker:
             g_node_registry_addr=dc.g_node_registry_addr,
             prev_alias=dc.prev_alias,
             gps_point_id=dc.gps_point_id,
-            ownership_deed_nft_id=dc.ownership_deed_nft_id,
-            ownership_deed_validator_addr=dc.ownership_deed_validator_addr,
-            owner_addr=dc.owner_addr,
-            daemon_addr=dc.daemon_addr,
-            trading_rights_nft_id=dc.trading_rights_nft_id,
             component_id=dc.component_id,
             display_name=dc.display_name,
+            ownership_deed_nft_id=dc.ownership_deed_nft_id,
+            owner_addr=dc.owner_addr,
+            ownership_deed_validator_addr=dc.ownership_deed_validator_addr,
+            daemon_addr=dc.daemon_addr,
+            trading_rights_nft_id=dc.trading_rights_nft_id,
         ).tuple
         return t
 

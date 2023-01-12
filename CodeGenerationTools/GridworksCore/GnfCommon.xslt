@@ -112,6 +112,17 @@
     </xsl:if>
 </xsl:template>
 
+<xsl:template name="gwapi-type">
+    <xsl:param name="gw-type" select="String"/>
+    <xsl:if test="$gw-type='String'"><xsl:text>string</xsl:text></xsl:if>
+    <xsl:if test="$gw-type='Boolean'"><xsl:text>boolean</xsl:text></xsl:if>
+    <xsl:if test="$gw-type='Number'"><xsl:text>number</xsl:text></xsl:if>
+    <xsl:if test="$gw-type='Integer'"><xsl:text>integer</xsl:text></xsl:if>
+    <xsl:if test="not ($gw-type='String') and not ($gw-type='Boolean') and not ($gw-type='Number') and not ($gw-type='Integer')">
+        <xsl:value-of select="$gw-type"/>
+    </xsl:if>
+</xsl:template>
+
 <xsl:template name="nt-case">
     <xsl:param name="mp-schema-text" select="''"></xsl:param>
     <xsl:variable name="as-class-name">

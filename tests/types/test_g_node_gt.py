@@ -19,13 +19,13 @@ def test_g_node_gt_generated() -> None:
         "GNodeRegistryAddr": "MONSDN5MXG4VMIOHJNCJJBVASG7HEZQSCEIKJAPEPVI5ZJUMQGXQKSOAYU",
         "PrevAlias": "d1",
         "GpsPointId": "50f3f6e8-5937-47c2-8d05-06525ef6467d",
-        "OwnershipDeedNftId": 5,
-        "OwnershipDeedValidatorAddr": "RNMHG32VTIHTC7W3LZOEPTDGREL5IQGK46HKD3KBLZHYQUCAKLMT4G5ALI",
-        "OwnerAddr": "7QQT4GN3ZPAQEFCNWF5BMF7NULVK3CWICZVT4GM3BQRISD52YEDLWJ4MII",
-        "DaemonAddr": "7QQT4GN3ZPAQEFCNWF5BMF7NULVK3CWICZVT4GM3BQRISD52YEDLWJ4MII",
-        "TradingRightsNftId": 1,
         "ComponentId": "19d3dd42-14de-427f-a489-d96b404ae3c5",
         "DisplayName": "Simulated Freedom House 1",
+        "OwnershipDeedNftId": 5,
+        "OwnerAddr": "7QQT4GN3ZPAQEFCNWF5BMF7NULVK3CWICZVT4GM3BQRISD52YEDLWJ4MII",
+        "OwnershipDeedValidatorAddr": "RNMHG32VTIHTC7W3LZOEPTDGREL5IQGK46HKD3KBLZHYQUCAKLMT4G5ALI",
+        "DaemonAddr": "7QQT4GN3ZPAQEFCNWF5BMF7NULVK3CWICZVT4GM3BQRISD52YEDLWJ4MII",
+        "TradingRightsNftId": 1,
         "TypeName": "g.node.gt",
         "Version": "000",
     }
@@ -52,13 +52,13 @@ def test_g_node_gt_generated() -> None:
         g_node_registry_addr=gtuple.GNodeRegistryAddr,
         prev_alias=gtuple.PrevAlias,
         gps_point_id=gtuple.GpsPointId,
-        ownership_deed_nft_id=gtuple.OwnershipDeedNftId,
-        ownership_deed_validator_addr=gtuple.OwnershipDeedValidatorAddr,
-        owner_addr=gtuple.OwnerAddr,
-        daemon_addr=gtuple.DaemonAddr,
-        trading_rights_nft_id=gtuple.TradingRightsNftId,
         component_id=gtuple.ComponentId,
         display_name=gtuple.DisplayName,
+        ownership_deed_nft_id=gtuple.OwnershipDeedNftId,
+        owner_addr=gtuple.OwnerAddr,
+        ownership_deed_validator_addr=gtuple.OwnershipDeedValidatorAddr,
+        daemon_addr=gtuple.DaemonAddr,
+        trading_rights_nft_id=gtuple.TradingRightsNftId,
     ).tuple
     assert t == gtuple
 
@@ -119,18 +119,28 @@ def test_g_node_gt_generated() -> None:
     Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
+    if "ComponentId" in d2.keys():
+        del d2["ComponentId"]
+    Maker.dict_to_tuple(d2)
+
+    d2 = dict(d)
+    if "DisplayName" in d2.keys():
+        del d2["DisplayName"]
+    Maker.dict_to_tuple(d2)
+
+    d2 = dict(d)
     if "OwnershipDeedNftId" in d2.keys():
         del d2["OwnershipDeedNftId"]
     Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    if "OwnershipDeedValidatorAddr" in d2.keys():
-        del d2["OwnershipDeedValidatorAddr"]
+    if "OwnerAddr" in d2.keys():
+        del d2["OwnerAddr"]
     Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    if "OwnerAddr" in d2.keys():
-        del d2["OwnerAddr"]
+    if "OwnershipDeedValidatorAddr" in d2.keys():
+        del d2["OwnershipDeedValidatorAddr"]
     Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
@@ -141,16 +151,6 @@ def test_g_node_gt_generated() -> None:
     d2 = dict(d)
     if "TradingRightsNftId" in d2.keys():
         del d2["TradingRightsNftId"]
-    Maker.dict_to_tuple(d2)
-
-    d2 = dict(d)
-    if "ComponentId" in d2.keys():
-        del d2["ComponentId"]
-    Maker.dict_to_tuple(d2)
-
-    d2 = dict(d)
-    if "DisplayName" in d2.keys():
-        del d2["DisplayName"]
     Maker.dict_to_tuple(d2)
 
     ######################################
@@ -196,6 +196,10 @@ def test_g_node_gt_generated() -> None:
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d, GpsPointId="d4be12d5-33ba-4f1f-b9e5")
+    with pytest.raises(ValidationError):
+        Maker.dict_to_tuple(d2)
+
+    d2 = dict(d, ComponentId="d4be12d5-33ba-4f1f-b9e5")
     with pytest.raises(ValidationError):
         Maker.dict_to_tuple(d2)
 

@@ -9,15 +9,14 @@ from typing import Optional
 
 from fastapi_utils.enums import StrEnum
 from pydantic import BaseModel
+from pydantic import Field
 from pydantic import validator
 
-import gridworks.property_format as property_format
 from gridworks.data_classes.g_node_instance import GNodeInstance
 from gridworks.enums import GniStatus
 from gridworks.enums import StrategyName
 from gridworks.errors import SchemaError
 from gridworks.message import as_enum
-from gridworks.property_format import predicate_validator
 from gridworks.types.g_node_gt import GNodeGt
 from gridworks.types.g_node_gt import GNodeGt_Maker
 
@@ -154,44 +153,157 @@ class StrategyNameMap:
     }
 
 
+def check_is_reasonable_unix_time_s(v: int) -> None:
+    """
+    ReasonableUnixTimeS format: time in unix seconds between Jan 1 2000 and Jan 1 3000
+
+    Raises:
+        ValueError: if not ReasonableUnixTimeS format
+    """
+    import pendulum
+
+    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp > v:  # type: ignore[attr-defined]
+        raise ValueError(f"{v} must be after Jan 1 2000")
+    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp < v:  # type: ignore[attr-defined]
+        raise ValueError(f"{v} must be before Jan 1 3000")
+
+
+def check_is_uuid_canonical_textual(v: str) -> None:
+    """
+    UuidCanonicalTextual format:  A string of hex words separated by hyphens
+    of length 8-4-4-4-12.
+
+    Raises:
+        ValueError: if not UuidCanonicalTextual format
+    """
+    try:
+        x = v.split("-")
+    except AttributeError as e:
+        raise ValueError(f"Failed to split on -: {e}")
+    if len(x) != 5:
+        raise ValueError(f"{v} split by '-' did not have 5 words")
+    for hex_word in x:
+        try:
+            int(hex_word, 16)
+        except ValueError:
+            raise ValueError(f"Words of {v} are not all hex")
+    if len(x[0]) != 8:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[1]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[2]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[3]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[4]) != 12:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+
+
+def check_is_algo_address_string_format(v: str) -> None:
+    """
+    AlgoAddressStringFormat format: The public key of a private/public Ed25519
+    key pair, transformed into an  Algorand address, by adding a 4-byte checksum
+    to the end of the public key and then encoding in base32.
+
+    Raises:
+        ValueError: if not AlgoAddressStringFormat format
+    """
+    import algosdk
+
+    at = algosdk.abi.AddressType()
+    try:
+        result = at.decode(at.encode(v))
+    except Exception as e:
+        raise ValueError(f"Not AlgoAddressStringFormat: {e}")
+
+
 class GNodeInstanceGt(BaseModel):
-    GNodeInstanceId: str  #
-    GNode: GNodeGt  #
-    Strategy: StrategyName  #
-    Status: GniStatus  #
-    SupervisorContainerId: str  #
-    StartTimeUnixS: int  #
-    EndTimeUnixS: int  #
-    AlgoAddress: Optional[str] = None
+    """Used to send and receive updates about GNodeInstances.
+
+    One of the layers of abstraction connecting a GNode with a running app in
+    a Docker container.
+
+    [More info](https://gridworks.readthedocs.io/en/latest/g-node-instance.html).
+    """
+
+    GNodeInstanceId: str = Field(
+        title="Immutable identifier for GNodeInstance (Gni)",
+    )
+    GNode: GNodeGt = Field(
+        title="The GNode represented by the Gni",
+    )
+    Strategy: StrategyName = Field(
+        title="Used to determine the code running in a GNode actor application",
+    )
+    Status: GniStatus = Field(
+        title="Lifecycle Status for Gni",
+    )
+    SupervisorContainerId: str = Field(
+        title="The Id of the docker container where the Gni runs",
+    )
+    StartTimeUnixS: int = Field(
+        title="When the gni starts representing the GNode",
+        description="Specifically, when the Status changes from Pending to Active. Note that this is time in the GNode's World, which may not be real time if it is a simulation.",
+    )
+    EndTimeUnixS: int = Field(
+        title="When the gni stops representing the GNode",
+        description="Specifically, when the Status changes from Active to Done.",
+    )
+    AlgoAddress: Optional[str] = Field(
+        title="Algorand address for Gni",
+        default=None,
+    )
     TypeName: Literal["g.node.instance.gt"] = "g.node.instance.gt"
     Version: str = "000"
 
-    _validator_g_node_instance_id = predicate_validator(
-        "GNodeInstanceId", property_format.is_uuid_canonical_textual
-    )
+    @validator("GNodeInstanceId")
+    def _check_g_node_instance_id(cls, v: str) -> str:
+        try:
+            check_is_uuid_canonical_textual(v)
+        except ValueError as e:
+            raise ValueError(
+                f"GNodeInstanceId failed UuidCanonicalTextual format validation: {e}"
+            )
+        return v
 
     @validator("Strategy")
-    def _validator_strategy(cls, v: StrategyName) -> StrategyName:
+    def _check_strategy(cls, v: StrategyName) -> StrategyName:
         return as_enum(v, StrategyName, StrategyName.NoActor)
 
     @validator("Status")
-    def _validator_status(cls, v: GniStatus) -> GniStatus:
+    def _check_status(cls, v: GniStatus) -> GniStatus:
         return as_enum(v, GniStatus, GniStatus.Unknown)
 
-    _validator_supervisor_container_id = predicate_validator(
-        "SupervisorContainerId", property_format.is_uuid_canonical_textual
-    )
+    @validator("SupervisorContainerId")
+    def _check_supervisor_container_id(cls, v: str) -> str:
+        try:
+            check_is_uuid_canonical_textual(v)
+        except ValueError as e:
+            raise ValueError(
+                f"SupervisorContainerId failed UuidCanonicalTextual format validation: {e}"
+            )
+        return v
 
-    _validator_start_time_unix_s = predicate_validator(
-        "StartTimeUnixS", property_format.is_reasonable_unix_time_s
-    )
+    @validator("StartTimeUnixS")
+    def _check_start_time_unix_s(cls, v: int) -> int:
+        try:
+            check_is_reasonable_unix_time_s(v)
+        except ValueError as e:
+            raise ValueError(
+                f"StartTimeUnixS failed ReasonableUnixTimeS format validation: {e}"
+            )
+        return v
 
     @validator("AlgoAddress")
-    def _validator_algo_address(cls, v: Optional[str]) -> Optional[str]:
+    def _check_algo_address(cls, v: Optional[str]) -> Optional[str]:
         if v is None:
             return v
-        if not property_format.is_algo_address_string_format(v):
-            raise ValueError(f"AlgoAddress {v} must have AlgoAddressStringFormat")
+        try:
+            check_is_algo_address_string_format(v)
+        except ValueError as e:
+            raise ValueError(
+                f"AlgoAddress failed AlgoAddressStringFormat format validation: {e}"
+            )
         return v
 
     def as_dict(self) -> Dict[str, Any]:
@@ -240,10 +352,16 @@ class GNodeInstanceGt_Maker:
 
     @classmethod
     def tuple_to_type(cls, tuple: GNodeInstanceGt) -> str:
+        """
+        Given a Python class object, returns the serialized JSON type object
+        """
         return tuple.as_type()
 
     @classmethod
     def type_to_tuple(cls, t: str) -> GNodeInstanceGt:
+        """
+        Given a serialized JSON type object, returns the Python class object
+        """
         try:
             d = json.loads(t)
         except TypeError:
@@ -306,7 +424,7 @@ class GNodeInstanceGt_Maker:
         else:
             dc = GNodeInstance(
                 g_node_instance_id=t.GNodeInstanceId,
-                g_node=t.GNode,
+                g_node=GNodeGt_Maker.tuple_to_dc(t.GNode),
                 strategy=t.Strategy,
                 status=t.Status,
                 supervisor_container_id=t.SupervisorContainerId,
@@ -321,7 +439,7 @@ class GNodeInstanceGt_Maker:
     def dc_to_tuple(cls, dc: GNodeInstance) -> GNodeInstanceGt:
         t = GNodeInstanceGt_Maker(
             g_node_instance_id=dc.g_node_instance_id,
-            g_node=dc.g_node,
+            g_node=GNodeGt_Maker.dc_to_tuple(dc.g_node),
             strategy=dc.strategy,
             status=dc.status,
             supervisor_container_id=dc.supervisor_container_id,

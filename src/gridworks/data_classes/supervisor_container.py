@@ -29,12 +29,12 @@ class SupervisorContainer:
         self,
         supervisor_container_id: str,
         status: SupervisorContainerStatus,
-        world_instance_alias: str,
+        world_instance_name: str,
         supervisor_g_node_instance_id: str,
         supervisor_g_node_alias: str,
     ):
         self.supervisor_container_id = supervisor_container_id
         self.status = status
-        self.world_instance_alias = world_instance_alias
+        self.world_instance_name = world_instance_name
         self.supervisor_g_node_instance_id = supervisor_g_node_instance_id
         self.supervisor_g_node_alias = supervisor_g_node_alias

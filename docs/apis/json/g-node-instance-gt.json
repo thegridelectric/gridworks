@@ -1,0 +1,153 @@
+{
+  "gwapi": "001",
+  "type_name": "g.node.instance.gt",
+  "version": "000",
+  "owner": "gridworks@gridworks-consulting.com",
+  "description": "Used to send and receive updates about GNodeInstances. One of the layers of abstraction connecting a GNode with a running app in a Docker container.",
+  "url": "https://gridworks.readthedocs.io/en/latest/g-node-instance.html",
+  "formats": {
+    "ReasonableUnixTimeS": {
+      "type": "string",
+      "description": "Integer reflecting unix time seconds between 1970 and 3000",
+      "example": ""
+    },
+    "UuidCanonicalTextual": {
+      "type": "string",
+      "description": "A string of hex words separated by hyphens of length 8-4-4-4-12.",
+      "example": "652ba6b0-c3bf-4f06-8a80-6b9832d60a25"
+    },
+    "AlgoAddressStringFormat": {
+      "type": "string",
+      "description": "String of length 32, characters are all base32 digits.",
+      "example": "RNMHG32VTIHTC7W3LZOEPTDGREL5IQGK46HKD3KBLZHYQUCAKLMT4G5ALI"
+    }
+  },
+  "enums": {
+    "GniStatus000": {
+      "type": "string",
+      "name": "gni.status.000",
+      "description": "Enum for managing GNodeInstance lifecycle",
+      "url": "https://gridworks.readthedocs.io/en/latest/g-node-instance.html",
+      "oneOf": [
+        {
+          "const": "00000000",
+          "title": "Unknown",
+          "description": "Default Value"
+        },
+        {
+          "const": "7890ab0a",
+          "title": "Pending",
+          "description": "Has been created by the World, but has not yet finished provisioning"
+        },
+        {
+          "const": "69241259",
+          "title": "Active",
+          "description": "Active in its GridWorks world. If the GNodeInstance has an actor, that actor is communicating"
+        },
+        {
+          "const": "8222421f",
+          "title": "Done",
+          "description": "No longer represents the GNode."
+        }
+      ]
+    },
+    "StrategyName000": {
+      "type": "string",
+      "name": "strategy.name.000",
+      "description": "Used to assign code to run a particular GNodeInstance",
+      "oneOf": [
+        {
+          "const": "00000000",
+          "title": "NoActor",
+          "description": "Assigned to GNodes that do not have actors"
+        },
+        {
+          "const": "642c83d3",
+          "title": "WorldA",
+          "description": "Basic GridWorks world strategy"
+        },
+        {
+          "const": "4bb2cf7e",
+          "title": "SupervisorA",
+          "description": "Supervisor A Strategy, in [gridworks-atn package](https://pypi.org/project/gridworks-atn/)"
+        },
+        {
+          "const": "f5961401",
+          "title": "AtnHeatPumpWithBoostStore",
+          "description": "GridWorks strategy for an AtomicTNode representing a type of heat pump storage heating system"
+        },
+        {
+          "const": "73fbe6ab",
+          "title": "TcGlobalA",
+          "description": "Basic GridWorks TimeCoordinator strategy, in [gridworks-timecoordinator repo](https://github.com/thegridelectric/gridworks-timecoordinator)"
+        },
+        {
+          "const": "5e18a52e",
+          "title": "MarketMakerA",
+          "description": "Simple GridWorks MarketMaker strategy, in [gridworks-marketmaker repo](https://github.com/thegridelectric/gridworks-marketmaker)"
+        }
+      ]
+    }
+  },
+  "properties": {
+    "GNodeInstanceId": {
+      "type": "string",
+      "format": "UuidCanonicalTextual",
+      "title": "Immutable identifier for GNodeInstance (Gni)",
+      "required": true
+    },
+    "GNode": {
+      "type": "g.node.gt.000",
+      "title": "The GNode represented by the Gni",
+      "required": true
+    },
+    "Strategy": {
+      "type": "string",
+      "format": "StrategyName000",
+      "title": "Used to determine the code running in a GNode actor application",
+      "required": true
+    },
+    "Status": {
+      "type": "string",
+      "format": "GniStatus000",
+      "title": "Lifecycle Status for Gni",
+      "required": true
+    },
+    "SupervisorContainerId": {
+      "type": "string",
+      "format": "UuidCanonicalTextual",
+      "title": "The Id of the docker container where the Gni runs",
+      "required": true
+    },
+    "StartTimeUnixS": {
+      "type": "integer",
+      "format": "ReasonableUnixTimeS",
+      "title": "When the gni starts representing the GNode",
+      "description": "Specifically, when the Status changes from Pending to Active. Note that this is time in the GNode's World, which may not be real time if it is a simulation.",
+      "required": true
+    },
+    "EndTimeUnixS": {
+      "type": "integer",
+      "title": "When the gni stops representing the GNode",
+      "description": "Specifically, when the Status changes from Active to Done.",
+      "required": true
+    },
+    "AlgoAddress": {
+      "type": "string",
+      "format": "AlgoAddressStringFormat",
+      "title": "Algorand address for Gni",
+      "required": false
+    },
+    "TypeName": {
+      "type": "string",
+      "value": "g.node.instance.gt.000",
+      "title": "The type name"
+    },
+    "Version": {
+      "type": "string",
+      "title": "The type version",
+      "default": "000",
+      "required": true
+    }
+  }
+}

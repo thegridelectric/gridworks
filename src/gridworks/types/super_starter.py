@@ -6,9 +6,9 @@ from typing import List
 from typing import Literal
 
 from pydantic import BaseModel
+from pydantic import Field
 from pydantic import validator
 
-import gridworks.property_format as property_format
 from gridworks.errors import SchemaError
 from gridworks.types.g_node_instance_gt import GNodeInstanceGt
 from gridworks.types.g_node_instance_gt import GNodeInstanceGt_Maker
@@ -16,17 +16,51 @@ from gridworks.types.supervisor_container_gt import SupervisorContainerGt
 from gridworks.types.supervisor_container_gt import SupervisorContainerGt_Maker
 
 
+def check_is_left_right_dot(v: str) -> None:
+    """
+    LeftRightDot format: Lowercase alphanumeric words separated by periods,
+    most significant word (on the left) starting with an alphabet character.
+
+    Raises:
+        ValueError: if not LeftRightDot format
+    """
+    from typing import List
+
+    try:
+        x: List[str] = v.split(".")
+    except:
+        raise ValueError(f"Failed to seperate {v} into words with split'.'")
+    first_word = x[0]
+    first_char = first_word[0]
+    if not first_char.isalpha():
+        raise ValueError(f"Most significant word of {v} must start with alphabet char.")
+    for word in x:
+        if not word.isalnum():
+            raise ValueError(f"words of {v} split by by '.' must be alphanumeric.")
+    if not v.islower():
+        raise ValueError(f"All characters of {v} must be lowercase.")
+
+
 class SuperStarter(BaseModel):
-    SupervisorContainer: SupervisorContainerGt  #
-    GniList: List[GNodeInstanceGt]
-    #
-    AliasWithKeyList: List[str]  #
-    KeyList: List[str]  #
+    """Used by world to seed a docker container with data needed to spawn and superviser GNodeInstances"""
+
+    SupervisorContainer: SupervisorContainerGt = Field(
+        title="Key data about the docker container",
+    )
+    GniList: List[GNodeInstanceGt] = Field(
+        title="List of GNodeInstances (Gnis) run in the container",
+    )
+    AliasWithKeyList: List[str] = Field(
+        title="Aliases of Gnis that own Algorand secret keys",
+    )
+    KeyList: List[str] = Field(
+        title="Algorand secret keys owned by Gnis",
+    )
     TypeName: Literal["super.starter"] = "super.starter"
     Version: str = "000"
 
     @validator("GniList")
-    def _validator_gni_list(cls, v: List) -> List:
+    def _check_gni_list(cls, v: List) -> List:
         for elt in v:
             if not isinstance(elt, GNodeInstanceGt):
                 raise ValueError(
@@ -35,11 +69,13 @@ class SuperStarter(BaseModel):
         return v
 
     @validator("AliasWithKeyList")
-    def _validator_alias_with_key_list(cls, v: List) -> List:
+    def _check_alias_with_key_list(cls, v: List) -> List:
         for elt in v:
-            if not property_format.is_left_right_dot(elt):
+            try:
+                check_is_left_right_dot(elt)
+            except ValueError as e:
                 raise ValueError(
-                    f"failure of predicate is_left_right_dot() on elt {elt} of AliasWithKeyList"
+                    f"AliasWithKeyList element {elt} failed LeftRightDot format validation: {e}"
                 )
         return v
 
@@ -79,10 +115,16 @@ class SuperStarter_Maker:
 
     @classmethod
     def tuple_to_type(cls, tuple: SuperStarter) -> str:
+        """
+        Given a Python class object, returns the serialized JSON type object
+        """
         return tuple.as_type()
 
     @classmethod
     def type_to_tuple(cls, t: str) -> SuperStarter:
+        """
+        Given a serialized JSON type object, returns the Python class object
+        """
         try:
             d = json.loads(t)
         except TypeError:

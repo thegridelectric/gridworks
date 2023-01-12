@@ -1,0 +1,69 @@
+{
+  "gwapi": "001",
+  "type_name": "tavalidatorcert.algo.transfer",
+  "version": "000",
+  "owner": "gridworks@gridworks-consulting.com",
+  "description": "Used for Step 2 of TaValidator certification. Meant to be sent from a pending TaValidator to the GNodeFactory (Gnf), so the Gnf will transfer its ValidatorCert to the pending TaValidator's Algorand address.",
+  "url": "https://gridworks.readthedocs.io/en/latest/ta-validator.html",
+  "formats": {
+    "AlgoAddressStringFormat": {
+      "type": "string",
+      "description": "String of length 32, characters are all base32 digits.",
+      "example": "RNMHG32VTIHTC7W3LZOEPTDGREL5IQGK46HKD3KBLZHYQUCAKLMT4G5ALI"
+    },
+    "AlgoMsgPackEncoded": {
+      "type": "string",
+      "description": "Error is not thrown with algosdk.encoding.future_msg_decode(candidate)",
+      "example": "gqRtc2lng6ZzdWJzaWeSgaJwa8Qgi1hzb1WaDzF+215cR8xmiRfUQMrnjqHtQV5PiFBAUtmConBrxCD8IT4Zu8vBAhRNsXoWF+2i6q2KyBZrPhmbDCKJD7rBBqFzxEAEp8UcTEJSyTmgw96/mCnNHKfhkdYMCD5jxWejHRmPCrR8U9z/FBVsoCGbjDTTk2L1k7n/eVlumEk/M1KSe48Jo3RocgKhdgGjdHhuiaRhcGFyhaJhbq9Nb2xseSBNZXRlcm1haWSiYXXZKWh0dHA6Ly9sb2NhbGhvc3Q6NTAwMC9tb2xseWNvL3doby13ZS1hcmUvoW3EIItYc29Vmg8xftteXEfMZokX1EDK546h7UFeT4hQQFLZoXQBonVupVZMRFRSo2ZlZc0D6KJmdlGjZ2VuqnNhbmRuZXQtdjGiZ2jEIC/iF+bI4LU6UTgG4SIxyD10PS0/vNAEa93OC5SVRFn6omx2zQQ5pG5vdGXEK01vbGx5IEluYyBUZWxlbWV0cnkgU3VydmV5b3JzIGFuZCBQdXJ2ZXlvcnOjc25kxCDHZxhdCT2TxxxZlZ/H5mIku1s4ulDm3EmU6dYKXCWEB6R0eXBlpGFjZmc="
+    }
+  },
+  "properties": {
+    "ValidatorAddr": {
+      "type": "string",
+      "format": "AlgoAddressStringFormat",
+      "title": "The address of the pending TaValidator",
+      "required": true
+    },
+    "HalfSignedCertTransferMtx": {
+      "type": "string",
+      "format": "AlgoMsgPackEncoded",
+      "title": "Algo multi-transaction for certificate transfer, with 1 of 2 signatures",
+      "required": true
+    },
+    "TypeName": {
+      "type": "string",
+      "value": "tavalidatorcert.algo.transfer.000",
+      "title": "The type name"
+    },
+    "Version": {
+      "type": "string",
+      "title": "The type version",
+      "default": "000",
+      "required": true
+    }
+  },
+  "axioms": {
+    "Axiom1": {
+      "title": "Is correct Multisig",
+      "description": "Decoded HalfSignedCertTransferMtx must have type MultisigTransaction from the 2-sig MultiAccount [GnfAdminAddr, ValidatorAddr].",
+      "url": "https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr"
+    },
+    "Axiom2": {
+      "title": "Transfers correct certificate",
+      "description": "- The transaction must be the transfer of an Algorand Standard Asset - It must be getting transferred from its creator, which must be the 2-sig Multi [GnfAdmin, TaValidatorAddr] - It must be getting sent to the ValidatorAddr -The ASA must have: - Total = 1 - UnitName=VLDITR - GnfAdminAddr as manage - AssetName and - Url not blank. - The transfer amount must be 1",
+      "url": "https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate"
+    },
+    "Axiom3": {
+      "title": "TaValidator has opted in",
+      "description": "ValidatorAddr must be opted into the transferring ASA."
+    },
+    "Axiom4": {
+      "title": "TaValidator has sufficient Algos",
+      "description": "ValidatorAddr must have enough Algos to meet the GNodeFactory criterion."
+    },
+    "Axiom5": {
+      "title": "TaValidator has signed",
+      "description": "ValidatorAddr must have signed the mtx."
+    }
+  }
+}

@@ -6,17 +6,21 @@ Python pydantic class corresponding to  json type ```super.starter```.
     :members:
 
 **SupervisorContainer**:
-    - Description:
+    - Description: Key data about the docker container
 
 **GniList**:
-    - Description:
+    - Description: List of GNodeInstances (Gnis) run in the container
 
 **AliasWithKeyList**:
-    - Description:
+    - Description: Aliases of Gnis that own Algorand secret keys
     - Format: LeftRightDot
 
 **KeyList**:
-    - Description:
+    - Description: Algorand secret keys owned by Gnis
+
+.. autoclass:: gridworks.types.super_starter.check_is_left_right_dot
+    :members:
+
 
 .. autoclass:: gridworks.types.SuperStarter_Maker
     :members:

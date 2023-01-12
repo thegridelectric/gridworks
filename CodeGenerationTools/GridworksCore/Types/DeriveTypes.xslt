@@ -23,6 +23,7 @@
                 <xsl:variable name="schema-id" select="Type"/>
                 <xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory= 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
                 <xsl:variable name="local-alias" select="AliasRoot" />
+                <xsl:variable name="full-type-name" select="Alias"/>
                     <xsl:variable name="class-name">
                         <xsl:call-template name="nt-case">
                             <xsl:with-param name="mp-schema-text" select="$local-alias" />
@@ -73,13 +74,16 @@ from typing import Literal</xsl:text>
 from typing import Optional</xsl:text>
 </xsl:if>
 <xsl:text>
-from pydantic import BaseModel</xsl:text>
+from pydantic import BaseModel
+from pydantic import Field</xsl:text>
 <xsl:if test="count($airtable//SchemaAttributes/SchemaAttribute[Schema = $schema-id and (IsOptional='true') or (IsEnum='true' or (IsList='true' and (IsType = 'true' or (IsPrimitive='true'  and normalize-space(PrimitiveFormat) != '') )))]) > 0">
 <xsl:text>
 from pydantic import validator</xsl:text>
 </xsl:if>
-
-
+<xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[MultiPropertyAxiom=$schema-id]) > 0">
+<xsl:text>
+from pydantic import root_validator</xsl:text>
+</xsl:if>
 
 
 <xsl:if test="count($airtable//SchemaAttributes/SchemaAttribute[(Schema = $schema-id) and (IsEnum = 'true')]) > 0">
@@ -88,10 +92,7 @@ from gridworks.message import as_enum
 from enum import auto
 from fastapi_utils.enums import StrEnum</xsl:text>
 </xsl:if>
-<xsl:if test="count($airtable//SchemaAttributes/SchemaAttribute[(Schema = $schema-id) and ((normalize-space(SubTypeDataClass) != '') or (normalize-space(PrimitiveFormat) != ''))]) > 0">
-<xsl:text>
-import gridworks.property_format as property_format</xsl:text>
-</xsl:if>
+
 
 <xsl:if test="MakeDataClass='true'">
 <xsl:if test="not(IsComponent = 'true') and not(IsCac = 'true')">
@@ -105,13 +106,9 @@ from gridworks.data_classes.</xsl:text>
 </xsl:if>
 </xsl:if>
 
-<xsl:if test="count($airtable//SchemaAttributes/SchemaAttribute[(Schema = $schema-id) and (IsRequired = 'true') and (IsPrimitive='true') and not (IsList='true') and normalize-space(PrimitiveFormat) != '']) > 0">
+
 <xsl:text>
-from gridworks.property_format import predicate_validator</xsl:text>
-</xsl:if>
-<xsl:text>
-from gridworks.errors import SchemaError
-</xsl:text>
+from gridworks.errors import SchemaError</xsl:text>
 
 <xsl:for-each select="$airtable//SchemaAttributes/SchemaAttribute[(Schema = $schema-id)]">
 
@@ -167,6 +164,7 @@ from gridworks.enums import </xsl:text>
 
 
 <xsl:text>
+
 
 class </xsl:text><xsl:value-of select="$enum-name"/><xsl:text>SchemaEnum:
     enum_name: str = "</xsl:text>
@@ -295,27 +293,244 @@ class </xsl:text><xsl:value-of select="$enum-local-name"/><xsl:text>Map:
 
 </xsl:for-each>
 
+<xsl:if test="count(PropertyFormatsUsed)>0">
+<xsl:for-each select="$airtable//PropertyFormats/PropertyFormat[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$schema-id])>0)]">
+
+    <xsl:if test="Name='AlgoAddressStringFormat'">
+    <xsl:text>
+
+
+def check_is_algo_address_string_format(v: str) -> None:
+    """
+    AlgoAddressStringFormat format: The public key of a private/public Ed25519
+    key pair, transformed into an  Algorand address, by adding a 4-byte checksum
+    to the end of the public key and then encoding in base32.
+
+    Raises:
+        ValueError: if not AlgoAddressStringFormat format
+    """
+    import algosdk
+    at = algosdk.abi.AddressType()
+    try:
+        result = at.decode(at.encode(v))
+    except Exception as e:
+        raise ValueError(f"Not AlgoAddressStringFormat: {e}")</xsl:text>
+    </xsl:if>
+
+
+    <xsl:if test="Name='AlgoMsgPackEncoded'">
+    <xsl:text>
+
+
+def check_is_algo_msg_pack_encoded(v: str) -> None:
+    """
+    AlgoMSgPackEncoded format: the format of an  transaction sent to
+    the Algorand blockchain.
+
+    Raises:
+        ValueError: if not AlgoMSgPackEncoded  format
+    """
+    import algosdk
+    try:
+        algosdk.encoding.future_msgpack_decode(v)
+    except Exception as e:
+        raise ValueError(f"Not AlgoMsgPackEncoded format: {e}")</xsl:text>
+    </xsl:if>
+
+
+    <xsl:if test="Name='HexChar'">
+    <xsl:text>
+
+
+def check_is_hex_char(v: str) -> None:
+    """
+    HexChar format: single-char string in '0123456789abcdefABCDEF'
+
+    Raises:
+        ValueError: if not HexChar format
+    """
+    if not isinstance(v, str):
+        raise ValueError(f"{v} must be a hex char, but not even a string")
+    if len(v) > 1:
+        raise ValueError(f"{v} must be a hex char, but not of len 1")
+    if v not in "0123456789abcdefABCDEF":
+        raise ValueError(f"{v} must be one of '0123456789abcdefABCDEF'")</xsl:text>
+    </xsl:if>
+
+
+    <xsl:if test="Name='LeftRightDot'">
+    <xsl:text>
+
+
+def check_is_left_right_dot(v: str) -> None:
+    """
+    LeftRightDot format: Lowercase alphanumeric words separated by periods,
+    most significant word (on the left) starting with an alphabet character.
+
+    Raises:
+        ValueError: if not LeftRightDot format
+    """
+    from typing import List
+
+    try:
+        x: List[str] = v.split(".")
+    except:
+        raise ValueError(f"Failed to seperate {v} into words with split'.'")
+    first_word = x[0]
+    first_char = first_word[0]
+    if not first_char.isalpha():
+        raise ValueError(f"Most significant word of {v} must start with alphabet char.")
+    for word in x:
+        if not word.isalnum():
+            raise ValueError(f"words of {v} split by by '.' must be alphanumeric.")
+    if not v.islower():
+        raise ValueError(f"All characters of {v} must be lowercase.")</xsl:text>
+
+    </xsl:if>
+
+    <xsl:if test="Name='ReasonableUnixTimeS'">
+    <xsl:text>
+
+
+def check_is_reasonable_unix_time_s(v: int) -> None:
+    """
+    ReasonableUnixTimeS format: time in unix seconds between Jan 1 2000 and Jan 1 3000
+
+    Raises:
+        ValueError: if not ReasonableUnixTimeS format
+    """
+    import pendulum
+    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp > v:  # type: ignore[attr-defined]
+        raise ValueError(f"{v} must be after Jan 1 2000")
+    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp &lt; v:  # type: ignore[attr-defined]
+        raise ValueError(f"{v} must be before Jan 1 3000")</xsl:text>
+
+    </xsl:if>
+
+    <xsl:if test="Name='ReasonableUnixTimeMs'">
+    <xsl:text>
+
+
+def check_is_reasonable_unix_time_ms(v: str) -> None:
+    """
+    ReasonableUnixTimeMs format: time in unix milliseconds between Jan 1 2000 and Jan 1 3000
+
+    Raises:
+        ValueError: if not ReasonableUnixTimeMs format
+    """
+    import pendulum
+    if pendulum.parse('2000-01-01T00:00:00Z').int_timestamp * 1000 > v:  # type: ignore[attr-defined]
+        raise ValueError(f"{v} must be after Jan 1 2000")
+    if pendulum.parse('3000-01-01T00:00:00Z').int_timestamp * 1000 &lt; v:  # type: ignore[attr-defined]
+        raise ValueError(f"{v} must be before Jan 1 3000")</xsl:text>
+
+
+    </xsl:if>
+
+    <xsl:if test="Name='UuidCanonicalTextual'">
+    <xsl:text>
+
+
+def check_is_uuid_canonical_textual(v: str) -> None:
+    """
+    UuidCanonicalTextual format:  A string of hex words separated by hyphens
+    of length 8-4-4-4-12.
+
+    Raises:
+        ValueError: if not UuidCanonicalTextual format
+    """
+    try:
+        x = v.split("-")
+    except AttributeError as e:
+        raise ValueError(f"Failed to split on -: {e}")
+    if len(x) != 5:
+        raise ValueError(f"{v} split by '-' did not have 5 words")
+    for hex_word in x:
+        try:
+            int(hex_word, 16)
+        except ValueError:
+            raise ValueError(f"Words of {v} are not all hex")
+    if len(x[0]) != 8:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[1]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[2]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[3]) != 4:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")
+    if len(x[4]) != 12:
+        raise ValueError(f"{v} word lengths not 8-4-4-4-12")</xsl:text>
+
+
+    </xsl:if>
+
+    <xsl:if test="Name='WorldInstanceNameFormat'">
+    <xsl:text>
+
+
+def check_is_world_instance_name_format(v: str) -> None:
+    """
+    WorldInstanceName format: A single alphanumerical word starting
+    with an alphabet char (the root GNodeAlias) and an integer,
+    seperated by '__'. For example 'd1__1'
+
+    Raises:
+        ValueError: if not WorldInstanceNameFormat format
+    """
+    try:
+        words = v.split("__")
+    except:
+        raise ValueError(f"{v} is not split by '__'")
+    if len(words) != 2:
+        raise ValueError(f"{v} not 2 words separated by '__'")
+    try:
+        int(words[1])
+    except:
+        raise ValueError(f"{v} second word not an int")
+
+    root_g_node_alias = words[0]
+    first_char = root_g_node_alias[0]
+    if not first_char.isalpha():
+        raise ValueError(f"{v} first word must be alph char")
+    if not root_g_node_alias.isalnum():
+        raise ValueError(f"{v} first word must be alphanumeric")</xsl:text>
+    </xsl:if>
+
+
+</xsl:for-each>
+</xsl:if>
 <xsl:text>
 
 
 class </xsl:text>
 <xsl:value-of select="$class-name"/>
 <xsl:text>(BaseModel):
+    """</xsl:text>
+    <xsl:value-of select="Title"/>
+    <xsl:if test="(normalize-space(Description) != '')">
+    <xsl:text>.
+
+    </xsl:text>
+    <xsl:value-of select="Description"/>
+    </xsl:if>
+    <xsl:if test="(normalize-space(Url) != '')">
+    <xsl:text>
+    [More info](</xsl:text>
+        <xsl:value-of select="normalize-space(Url)"/>
+        <xsl:text>).</xsl:text>
+    </xsl:if>
+    <xsl:text>
+    """
     </xsl:text>
 <xsl:for-each select="$airtable//SchemaAttributes/SchemaAttribute[(Schema = $schema-id)]">
 <xsl:sort select="Idx" data-type="number"/>
+
 
 <xsl:if test="(IsPrimitive = 'true') and (IsRequired = 'true') and not (IsList = 'true')">
     <xsl:value-of select="Value"/><xsl:text>: </xsl:text>
     <xsl:call-template name="python-type">
         <xsl:with-param name="gw-type" select="PrimitiveType"/>
-    </xsl:call-template>
-    <xsl:if test="(normalize-space(DefaultValue) !='')">
-        <xsl:text> = </xsl:text>
-        <xsl:value-of select="DefaultValue"/>
-    </xsl:if>
-<xsl:text>  #
-    </xsl:text>
+    </xsl:call-template> <xsl:text> = </xsl:text>
 </xsl:if>
 
 
@@ -324,60 +539,30 @@ class </xsl:text>
     <xsl:call-template name="python-type">
         <xsl:with-param name="gw-type" select="PrimitiveType"/>
     </xsl:call-template>
-<xsl:text>]</xsl:text>
-    <xsl:if test="(normalize-space(DefaultValue) !='')">
-        <xsl:text> = </xsl:text>
-        <xsl:value-of select="DefaultValue"/>
-    </xsl:if>
-    <xsl:text>  #
-    </xsl:text>
+<xsl:text>] = </xsl:text>
 </xsl:if>
-
 
 <xsl:if test = "(IsEnum = 'true') and not(IsList = 'true')">
     <xsl:value-of select="Value"/><xsl:text>: </xsl:text>
     <xsl:call-template name="nt-case">
                     <xsl:with-param name="mp-schema-text" select="EnumLocalName" />
-    </xsl:call-template>
-    <xsl:if test="(normalize-space(DefaultValue) !='')">
-        <xsl:text> = </xsl:text>
-        <xsl:call-template name="nt-case">
-            <xsl:with-param name="mp-schema-text" select="EnumLocalName" />
-    </xsl:call-template><xsl:text>.</xsl:text>
-        <xsl:value-of select="DefaultValue"/>
-    </xsl:if>
-<xsl:text>  #
-    </xsl:text>
+    </xsl:call-template> <xsl:text> = </xsl:text>
 </xsl:if>
-
 
 <xsl:if test = "(IsEnum = 'true') and (IsList = 'true')">
     <xsl:value-of select="Value"/><xsl:text>: List[</xsl:text>
     <xsl:call-template name="nt-case">
                     <xsl:with-param name="mp-schema-text" select="EnumLocalName" />
     </xsl:call-template>
-<xsl:text>]
-    </xsl:text>
-    <xsl:if test="(normalize-space(DefaultValue) !='')">
-        <xsl:text> = </xsl:text>
-        <xsl:value-of select="DefaultValue"/>
-    </xsl:if>
-    <xsl:text>  #
-    </xsl:text>
+<xsl:text>] = </xsl:text>
 </xsl:if>
-
 
 <xsl:if test="(IsType = 'true') and  not (IsList = 'true')">
     <xsl:value-of select="Value"/><xsl:text>: </xsl:text>
     <xsl:call-template name="nt-case">
         <xsl:with-param name="mp-schema-text" select="SubMessageFormatAliasRoot" />
     </xsl:call-template>
-    <xsl:if test="(normalize-space(DefaultValue) !='')">
         <xsl:text> = </xsl:text>
-        <xsl:value-of select="DefaultValue"/>
-    </xsl:if>
-    <xsl:text>  #
-    </xsl:text>
 </xsl:if>
 
 <xsl:if test="(IsType = 'true') and (IsList = 'true')">
@@ -385,23 +570,61 @@ class </xsl:text>
     <xsl:call-template name="nt-case">
         <xsl:with-param name="mp-schema-text" select="SubMessageFormatAliasRoot" />
     </xsl:call-template>
-    <xsl:text>]
-    </xsl:text>
-    <xsl:if test="(normalize-space(DefaultValue) !='')">
-        <xsl:text> = </xsl:text>
-        <xsl:value-of select="DefaultValue"/>
-    </xsl:if>
-    <xsl:text>  #
-    </xsl:text>
+    <xsl:text>] = </xsl:text>
  </xsl:if>
+
  <xsl:if test="not (IsRequired = 'true') and (IsPrimitive = 'true')">
     <xsl:value-of select="Value"/><xsl:text>: Optional[</xsl:text>
     <xsl:call-template name="python-type">
         <xsl:with-param name="gw-type" select="PrimitiveType"/>
     </xsl:call-template>
-<xsl:text>] = None
-    </xsl:text>
+<xsl:text>] = </xsl:text>
 </xsl:if>
+
+
+
+<xsl:text>Field(
+        title="</xsl:text>
+        <xsl:if test="normalize-space(Title)!=''">
+        <xsl:value-of select="Title"/>
+        </xsl:if>
+        <xsl:if test="normalize-space(Title)=''">
+        <xsl:value-of select="Value"/>
+        </xsl:if>
+        <xsl:text>",</xsl:text>
+
+    <xsl:if test="(normalize-space(Description) !='') or (normalize-space(Url) != '')">
+        <xsl:text>
+        description="</xsl:text>
+        <xsl:value-of select="normalize-space(Description)"/>
+        <xsl:if test = "(normalize-space(Url) != '')">
+        <xsl:text> [More info](</xsl:text>
+        <xsl:value-of select="normalize-space(Url)"/>
+        <xsl:text>).</xsl:text>
+        </xsl:if>
+        <xsl:text>",</xsl:text>
+    </xsl:if>
+
+    <xsl:if test="(normalize-space(DefaultValue) !='')">
+        <xsl:text>
+        default=</xsl:text>
+        <xsl:value-of select="DefaultValue"/>
+        <xsl:text>,</xsl:text>
+    </xsl:if>
+
+    <xsl:if test="not (IsRequired = 'true') and (IsPrimitive = 'true')">
+        <xsl:text>
+        default=None,</xsl:text>
+    </xsl:if>
+
+    <xsl:if test="(normalize-space(PydanticFormat) = 'PositiveInteger') and (IsList != 'true')">
+        <xsl:text>
+        ge=0,</xsl:text>
+    </xsl:if>
+
+    <xsl:text>
+    )
+    </xsl:text>
 
 </xsl:for-each>
 
@@ -412,20 +635,93 @@ class </xsl:text>
 <xsl:value-of select="SemanticEnd"/><xsl:text>"</xsl:text>
     <xsl:for-each select="$airtable//SchemaAttributes/SchemaAttribute[(Schema = $schema-id)]">
     <xsl:sort select="Idx" data-type="number"/>
+    <xsl:variable name="property-id" select="SchemaAttributeId" />
+    <xsl:if test="(IsRequired='true') and not (IsList='true') and (IsPrimitive='true') and ((normalize-space(PrimitiveFormat) != '') or (Axiom != ''))">
+    <xsl:text>
 
-    <xsl:if test="(IsRequired = 'true') and (IsPrimitive='true') and not (IsList='true') and normalize-space(PrimitiveFormat) != ''">
-            <xsl:text>
+    @validator("</xsl:text><xsl:value-of select="Value"/><xsl:text>")
+    def </xsl:text>
 
-    _validator_</xsl:text>
-        <xsl:call-template name="python-case">
+    <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) = 0">
+    <xsl:text>_</xsl:text>
+    </xsl:if>
+    <xsl:text>check_</xsl:text><xsl:call-template name="python-case">
         <xsl:with-param name="camel-case-text" select="Value"  />
+        </xsl:call-template><xsl:text>(cls, v: </xsl:text>
+        <xsl:call-template name="python-type">
+            <xsl:with-param name="gw-type" select="PrimitiveType"/>
         </xsl:call-template>
-    <xsl:text> = predicate_validator("</xsl:text>
-        <xsl:value-of select = "Value"/><xsl:text>", property_format.is_</xsl:text>
+        <xsl:text>) -> </xsl:text>
+        <xsl:call-template name="python-type">
+            <xsl:with-param name="gw-type" select="PrimitiveType"/>
+        </xsl:call-template>
+        <xsl:text>:</xsl:text>
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 1">
+        <xsl:text>
+        """
+        Axioms </xsl:text>
+        <xsl:for-each select="$airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]">
+        <xsl:sort select="AxiomNumber" data-type="number"/>
+        <xsl:value-of select="AxiomNumber"/>
+                <xsl:if test="position() != count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)])">
+                <xsl:text>, </xsl:text>
+                </xsl:if>
+        </xsl:for-each>
+        <xsl:text>:</xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) = 1">
+        <xsl:text>
+        """</xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 0">
+        <xsl:for-each select="$airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]">
+        <xsl:sort select="AxiomNumber" data-type="number"/>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) =1">
+        <xsl:text>
+        Axiom </xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) >1">
+        <xsl:text>
+
+        Axiom </xsl:text>
+        </xsl:if>
+
+        <xsl:value-of select="AxiomNumber"/><xsl:text>: </xsl:text>
+        <xsl:value-of select="Title"/><xsl:text>.
+        </xsl:text>
+        <xsl:value-of select="Description"/>
+        <xsl:if test="normalize-space(Url)!=''">
+        <xsl:text>
+        [More info](</xsl:text><xsl:value-of select="Url"/>
+        <xsl:text>)</xsl:text>
+
+        </xsl:if>
+
+        </xsl:for-each>
+        <xsl:text>
+        """</xsl:text>
+        </xsl:if>
+        <xsl:text>
+        try:
+            check_is_</xsl:text>
             <xsl:call-template name="python-case">
                 <xsl:with-param name="camel-case-text" select="translate(PrimitiveFormat,'.','_')"  />
                 </xsl:call-template>
-        <xsl:text>)</xsl:text>
+        <xsl:text>(v)
+        except ValueError as e:
+            raise ValueError(f"</xsl:text><xsl:value-of select="Value"/><xsl:text> failed </xsl:text>
+            <xsl:value-of select="PrimitiveFormat"/>
+            <xsl:text> format validation: {e}")</xsl:text>
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 0">
+        <xsl:text>
+        raise NotImplementedError("Implement axiom(s)")</xsl:text>
+        </xsl:if>
+        <xsl:text>
+        return v</xsl:text>
     </xsl:if>
 
 
@@ -433,7 +729,12 @@ class </xsl:text>
         <xsl:text>
 
     @validator("</xsl:text><xsl:value-of select="Value"/><xsl:text>")
-    def _validator_</xsl:text><xsl:call-template name="python-case">
+    def </xsl:text>
+
+    <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) = 0">
+    <xsl:text>_</xsl:text>
+    </xsl:if>
+    <xsl:text>check_</xsl:text><xsl:call-template name="python-case">
     <xsl:with-param name="camel-case-text" select="Value"  />
     </xsl:call-template><xsl:text>(cls, v: </xsl:text>
     <xsl:call-template name="nt-case">
@@ -443,7 +744,15 @@ class </xsl:text>
         <xsl:call-template name="nt-case">
         <xsl:with-param name="mp-schema-text" select="EnumLocalName" />
     </xsl:call-template>
-    <xsl:text>:
+    <xsl:text>:</xsl:text>
+
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 0">
+        <xsl:text>
+        raise NotImplementedError("Implement axiom(s)")</xsl:text>
+        </xsl:if>
+
+        <xsl:text>
         return as_enum(v, </xsl:text>
         <xsl:call-template name="nt-case">
             <xsl:with-param name="mp-schema-text" select="EnumLocalName" />
@@ -467,22 +776,80 @@ class </xsl:text>
                 <xsl:text>
 
     @validator("</xsl:text><xsl:value-of select="Value"/><xsl:text>")
-    def _validator_</xsl:text><xsl:call-template name="python-case">
+    def </xsl:text>
+
+    <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) = 0">
+    <xsl:text>_</xsl:text>
+    </xsl:if>
+    <xsl:text>check_</xsl:text><xsl:call-template name="python-case">
         <xsl:with-param name="camel-case-text" select="Value"  />
-        </xsl:call-template><xsl:text>(cls, v: List) -> List:
+        </xsl:call-template><xsl:text>(cls, v: List) -> List:</xsl:text>
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 1">
+        <xsl:text>
+        """
+        Axioms </xsl:text>
+        <xsl:for-each select="$airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]">
+        <xsl:sort select="AxiomNumber" data-type="number"/>
+        <xsl:value-of select="AxiomNumber"/>
+                <xsl:if test="position() != count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)])">
+                <xsl:text>, </xsl:text>
+                </xsl:if>
+        </xsl:for-each>
+        <xsl:text>:</xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) = 1">
+        <xsl:text>
+        """</xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 0">
+        <xsl:for-each select="$airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]">
+        <xsl:sort select="AxiomNumber" data-type="number"/>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) =1">
+        <xsl:text>
+        Axiom </xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) >1">
+        <xsl:text>
+
+        Axiom </xsl:text>
+        </xsl:if>
+
+        <xsl:value-of select="AxiomNumber"/><xsl:text>: </xsl:text>
+        <xsl:value-of select="Title"/><xsl:text>.
+        </xsl:text>
+        <xsl:value-of select="Description"/>
+        <xsl:if test="normalize-space(Url)!=''">
+        <xsl:text>
+        [More info](</xsl:text><xsl:value-of select="Url"/>
+        <xsl:text>)</xsl:text>
+
+        </xsl:if>
+
+        </xsl:for-each>
+        <xsl:text>
+        """</xsl:text>
+        </xsl:if>
+        <xsl:text>
         for elt in v:
-            if not property_format.is_</xsl:text>
+            try:
+                check_is_</xsl:text>
             <xsl:call-template name="python-case">
                 <xsl:with-param name="camel-case-text" select="translate(PrimitiveFormat,'.','_')"  />
             </xsl:call-template>
-        <xsl:text>(elt):
-                raise ValueError(f"failure of predicate is_</xsl:text>
-                <xsl:call-template name="python-case">
-                    <xsl:with-param name="camel-case-text" select="translate(PrimitiveFormat,'.','_')"  />
-                </xsl:call-template>
-
-                <xsl:text>() on elt {elt} of </xsl:text><xsl:value-of select="Value"/>
-            <xsl:text>")
+        <xsl:text>(elt)
+            except ValueError as e:
+                raise ValueError(f"</xsl:text><xsl:value-of select="Value"/><xsl:text> element {elt} failed </xsl:text>
+                <xsl:value-of select="PrimitiveFormat" />
+                <xsl:text> format validation: {e}")</xsl:text>
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 0">
+        <xsl:text>
+        raise NotImplementedError("Implement axiom(s)")</xsl:text>
+        </xsl:if>
+        <xsl:text>
         return v</xsl:text>
     </xsl:if>
 
@@ -490,7 +857,12 @@ class </xsl:text>
         <xsl:text>
 
     @validator("</xsl:text><xsl:value-of select="Value"/><xsl:text>")
-    def _validator_</xsl:text><xsl:call-template name="python-case">
+    def </xsl:text>
+
+    <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) = 0">
+    <xsl:text>_</xsl:text>
+    </xsl:if>
+    <xsl:text>check_</xsl:text><xsl:call-template name="python-case">
     <xsl:with-param name="camel-case-text" select="Value"  />
     </xsl:call-template><xsl:text>(cls, v: </xsl:text>
     <xsl:call-template name="nt-case">
@@ -500,7 +872,57 @@ class </xsl:text>
         <xsl:call-template name="nt-case">
         <xsl:with-param name="mp-schema-text" select="EnumName" />
     </xsl:call-template>
-    <xsl:text>]:
+    <xsl:text>]:</xsl:text>
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 1">
+        <xsl:text>
+        """
+        Axioms </xsl:text>
+        <xsl:for-each select="$airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]">
+        <xsl:sort select="AxiomNumber" data-type="number"/>
+        <xsl:value-of select="AxiomNumber"/>
+                <xsl:if test="position() != count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)])">
+                <xsl:text>, </xsl:text>
+                </xsl:if>
+        </xsl:for-each>
+        <xsl:text>:</xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) = 1">
+        <xsl:text>
+        """</xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 0">
+        <xsl:for-each select="$airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]">
+        <xsl:sort select="AxiomNumber" data-type="number"/>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) =1">
+        <xsl:text>
+        Axiom </xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) >1">
+        <xsl:text>
+
+        Axiom </xsl:text>
+        </xsl:if>
+
+        <xsl:value-of select="AxiomNumber"/><xsl:text>: </xsl:text>
+        <xsl:value-of select="Title"/><xsl:text>.
+        </xsl:text>
+        <xsl:value-of select="Description"/>
+        <xsl:if test="normalize-space(Url)!=''">
+        <xsl:text>
+        [More info](</xsl:text><xsl:value-of select="Url"/>
+        <xsl:text>)</xsl:text>
+
+        </xsl:if>
+
+        </xsl:for-each>
+        <xsl:text>
+        """</xsl:text>
+        </xsl:if>
+        <xsl:text>
         if not isinstance(v, List):
             raise ValueError("</xsl:text><xsl:value-of select="Value"/><xsl:text> must be a list!")
         enum_list = []
@@ -514,7 +936,12 @@ class </xsl:text>
             <xsl:with-param name="mp-schema-text" select="EnumLocalName" />
         </xsl:call-template>
         <xsl:text>.</xsl:text><xsl:value-of select="DefaultEnumValue"/>
-        <xsl:text>))
+        <xsl:text>))</xsl:text>
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 0">
+        <xsl:text>
+        raise NotImplementedError("Implement axiom(s)")</xsl:text>
+        </xsl:if>
+        <xsl:text>
         return enum_list</xsl:text>
     </xsl:if>
 
@@ -522,9 +949,64 @@ class </xsl:text>
         <xsl:text>
 
     @validator("</xsl:text><xsl:value-of select="Value"/><xsl:text>")
-    def _validator_</xsl:text><xsl:call-template name="python-case">
+    def </xsl:text>
+
+    <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) = 0">
+    <xsl:text>_</xsl:text>
+    </xsl:if>
+    <xsl:text>check_</xsl:text><xsl:call-template name="python-case">
         <xsl:with-param name="camel-case-text" select="Value"  />
-        </xsl:call-template><xsl:text>(cls, v: List) -> List:
+        </xsl:call-template><xsl:text>(cls, v: List) -> List:</xsl:text>
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 1">
+        <xsl:text>
+        """
+        Axioms </xsl:text>
+        <xsl:for-each select="$airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]">
+        <xsl:sort select="AxiomNumber" data-type="number"/>
+        <xsl:value-of select="AxiomNumber"/>
+                <xsl:if test="position() != count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)])">
+                <xsl:text>, </xsl:text>
+                </xsl:if>
+        </xsl:for-each>
+        <xsl:text>:</xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) = 1">
+        <xsl:text>
+        """</xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 0">
+        <xsl:for-each select="$airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]">
+        <xsl:sort select="AxiomNumber" data-type="number"/>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) =1">
+        <xsl:text>
+        Axiom </xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) >1">
+        <xsl:text>
+
+        Axiom </xsl:text>
+        </xsl:if>
+
+        <xsl:value-of select="AxiomNumber"/><xsl:text>: </xsl:text>
+        <xsl:value-of select="Title"/><xsl:text>.
+        </xsl:text>
+        <xsl:value-of select="Description"/>
+        <xsl:if test="normalize-space(Url)!=''">
+        <xsl:text>
+        [More info](</xsl:text><xsl:value-of select="Url"/>
+        <xsl:text>)</xsl:text>
+
+        </xsl:if>
+
+        </xsl:for-each>
+        <xsl:text>
+        """</xsl:text>
+        </xsl:if>
+        <xsl:text>
         for elt in v:
             if not isinstance(elt, </xsl:text>
             <xsl:call-template name="nt-case">
@@ -538,7 +1020,12 @@ class </xsl:text>
                         <xsl:with-param name="mp-schema-text" select="SubMessageFormatAliasRoot" />
         </xsl:call-template>
                 <xsl:text>."
-                    )
+                    )</xsl:text>
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 0">
+        <xsl:text>
+        raise NotImplementedError("Implement axiom(s)")</xsl:text>
+        </xsl:if>
+        <xsl:text>
         return v</xsl:text>
     </xsl:if>
 
@@ -548,7 +1035,12 @@ class </xsl:text>
     <xsl:text>
 
     @validator("</xsl:text><xsl:value-of select="Value"/><xsl:text>")
-    def _validator_</xsl:text>
+    def </xsl:text>
+
+    <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) = 0">
+    <xsl:text>_</xsl:text>
+    </xsl:if>
+    <xsl:text>check_</xsl:text>
     <xsl:call-template name="python-case">
     <xsl:with-param name="camel-case-text" select="Value"  />
     </xsl:call-template>
@@ -560,17 +1052,76 @@ class </xsl:text>
     <xsl:call-template name="python-type">
         <xsl:with-param name="gw-type" select="PrimitiveType"/>
     </xsl:call-template>
-    <xsl:text>]:
+    <xsl:text>]:</xsl:text>
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 1">
+        <xsl:text>
+        """
+        Axioms </xsl:text>
+        <xsl:for-each select="$airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]">
+        <xsl:sort select="AxiomNumber" data-type="number"/>
+        <xsl:value-of select="AxiomNumber"/>
+                <xsl:if test="position() != count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)])">
+                <xsl:text>, </xsl:text>
+                </xsl:if>
+        </xsl:for-each>
+        <xsl:text>:</xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) = 1">
+        <xsl:text>
+        """</xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 0">
+        <xsl:for-each select="$airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]">
+        <xsl:sort select="AxiomNumber" data-type="number"/>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) =1">
+        <xsl:text>
+        Axiom </xsl:text>
+        </xsl:if>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) >1">
+        <xsl:text>
+
+        Axiom </xsl:text>
+        </xsl:if>
+
+        <xsl:value-of select="AxiomNumber"/><xsl:text>: </xsl:text>
+        <xsl:value-of select="Title"/><xsl:text>.
+        </xsl:text>
+        <xsl:value-of select="Description"/>
+        <xsl:if test="normalize-space(Url)!=''">
+        <xsl:text>
+        [More info](</xsl:text><xsl:value-of select="Url"/>
+        <xsl:text>)</xsl:text>
+
+        </xsl:if>
+
+        </xsl:for-each>
+        <xsl:text>
+        """</xsl:text>
+        </xsl:if>
+        <xsl:text>
         if v is None:
             return v
-        if not property_format.is_</xsl:text>
+        try:
+            check_is_</xsl:text>
             <xsl:call-template name="python-case">
                 <xsl:with-param name="camel-case-text" select="translate(PrimitiveFormat,'.','_')"  />
             </xsl:call-template>
-        <xsl:text>(v):
+        <xsl:text>(v)
+        except ValueError as e:
             raise ValueError(f"</xsl:text>
-           <xsl:value-of select="Value"/><xsl:text> {v} must have </xsl:text>
-           <xsl:value-of select="PrimitiveFormat"/><xsl:text>")
+           <xsl:value-of select="Value"/><xsl:text> failed </xsl:text>
+           <xsl:value-of select="PrimitiveFormat"/><xsl:text> format validation: {e}")</xsl:text>
+
+        <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[(normalize-space(SinglePropertyAxiom)=$property-id)]) > 0">
+        <xsl:text>
+        raise NotImplementedError("Implement axiom(s)")</xsl:text>
+        </xsl:if>
+
+        <xsl:text>
         return v</xsl:text>
     </xsl:if>
 
@@ -596,6 +1147,36 @@ class </xsl:text>
 
         </xsl:for-each>
 
+
+    <xsl:if test="count($airtable//SchemaAxioms/SchemaAxiom[MultiPropertyAxiom=$schema-id]) > 0">
+    <xsl:for-each select="$airtable//SchemaAxioms/SchemaAxiom[MultiPropertyAxiom=$schema-id]">
+    <xsl:sort select="AxiomNumber" data-type="number"/>
+    <xsl:text>
+
+    @root_validator</xsl:text>
+    <xsl:if test="CheckFirst='true'">
+     <xsl:text>(pre=True)</xsl:text>
+    </xsl:if>
+    <xsl:text>
+    def check_axiom_</xsl:text><xsl:value-of select="AxiomNumber"/><xsl:text>(cls, v: dict) -> dict:
+        """
+        Axiom </xsl:text><xsl:value-of select="AxiomNumber"/><xsl:text>: </xsl:text>
+        <xsl:value-of select="Title"/>
+        <xsl:text>.
+        </xsl:text><xsl:value-of select="Description"/>
+        <xsl:if test="normalize-space(Url)!=''">
+        <xsl:text>
+        [More info](</xsl:text>
+        <xsl:value-of select="normalize-space(Url)"/>
+        <xsl:text>)</xsl:text>
+        </xsl:if>
+
+        <xsl:text>
+        """
+        raise NotImplementedError("Implement check for axiom </xsl:text><xsl:value-of select="AxiomNumber"/><xsl:text>")</xsl:text>
+
+    </xsl:for-each>
+    </xsl:if>
     <xsl:text>
 
     def as_dict(self) -> Dict[str, Any]:
@@ -824,11 +1405,17 @@ class </xsl:text>
     @classmethod
     def tuple_to_type(cls, tuple: </xsl:text><xsl:value-of select="$class-name"/>
     <xsl:text>) -> str:
+        """
+        Given a Python class object, returns the serialized JSON type object
+        """
         return tuple.as_type()
 
     @classmethod
     def type_to_tuple(cls, t: str) -> </xsl:text><xsl:value-of select="$class-name"/>
 <xsl:text>:
+        """
+        Given a serialized JSON type object, returns the Python class object
+        """
         try:
             d = json.loads(t)
         except TypeError:
@@ -1070,12 +1657,27 @@ class </xsl:text>
             </xsl:text>
         <xsl:for-each select="$airtable//SchemaAttributes/SchemaAttribute[(Schema = $schema-id)]">
         <xsl:sort select="Idx" data-type="number"/>
-            <xsl:text></xsl:text>
+
+            <xsl:if test="(normalize-space(SubMessageFormatAliasRoot) !='')">
+                <xsl:call-template name="python-case">
+                    <xsl:with-param name="camel-case-text" select="Value"  />
+                </xsl:call-template><xsl:text>=</xsl:text>
+                        <xsl:call-template name="nt-case">
+                            <xsl:with-param name="mp-schema-text" select="SubMessageFormatAliasRoot" />
+                        </xsl:call-template>
+                <xsl:text>_Maker.tuple_to_dc(t.</xsl:text>
+        <xsl:value-of select="Value"/><xsl:text>),
+            </xsl:text>
+            </xsl:if>
+
+            <xsl:if test="(normalize-space(SubMessageFormatAliasRoot)='')">
                 <xsl:call-template name="python-case">
                     <xsl:with-param name="camel-case-text" select="Value"  />
                 </xsl:call-template><xsl:text>=t.</xsl:text>
         <xsl:value-of select="Value"/><xsl:text>,
             </xsl:text>
+            </xsl:if>
+
     </xsl:for-each>
             <xsl:text>
             )
@@ -1088,6 +1690,8 @@ class </xsl:text>
             </xsl:text>
         <xsl:for-each select="$airtable//SchemaAttributes/SchemaAttribute[(Schema = $schema-id)]">
         <xsl:sort select="Idx" data-type="number"/>
+
+        <xsl:if test="(normalize-space(SubMessageFormatAliasRoot) ='')">
         <xsl:call-template name="python-case">
             <xsl:with-param name="camel-case-text" select="Value"  />
         </xsl:call-template><xsl:text>=dc.</xsl:text>
@@ -1096,6 +1700,22 @@ class </xsl:text>
         </xsl:call-template>
         <xsl:text>,
             </xsl:text>
+        </xsl:if>
+
+
+        <xsl:if test="(normalize-space(SubMessageFormatAliasRoot)!='')">
+        <xsl:call-template name="python-case">
+            <xsl:with-param name="camel-case-text" select="Value"  />
+        </xsl:call-template><xsl:text>=</xsl:text><xsl:call-template name="nt-case">
+                            <xsl:with-param name="mp-schema-text" select="SubMessageFormatAliasRoot" />
+                        </xsl:call-template>
+                <xsl:text>_Maker.dc_to_tuple(dc.</xsl:text>
+        <xsl:call-template name="python-case">
+            <xsl:with-param name="camel-case-text" select="Value"  />
+        </xsl:call-template>
+        <xsl:text>),
+            </xsl:text>
+        </xsl:if>
         </xsl:for-each>
         <xsl:text>
         ).tuple
