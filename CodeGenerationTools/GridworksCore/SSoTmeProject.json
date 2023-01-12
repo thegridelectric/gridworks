@@ -128,6 +128,28 @@
         "Name": "XmlXsltTransform",
         "Description": "Given an Xml and Xslt file, will process and \"split\" a resulting fileset."
       },
+      "ProjectTranspilerId": "913cc854-8b17-4078-88a2-2b3abfa54faa",
+      "Name": "XmlXsltTransform",
+      "RelativePath": "/Types/Docs/ApiDocs",
+      "CommandLine": "codee42/xml-xslt-transform -i ../../../SSoT/Airtable.xml -i DeriveApiDocs.xslt -i ../../../GnfCommon.xslt -i ../../../ODXML/DataSchema.odxml -w 120000"
+    },
+    {
+      "MatchedTranspiler": {
+        "TranspilerId": "4b713f03-1d9f-42f2-b02f-e3cdbd237bb3",
+        "Name": "XmlXsltTransform",
+        "Description": "Given an Xml and Xslt file, will process and \"split\" a resulting fileset."
+      },
+      "ProjectTranspilerId": "a6edc9ec-fd9e-4eef-8dbe-3e308d203e83",
+      "Name": "XmlXsltTransform",
+      "RelativePath": "/Types/Docs/ApiDocs/Toc",
+      "CommandLine": "codee42/xml-xslt-transform -i ../../../../SSoT/Airtable.xml -i DeriveToc.xslt -i ../../../../GnfCommon.xslt -i ../../../../ODXML/DataSchema.odxml -w 120000"
+    },
+    {
+      "MatchedTranspiler": {
+        "TranspilerId": "4b713f03-1d9f-42f2-b02f-e3cdbd237bb3",
+        "Name": "XmlXsltTransform",
+        "Description": "Given an Xml and Xslt file, will process and \"split\" a resulting fileset."
+      },
       "ProjectTranspilerId": "a2b6bc61-44d1-4bcd-b35c-fef614baf114",
       "Name": "XmlXsltTransform",
       "RelativePath": "/Types/ApiUtil",

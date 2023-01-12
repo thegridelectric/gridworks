@@ -1,4 +1,4 @@
-"""TypeName `ready`, version `001`"""
+"""Type ready, version 001"""
 import json
 from typing import Any
 from typing import Dict
@@ -8,41 +8,16 @@ from pydantic import BaseModel
 from pydantic import Field
 from pydantic import validator
 
-import gridworks.property_format as property_format
 from gridworks.errors import SchemaError
-from gridworks.property_format import predicate_validator
-
-
-def check_is_left_right_dot(v: str) -> None:
-    """LeftRightDot format: Lowercase alphanumeric words separated by periods,
-    most significant word (on the left) starting with an alphabet character.
-
-    Raises:
-        ValueError: if v is not LeftRightDot format
-    """
-    from typing import List
-
-    try:
-        x: List[str] = v.split(".")
-    except:
-        raise ValueError(f"Failed to seperate {v} into words with split'.'")
-    first_word = x[0]
-    first_char = first_word[0]
-    if not first_char.isalpha():
-        raise ValueError(f"Most significant word of {v} must start with alphabet char.")
-    for word in x:
-        if not word.isalnum():
-            raise ValueError(f"words of {v} split by by '.' must be alphanumeric.")
-    if not v.islower():
-        raise ValueError(f"All characters of {v} must be lowercase. ")
 
 
 def check_is_uuid_canonical_textual(v: str) -> None:
-    """UuidCanonicalTextual format:  A string of hex words separated
-    by hyphens of length 8-4-4-4-12.
+    """
+    UuidCanonicalTextual format:  A string of hex words separated by hyphens
+    of length 8-4-4-4-12.
 
     Raises:
-        ValueError: if v is not UuidCanonicalTextual format
+        ValueError: if not UuidCanonicalTextual format
     """
     try:
         x = v.split("-")
@@ -67,37 +42,55 @@ def check_is_uuid_canonical_textual(v: str) -> None:
         raise ValueError(f"{v} word lengths not 8-4-4-4-12")
 
 
+def check_is_left_right_dot(v: str) -> None:
+    """
+    LeftRightDot format: Lowercase alphanumeric words separated by periods,
+    most significant word (on the left) starting with an alphabet character.
+
+    Raises:
+        ValueError: if not LeftRightDot format
+    """
+    from typing import List
+
+    try:
+        x: List[str] = v.split(".")
+    except:
+        raise ValueError(f"Failed to seperate {v} into words with split'.'")
+    first_word = x[0]
+    first_char = first_word[0]
+    if not first_char.isalpha():
+        raise ValueError(f"Most significant word of {v} must start with alphabet char.")
+    for word in x:
+        if not word.isalnum():
+            raise ValueError(f"words of {v} split by by '.' must be alphanumeric.")
+    if not v.islower():
+        raise ValueError(f"All characters of {v} must be lowercase.")
+
+
 class Ready(BaseModel):
     """Used in simulations by TimeCoordinator GNodes.
 
     Only intended for simulations that do not have sub-second TimeSteps.
     TimeCoordinators based on ```gridworks-timecoordinator``` have a notion of actors
     whose `Ready` must be received before issuing the next TimeStep.
-
-    `More info <https://gridworks.readthedocs.io/en/latest/time-coordinator.html>`_
+    [More info](https://gridworks.readthedocs.io/en/latest/time-coordinator.html).
     """
 
     FromGNodeAlias: str = Field(
         title="The GNodeAlias of the sender",
-        description="LeftRightDot format",
     )
-
     FromGNodeInstanceId: str = Field(
         title="The GNodeInstanceId of the sender",
-        description="UuidCanonicalTextual format",
     )
-
     TimeUnixS: int = Field(
         title="Latest simulated time for sender",
         description="The time in unix seconds of the latest TimeStep received from the TimeCoordinator by the actor that sent the payload.",
     )
-
     TypeName: Literal["ready"] = "ready"
-
     Version: str = "001"
 
     @validator("FromGNodeAlias")
-    def _validator_from_g_node_alias(cls, v: str) -> str:
+    def _check_from_g_node_alias(cls, v: str) -> str:
         try:
             check_is_left_right_dot(v)
         except ValueError as e:
@@ -107,7 +100,7 @@ class Ready(BaseModel):
         return v
 
     @validator("FromGNodeInstanceId")
-    def _validator_from_g_node_instance_id(cls, v: str) -> str:
+    def _check_from_g_node_instance_id(cls, v: str) -> str:
         try:
             check_is_uuid_canonical_textual(v)
         except ValueError as e:
@@ -125,10 +118,6 @@ class Ready(BaseModel):
 
 
 class Ready_Maker:
-    """Helper for translating between json ```ready``` types
-    and python ```Ready``` tuples.
-    """
-
     type_name = "ready"
     version = "001"
 
@@ -145,22 +134,14 @@ class Ready_Maker:
     @classmethod
     def tuple_to_type(cls, tuple: Ready) -> str:
         """
-        Args:
-             tuple (Ready)
-
-        Returns:
-            str:  corresponding serialized json string of type ```ready```
+        Given a Python class object, returns the serialized JSON type object
         """
         return tuple.as_type()
 
     @classmethod
     def type_to_tuple(cls, t: str) -> Ready:
         """
-        Args:
-            t (str): Serialized json string of type ```ready```
-
-        Returns:
-            Ready: corresponding Ready object
+        Given a serialized JSON type object, returns the Python class object
         """
         try:
             d = json.loads(t)

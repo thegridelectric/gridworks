@@ -9,7 +9,14 @@ DEFAULT_ENV_FILE = ".env"
 
 
 class Public(BaseModel):
-    """This class is the publicly available information about the GNodeFactory"""
+    """
+    Publicly available information about the GNodeFactory, including:
+      - GnfAdminAddr
+      - TaValidatorFundingThresholdAlgos
+      - TaDeedConsiderationAlgos
+      - GnfApiRoot
+
+    """
 
     algod_address: str = "http://localhost:4001"
     kmd_address: str = "http://localhost:4002"
@@ -21,7 +28,7 @@ class Public(BaseModel):
         "COA6SYUOBE33F5JDYEGC5XAD43QRG3VGHNNQXLYWFSSQEHDQ5HJ52NDNPI"
     )
     gnr_addr: str = "X2ASUAUPK5ICMGDXQZQKBPSXWEJLBA4KKQ2TXW2KWO2JQTLY3J2Q4S33WE"
-    gnf_validator_funding_threshold_algos: int = 100
+    ta_validator_funding_threshold_algos: int = 100
     ta_deed_consideration_algos: int = 50
     gnf_api_root: str = "http://localhost:8000"
 
@@ -87,7 +94,7 @@ class SupervisorSettings(BaseSettings):
     my_time_coordinator_alias = "d1.time"
     log_level: str = "INFO"
     universe_type_value: str = "Dev"
-    world_instance_alias: str = "d1__1"
+    world_instance_name: str = "d1__1"
     rabbit: RabbitBrokerClient = RabbitBrokerClient()
 
     class Config:

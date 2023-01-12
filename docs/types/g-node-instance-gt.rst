@@ -6,32 +6,44 @@ Python pydantic class corresponding to  json type ```g.node.instance.gt```.
     :members:
 
 **GNodeInstanceId**:
-    - Description:
+    - Description: Immutable identifier for GNodeInstance (Gni)
     - Format: UuidCanonicalTextual
 
 **GNode**:
-    - Description:
+    - Description: The GNode represented by the Gni
 
 **Strategy**:
-    - Description:
+    - Description: Used to determine the code running in a GNode actor application
 
 **Status**:
-    - Description:
+    - Description: Lifecycle Status for Gni
 
 **SupervisorContainerId**:
-    - Description:
+    - Description: The Id of the docker container where the Gni runs
     - Format: UuidCanonicalTextual
 
 **StartTimeUnixS**:
-    - Description:
+    - Description: When the gni starts representing the GNode. Specifically, when the Status changes from Pending to Active. Note that this is time in the GNode's World, which may not be real time if it is a simulation.
     - Format: ReasonableUnixTimeS
 
 **EndTimeUnixS**:
-    - Description:
+    - Description: When the gni stops representing the GNode. Specifically, when the Status changes from Active to Done.
 
 **AlgoAddress**:
-    - Description:
+    - Description: Algorand address for Gni
     - Format: AlgoAddressStringFormat
+
+.. autoclass:: gridworks.types.g_node_instance_gt.check_is_reasonable_unix_time_s
+    :members:
+
+
+.. autoclass:: gridworks.types.g_node_instance_gt.check_is_uuid_canonical_textual
+    :members:
+
+
+.. autoclass:: gridworks.types.g_node_instance_gt.check_is_algo_address_string_format
+    :members:
+
 
 .. autoclass:: gridworks.types.GNodeInstanceGt_Maker
     :members:

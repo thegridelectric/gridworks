@@ -21,8 +21,6 @@
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [black]: https://github.com/psf/black
 
-# GridWorks
-
 GridWorks uses distributed actors to balance the electric grid. What does this mean?
 In today's world, more power comes from highly variable power sources such as wind and
 solar. And yet, the number of electrons going into the grid must match the number coming
@@ -41,7 +39,7 @@ To learn how using and contributing to GridWorks can support a cost-effective an
 ## Algorand Blockchain Mechanics
 
 Gridworks runs markets between distributed actors acting as avatars for physical devices on the grid. It needs a foundation of trustless, secure, scalabe validation and authentication. Out of the gate, you will need to understand how to work with the Algorand blockchain. If Algorand
-development is new to you or you want a refresher, consider starting [here](https://gridworks.readthedocs.io/en/latest/blockchain.html)
+development is new to you or you want a refresher, consider starting [here](https://gridworks.readthedocs.io/en/latest/blockchain.html).
 
 ## Usage
 

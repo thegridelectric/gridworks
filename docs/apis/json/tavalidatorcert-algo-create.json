@@ -1,0 +1,69 @@
+{
+  "gwapi": "001",
+  "type_name": "tavalidatorcert.algo.create",
+  "version": "000",
+  "owner": "gridworks@gridworks-consulting.com",
+  "description": "Used for Step 1 of TaValidator certification. Meant to be sent from a pending TaValidator to the GNodeFactory (Gnf), to initiate the process of certifying the pending TaValidator.",
+  "url": "https://gridworks.readthedocs.io/en/latest/ta-validator.html",
+  "formats": {
+    "AlgoAddressStringFormat": {
+      "type": "string",
+      "description": "String of length 32, characters are all base32 digits.",
+      "example": "RNMHG32VTIHTC7W3LZOEPTDGREL5IQGK46HKD3KBLZHYQUCAKLMT4G5ALI"
+    },
+    "AlgoMsgPackEncoded": {
+      "type": "string",
+      "description": "Error is not thrown with algosdk.encoding.future_msg_decode(candidate)",
+      "example": "gqRtc2lng6ZzdWJzaWeSgaJwa8Qgi1hzb1WaDzF+215cR8xmiRfUQMrnjqHtQV5PiFBAUtmConBrxCD8IT4Zu8vBAhRNsXoWF+2i6q2KyBZrPhmbDCKJD7rBBqFzxEAEp8UcTEJSyTmgw96/mCnNHKfhkdYMCD5jxWejHRmPCrR8U9z/FBVsoCGbjDTTk2L1k7n/eVlumEk/M1KSe48Jo3RocgKhdgGjdHhuiaRhcGFyhaJhbq9Nb2xseSBNZXRlcm1haWSiYXXZKWh0dHA6Ly9sb2NhbGhvc3Q6NTAwMC9tb2xseWNvL3doby13ZS1hcmUvoW3EIItYc29Vmg8xftteXEfMZokX1EDK546h7UFeT4hQQFLZoXQBonVupVZMRFRSo2ZlZc0D6KJmdlGjZ2VuqnNhbmRuZXQtdjGiZ2jEIC/iF+bI4LU6UTgG4SIxyD10PS0/vNAEa93OC5SVRFn6omx2zQQ5pG5vdGXEK01vbGx5IEluYyBUZWxlbWV0cnkgU3VydmV5b3JzIGFuZCBQdXJ2ZXlvcnOjc25kxCDHZxhdCT2TxxxZlZ/H5mIku1s4ulDm3EmU6dYKXCWEB6R0eXBlpGFjZmc="
+    }
+  },
+  "properties": {
+    "ValidatorAddr": {
+      "type": "string",
+      "format": "AlgoAddressStringFormat",
+      "title": "The address of the pending TaValidator",
+      "required": true
+    },
+    "HalfSignedCertCreationMtx": {
+      "type": "string",
+      "format": "AlgoMsgPackEncoded",
+      "title": "Algo multi-transaction for certificate creation, with 1 of 2 signatures",
+      "required": true
+    },
+    "TypeName": {
+      "type": "string",
+      "value": "tavalidatorcert.algo.create.000",
+      "title": "The type name"
+    },
+    "Version": {
+      "type": "string",
+      "title": "The type version",
+      "default": "000",
+      "required": true
+    }
+  },
+  "axioms": {
+    "Axiom1": {
+      "title": "Is correct Multisig",
+      "description": "Decoded HalfSignedCertCreationMtx must have type MultisigTransaction from the 2-sig MultiAccount [GnfAdminAddr, ValidatorAddr].",
+      "url": "https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr"
+    },
+    "Axiom2": {
+      "title": "Is AssetConfigTxn",
+      "description": "The transaction must have type AssetConfigTxn."
+    },
+    "Axiom3": {
+      "title": "Is ValidatorCert",
+      "description": "For the asset getting created: total = 1, unit_name=VLDTR, manager is GnfAdminAddr, asset_name and url not blank.",
+      "url": "https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate"
+    },
+    "Axiom4": {
+      "title": "TaValidator has signed",
+      "description": "ValidatorAddr must have signed the HalfSignedCertCreationMtx."
+    },
+    "Axiom5": {
+      "title": "Uniqueness",
+      "description": "There must not already be a ValidatorCert belonging to the 2-sig [GnfAdminAddr, ValidatorAddr] address."
+    }
+  }
+}

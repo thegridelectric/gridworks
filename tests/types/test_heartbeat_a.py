@@ -1,23 +1,19 @@
-"""Tests supervisor.container.gt type, version 000"""
+"""Tests heartbeat.a type, version 100"""
 import json
 
 import pytest
 from pydantic import ValidationError
 
-from gridworks.enums import SupervisorContainerStatus
 from gridworks.errors import SchemaError
-from gridworks.types import SupervisorContainerGt_Maker as Maker
+from gridworks.types import HeartbeatA_Maker as Maker
 
 
-def test_supervisor_container_gt_generated() -> None:
+def test_heartbeat_a_generated() -> None:
     d = {
-        "SupervisorContainerId": "da2dafe0-b5c8-4c36-984c-ae653a29bfcc",
-        "StatusGtEnumSymbol": "00000000",
-        "WorldInstanceAlias": "d1__1",
-        "SupervisorGNodeInstanceId": "aac80de4-91cf-48e7-9bef-d469eba989ad",
-        "SupervisorGNodeAlias": "d1.super1",
-        "TypeName": "supervisor.container.gt",
-        "Version": "000",
+        "MyHex": "a",
+        "YourLastHex": 2,
+        "TypeName": "heartbeat.a",
+        "Version": "100",
     }
 
     with pytest.raises(SchemaError):
@@ -35,11 +31,8 @@ def test_supervisor_container_gt_generated() -> None:
 
     # test Maker init
     t = Maker(
-        supervisor_container_id=gtuple.SupervisorContainerId,
-        status=gtuple.Status,
-        world_instance_alias=gtuple.WorldInstanceAlias,
-        supervisor_g_node_instance_id=gtuple.SupervisorGNodeInstanceId,
-        supervisor_g_node_alias=gtuple.SupervisorGNodeAlias,
+        my_hex=gtuple.MyHex,
+        your_last_hex=gtuple.YourLastHex,
     ).tuple
     assert t == gtuple
 
@@ -53,36 +46,18 @@ def test_supervisor_container_gt_generated() -> None:
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    del d2["SupervisorContainerId"]
+    del d2["MyHex"]
     with pytest.raises(SchemaError):
         Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    del d2["StatusGtEnumSymbol"]
-    with pytest.raises(SchemaError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d)
-    del d2["WorldInstanceAlias"]
-    with pytest.raises(SchemaError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d)
-    del d2["SupervisorGNodeInstanceId"]
-    with pytest.raises(SchemaError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d)
-    del d2["SupervisorGNodeAlias"]
+    del d2["YourLastHex"]
     with pytest.raises(SchemaError):
         Maker.dict_to_tuple(d2)
 
     ######################################
     # Behavior on incorrect types
     ######################################
-
-    d2 = dict(d, StatusGtEnumSymbol="hi")
-    Maker.dict_to_tuple(d2).Status = SupervisorContainerStatus.default()
 
     ######################################
     # SchemaError raised if TypeName is incorrect
@@ -96,15 +71,11 @@ def test_supervisor_container_gt_generated() -> None:
     # SchemaError raised if primitive attributes do not have appropriate property_format
     ######################################
 
-    d2 = dict(d, SupervisorContainerId="d4be12d5-33ba-4f1f-b9e5")
+    d2 = dict(d, MyHex="g")
     with pytest.raises(ValidationError):
         Maker.dict_to_tuple(d2)
 
-    d2 = dict(d, SupervisorGNodeInstanceId="d4be12d5-33ba-4f1f-b9e5")
-    with pytest.raises(ValidationError):
-        Maker.dict_to_tuple(d2)
-
-    d2 = dict(d, SupervisorGNodeAlias="a.b-h")
+    d2 = dict(d, YourLastHex="g")
     with pytest.raises(ValidationError):
         Maker.dict_to_tuple(d2)
 

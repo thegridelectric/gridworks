@@ -5,11 +5,21 @@ Python pydantic class corresponding to  json type ```tavalidatorcert.algo.transf
 .. autoclass:: gridworks.types.TavalidatorcertAlgoTransfer
     :members:
 
+**ValidatorAddr**:
+    - Description: The address of the pending TaValidator
+    - Format: AlgoAddressStringFormat
+
+**HalfSignedCertTransferMtx**:
+    - Description: Algo multi-transaction for certificate transfer, with 1 of 2 signatures
+    - Format: AlgoMsgPackEncoded
+
+.. autoclass:: gridworks.types.tavalidatorcert_algo_transfer.check_is_algo_address_string_format
+    :members:
 
 
-**ValidatorAddr**: The address of the pending TerminalAsset validator.
+.. autoclass:: gridworks.types.tavalidatorcert_algo_transfer.check_is_algo_msg_pack_encoded
+    :members:
 
-**HalfSignedCertTransferMtx**: This string is an encoded (algosdk.encoding.msgpack_encode) multiSigTransaction (mtx) signed by the pendingValidator. The mtx.txn is a AssetTransfer for a created ValidatorCertificate for the pendingValidator that the pendingValidator has opted in to.
 
 .. autoclass:: gridworks.types.TavalidatorcertAlgoTransfer_Maker
     :members:
