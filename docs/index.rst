@@ -103,6 +103,7 @@ Installation
     ActorBase <actor-base>
     AlgoUtils <algo-utils>
     ApiUtils <api-utils>
+    AlgoSetup <algo-setup>
     Config <gw-config>
     DataClasses <data-classes>
     Enums <enums>

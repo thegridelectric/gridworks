@@ -4,24 +4,19 @@ from typing import List
 from typing import Optional
 
 import dotenv
-import gnf.algo_utils as algo_utils
-import gnf.config as config
 from algosdk.kmd import KMDClient
 from algosdk.v2client.algod import AlgodClient
-from gnf.algo_utils import BasicAccount
-from gnf.algo_utils import PendingTxnResponse
-from gnf.algo_utils import get_kmd_client
-from gnf.algo_utils import pay_account
-from gnf.errors import AlgoError
+
+import gridworks.algo_utils as algo_utils
+import gridworks.gw_config as config
+from gridworks.algo_utils import BasicAccount
+from gridworks.algo_utils import PendingTxnResponse
+from gridworks.algo_utils import get_kmd_client
+from gridworks.algo_utils import pay_account
+from gridworks.errors import AlgoError
 
 
 FUNDING_AMOUNT = 1_000_000
-
-
-DEV_DEMO_HOLLY_SK = "sp4SDWmH8Rin0IhPJQq1UMsSR5C0j1IGqzLdcwCMySBVzT8lEUwjwwpS9z6l6dKSg52WWEjRdJDAL+eVt4kvBg=="
-DEV_DEMO_MOLLY_SK = "FCLmrvflibLD6Deu3NNiUQCC9LOWpXLsbMR/cP2oJzH8IT4Zu8vBAhRNsXoWF+2i6q2KyBZrPhmbDCKJD7rBBg=="
-
-JOINT_ACCOUNT_SIGNING_THRESHOLD = 2
 
 
 kmdAccounts: Optional[List[BasicAccount]] = None
@@ -32,18 +27,25 @@ LOG_FORMAT = (
 LOGGER = logging.getLogger(__name__)
 
 
-def dev_fund_to_min(addr: str, min_algos: int):
+def dev_fund_to_min(addr: str, min_algos: int) -> PendingTxnResponse:
+    """
+    Tops up the AlgoAddr so that it has at least min_algos Algos, using a randomly
+    chosen genesis acct from the sandbox. Note that the native algosdk pay_account
+    uses micro Algos (in ints).
+
+    Returns: PendingTxnResponse
+    """
     if algo_utils.algos(addr) is None:
-        dev_fund_account(
+        return dev_fund_account(
             config.VanillaSettings(_env_file=dotenv.find_dotenv()),
             to_addr=addr,
-            amt_in_micros=min_algos * 10**6,
+            amt_in_micros=int(min_algos * 10**6),
         )
     elif algo_utils.algos(addr) < min_algos:
-        dev_fund_account(
+        return dev_fund_account(
             config.VanillaSettings(_env_file=dotenv.find_dotenv()),
             to_addr=addr,
-            amt_in_micros=min_algos * 10**6,
+            amt_in_micros=int((min_algos - algo_utils.algos(addr)) * 10**6),
         )
 
 
@@ -52,15 +54,6 @@ def dev_fund_account(
     to_addr: str,
     amt_in_micros: int = FUNDING_AMOUNT,
 ) -> PendingTxnResponse:
-    """Funds an adddress in local sandbox mode using a randomly chosen genesis
-    account.
-    Args:
-        settingsAlgo (config.Algo): has the kmd wallet for the genesis accounts
-        toAddr (str): address receiving the money
-        microAlgoAmount (int, optional):  Defaults to FUNDING_AMOUNT.
-
-    Returns: PendingTxnResponse
-    """
     client: AlgodClient = AlgodClient(
         settings.algo_api_secrets.algod_token.get_secret_value(),
         settings.public.algod_address,
@@ -113,20 +106,3 @@ def dev_get_genesis_accounts(
             kmd.release_wallet_handle(walletHandle)
         LOGGER.debug(f"Found {len(kmdAccounts)} genesis accounts in {walletName}")
     return kmdAccounts
-
-
-def dev_fund_admin_and_graveyard(settings: config.VanillaSettings):
-    """Fund admin account from one of the sandbox
-    genesis accounts. Only for the dev universe"""
-    admin_addr = settings.public.gnf_admin_addr
-    graveyard_addr = settings.public.gnf_graveyard_addr
-    if algo_utils.micro_algos(admin_addr) < 1:
-        dev_fund_account(settings=settings, to_addr=admin_addr)
-    LOGGER.info(
-        f"gnf admin account balance: {algo_utils.micro_algos(admin_addr)} microAlgos"
-    )
-    if algo_utils.micro_algos(graveyard_addr) < 1:
-        dev_fund_account(settings=settings, to_addr=graveyard_addr)
-    LOGGER.info(
-        f"gnf graveyard account balance: {algo_utils.micro_algos(graveyard_addr)} microAlgos"
-    )
