@@ -10,7 +10,6 @@ The Python classes below also come with methods for translating back and
 forth between type instances and Python objects.
 
 
-
 .. automodule:: gridworks.types
 
 .. toctree::

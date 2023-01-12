@@ -56,20 +56,27 @@ numerous validation checks for GridWorks types.  It is available as an environme
    assert gnf_admin_addr ==  "RNMHG32VTIHTC7W3LZOEPTDGREL5IQGK46HKD3KBLZHYQUCAKLMT4G5ALI"
 
 
-
 Note that the GNodeFactory is designed to be unique. However, as a developer, you can run
 GridWorks simulations on your laptop, with no Internet.  GridWorks has the concept
 of `Universe <universe.html>`_, which can be Dev, Hybrid or Production. Each of these has a unique
 GnfAdminAddr.
 
 
-GnfValidatorFundingThresholdAlgos
+TaValidatorFundingThresholdAlgos
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 In order to be certified as a `TaValidator <ta-validator.html>`_, an entity must put enough
 skin in the game to show that they are serious about doing TerminalAsset validations. They
 are required to fund their 2-sig Multi [GnfAdminAddr, TaValidatorAddr] with this amount.
-In the `Dev Universe <universe.html>`_, this is set to 50 Algos. This is enough for a
-TaValidator to certify 500 TerminalAssets.
+In the `Dev Universe <universe.html>`_, this is set to 100 Algos.
+
+.. code-block:: python
+   :caption: Inspect dev TaValidatorFundingThesholdAlgos
+
+   from gridworks.gw_config import Public
+
+   threshold = Public().ta_validator_funding_threshold_algos
+   assert threshold ==  100
+
 
 TaDeedConsiderationAlgos
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -80,7 +87,16 @@ the AtomicTNode transacts on behalf of the TerminalAsset in markets. Prior to en
 markets, initial requirements may be made about the funding level of the TaDaemonAddr - roughly
 equivalent to the energy costs incurred by a month of trading activity.
 
-In the `Dev Universe <universe.html>`_, the TaDeedConsiderationAlgos is set to 100 Algos.
+In the `Dev Universe <universe.html>`_, the TaDeedConsiderationAlgos is set to 50 Algos.
+
+.. code-block:: python
+   :caption: Inspect dev TaValidatorFundingThesholdAlgos
+
+   from gridworks.gw_config import Public
+
+   threshold = Public().ta_deed_consideration_algos
+   assert threshold ==  50
+
 
 
 Back to `Lexicon <lexicon.html>`_

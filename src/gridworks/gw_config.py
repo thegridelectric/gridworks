@@ -12,7 +12,7 @@ class Public(BaseModel):
     """
     Publicly available information about the GNodeFactory, including:
       - GnfAdminAddr
-      - GnfValidatorFundingThresholdAlgos
+      - TaValidatorFundingThresholdAlgos
       - TaDeedConsiderationAlgos
       - GnfApiRoot
 
@@ -28,7 +28,7 @@ class Public(BaseModel):
         "COA6SYUOBE33F5JDYEGC5XAD43QRG3VGHNNQXLYWFSSQEHDQ5HJ52NDNPI"
     )
     gnr_addr: str = "X2ASUAUPK5ICMGDXQZQKBPSXWEJLBA4KKQ2TXW2KWO2JQTLY3J2Q4S33WE"
-    gnf_validator_funding_threshold_algos: int = 100
+    ta_validator_funding_threshold_algos: int = 100
     ta_deed_consideration_algos: int = 50
     gnf_api_root: str = "http://localhost:8000"
 

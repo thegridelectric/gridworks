@@ -16,32 +16,4 @@ is responsible for killing and re-spawning any subordinate that fails to receive
 or send messages in a reasonable timeframe.
 
 
-.. module:: gridworks.types
-
-.. automodule:: gridworks.types.g_node_instance_gt
-    :members:
-
-.. autoclass:: GNodeInstanceGt
-    :members:
-
-.. module:: gridworks.types
-
-.. autoclass:: SupervisorContainerGt
-    :members:
-
-.. automodule:: gridworks.types.supervisor_container_gt
-    :members:
-
-.. module:: gridworks.types
-
-.. autoclass:: SupervisorContainerGt
-    :members:
-
-
-.. automodule:: gridworks.types.heartbeat_a
-    :members:
-
-.. autoclass:: HeartbeatA
-    :members:
-
 `Back to Lexicon <lexicon.html>`_

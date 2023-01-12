@@ -51,7 +51,7 @@ These TaValidators establish the
 TerminalAssets. Note that a centralized registry must be involved in this process in order
 to ensure various uniqueness constraints (bijection between Transactive Devices and TerminalAssets,
 unique GNode for any GNodeAlias across time, and unique unique GNodeAlias for any GNode at any
-instant of time). This centralized registry is the `GNodeFactory <g-node-factory.html`_, and this is why the creation
+instant of time). This centralized registry is the `GNodeFactory <g-node-factory.html>`_, and this is why the creation
 of a TaDeed is an act of co-creation (requiring both signatures) between the GNodeFactory and
 a TaValidator.
 

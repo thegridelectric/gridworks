@@ -25,29 +25,15 @@
                 <OverwriteMode>Always</OverwriteMode>
                 <xsl:element name="FileContents">
 <xsl:text>
-SDK for Gridworks Types
-=======================
+SDK for `gridworks &lt;https://pypi.org/project/gridworks/&gt;`_  Types
+==================================================================
 
-Types are the building blocks for GridWorks APIs: they articulate
-*what* is getting sent without specifying the *where* (i.e.,
-a Restful API endpoint, or a queue in a rabbit broker) or *how* (i.e.,
-specifying that a Restful POST requires *this* type, or returns *that* type).
-
-As you are learning, you can assume that all Gridworks types are serialized JSON.
-Json is the lingua franca of APIs. It is not a programming language,
-it is more like a multi-dimensional graph structure.
-
-The API specs for these GridWorks types is `here &lt;apis/types.html&gt;`_. The Python Type
-SDKs provide a Pythonic method of creating valid instances of these types, and for
-interpretting payloads as  natural Python objects.
-
-You will notice massive overlap in the API specs and the SDK documentation for types.
-Why is that?
-
-Imagine the actors in GridWorks as cells in an organism. They have ways of communicating,
-and this is captured in their cell membranes. An actor's APIs specify how it communicates
-at and beyond its cell membranes. An SDK, in contrast,  is like an internal organelle
-capable of generating valid messages to be sent out of the membrane.
+The Python classes enumerated below provide an interpretation of GridWorks
+type instances (serialized JSON) as Python objects. Types are the building
+blocks for GridWorks APIs. You can read more about how they work
+`here &lt;api-sdk-abi.html&gt;`_, and examine their API specifications `here &lt;apis/types.html&gt;`_.
+The Python classes below also come with methods for translating back and
+forth between type instances and Python objects.
 
 
 .. automodule:: gridworks.types

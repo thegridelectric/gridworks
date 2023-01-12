@@ -608,6 +608,11 @@ class </xsl:text>
     <xsl:if test="(normalize-space(DefaultValue) !='')">
         <xsl:text>
         default=</xsl:text>
+         <xsl:if test="IsEnum='true'">
+             <xsl:call-template name="nt-case">
+                    <xsl:with-param name="mp-schema-text" select="EnumLocalName" />
+            </xsl:call-template><xsl:text>.</xsl:text>
+         </xsl:if>
         <xsl:value-of select="DefaultValue"/>
         <xsl:text>,</xsl:text>
     </xsl:if>
