@@ -280,7 +280,7 @@ class MultisigAccount:
 
 
 class PendingTxnResponse:
-    """Parses the dict object of a transaction response into a python class"""
+    """Parses the dict object of a transaction response into a Python class"""
 
     def __init__(self, tx_id: str, response: Dict[str, Any]) -> None:
         self.tx_id = tx_id
@@ -312,13 +312,21 @@ class PendingTxnResponse:
 def wait_for_transaction(
     client: AlgodClient, tx_id: str, timeout: int = 10
 ) -> PendingTxnResponse:
-    """Translates algosdk client.pending_transaction_info into a python class
-    object PendingTxnResponse after waiting for a confirmed transaction"""
-    lastStatus = client.status()
-    lastRound = lastStatus["last-round"]
-    startRound = lastRound
+    """Translates algosdk client.pending_transaction_info into a Python class
+    object PendingTxnResponse after waiting for a confirmed transaction
 
-    while lastRound < startRound + timeout:
+    Args:
+      tx_id (str): id of transaction
+      timeout (int): rounds to repeat before raising an error and giving up
+
+    Raises:
+        Exception if transaction is not confirmed in timeout rounds
+    """
+    last_status = client.status()
+    last_round = last_status["last-round"]
+    start_round = last_round
+
+    while last_round < start_round + timeout:
         pending_txn = client.pending_transaction_info(tx_id)
 
         if pending_txn.get("confirmed-round", 0) > 0:
@@ -327,9 +335,9 @@ def wait_for_transaction(
         if pending_txn["pool-error"]:
             raise Exception("Pool error: {}".format(pending_txn["pool-error"]))
 
-        lastStatus = client.status_after_block(lastRound + 1)
+        last_status = client.status_after_block(last_round + 1)
 
-        lastRound += 1
+        last_round += 1
 
     raise Exception(f"Transaction {tx_id} not confirmed after {timeout} rounds")
 
@@ -351,12 +359,12 @@ def pay_account(
     client: AlgodClient, sender: BasicAccount, to_addr: str, amt_in_micros: int
 ) -> PendingTxnResponse:
     """
-    Sends algos from one account to another.
+    Sends micro algos from one account to another, and waits to
 
     Args:
         client: AlgodClient
         sender: algo_utils.BasicAccount (not algo_utils.MultisigAccount)
-        toAddr (str): public address receiving the algos
+        to_addr (str): public address receiving the algos
         amtInMicros (int): Algos * 10**6 getting sent
 
     Raises:
@@ -414,16 +422,16 @@ def get_balances(client: AlgodClient, addr: str) -> Dict[int, int]:
         property_format.check_is_algo_address_string_format(addr)
     except:
         raise errors.AlgoError(f"addr does not have AlgoAddressStringFormat: {addr}")
-    accountInfo = client.account_info(addr)
+    account_info = client.account_info(addr)
 
     # set key 0 to Algo balance
-    balances[0] = accountInfo["amount"]
+    balances[0] = account_info["amount"]
 
-    assets: List[Dict[str, Any]] = accountInfo.get("assets", [])
-    for assetHolding in assets:
-        assetID = assetHolding["asset-id"]
-        amount = assetHolding["amount"]
-        balances[assetID] = amount
+    assets: List[Dict[str, Any]] = account_info.get("assets", [])
+    for asset_holding in assets:
+        asset_id = asset_holding["asset-id"]
+        amount = asset_holding["amount"]
+        balances[asset_id] = amount
 
     return balances
 
