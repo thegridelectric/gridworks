@@ -38,10 +38,30 @@ Wait for the `rabbit admin page <http://0.0.0.0:15672/>`_ to load (username/pass
 Hello Algorand
 ^^^^^^^^^^^^^^^
 
+Before you start, clone the  [Algorand sandbox](https://github.com/algorand/sandbox) and start it up in dev mode by
+running `./sandbox up dev` at its top level directory (you will need docker installed). Also,
+
+.. code-block:: python
+   :caption: Create and fund a dev account
+
+   import gridworks.algo_utils as algo_utils
+   from gridworks.algo_utils import BasicAccount
+   import gridworks.dev_utils.algo_setup as algo_setup
+
+   acct = BasicAccount()
+   assert algo_utils.algos(acct.addr) == 0
+   algo_setup.dev_fund_to_min(addr=acct.addr, min_algos=3)
+   assert algo_utils.algos(acct.addr) == 3
+   algo_setup.dev_fund_to_min(addr=acct.addr, min_algos=2)
+   assert algo_utils.algos(acct.addr) == 3
+
+
+
 The first Algorand transaction that occurs in any full simulation is the creation of a `TaValidator Certificate <ta-validator.html#tavalidator-certificate>`_.
 (For quick context, a TaValidator is an entity involved in establishing the link between GridWorks avatars for real-world devices attached to the electric grid.)
 
-This certificate is an example of an Algorand Non-fungible Token (NFT).  More specifically, an NFT it is an Algorand Standard Asset (ASA) whose
+This certificate is an example of an Algorand Non-fungible Token (`NFT <https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0003.md>`_).
+In particular, the certificate is an Algorand Standard Asset whose
 `total <https://developer.algorand.org/docs/get-details/transactions/transactions/#total>`_ is 1 (this is how uniqueness in enforced).
 You may have heard about NFTs in the `context of art <https://www.algorand.foundation/nfts>`_. We are using NFTs in a similar way -
 s an identifiable object that can only be owned by a single entity.
@@ -54,23 +74,22 @@ TaValidator Certificate is that the creator's address  must be a 2-signature Mul
 .. code-block:: python
    :caption: Creating a 2-sig MultiAddress [GnfAdminAddr, ValidatorAddr]
 
-   from gridworks.gw_config import Public
-   from gridworks.algo_utils import BasicAccount
+from gridworks.gw_config import Public
+from gridworks.algo_utils import BasicAccount
+from gridworks.algo_utils import MultisigAccount
 
-   validator_acct = BasicAccount()
-   gnf_admin_addr = Public().gnf_admin_addr
-   msig = Multisig(
-      version=1,
-      threshold=2,
-      addresses = [gnf_admin_addr, validator_acct.addr]
-   )
+validator_acct = BasicAccount()
+gnf_admin_addr = Public().gnf_admin_addr
+multi = MultisigAccount(
+   version=1,
+   threshold=2,
+   addresses = [gnf_admin_addr, validator_acct.addr]
+)
 
-   print(msig.address())
+   print(msig.addr())
 
-TODO: code block using algo_util.MultiAccount to crreate the same multi.
 
-TODO: give an example of creating an NFT.
-ASAs have unique identifiers on the blockchain. These are called Asset Ids, or Asset Indices, and they are integers.
+
 
 Hello FastAPI
 ^^^^^^^^^^^^^^
