@@ -74,6 +74,7 @@ class GNodeSettings(BaseSettings):
     log_level: str = "INFO"
     universe_type_value: str = "Dev"
     rabbit: RabbitBrokerClient = RabbitBrokerClient()
+    redis_endpoint: str = "localhost"
     public: Public = Public()
     algo_api_secrets: AlgoApiSecrets = AlgoApiSecrets()
     minute_cron_file: str = "cron_last_minute.txt"
