@@ -20,7 +20,10 @@ GridWorks lexicon
     GNodeRole <g-node-role>
     GNodeStatus <g-node-status>
     InterconnectionComponent <interconnection-component>
+    MarketBid <market-bid>
     MarketMaker <market-maker>
+    MarketSlot <market-slot>
+    MarketType <market-type>
     PriceService <price-service>
     SCADA <scada>
     Supervisor <supervisor>
