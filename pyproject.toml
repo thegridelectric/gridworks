@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gridworks"
-version = "0.0.10"
+version = "0.0.11"
 description = "Gridworks"
 authors = ["GridWorks <gridworks@gridworks-consulting.com>"]
 license = "MIT"
