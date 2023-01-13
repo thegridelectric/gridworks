@@ -59,6 +59,14 @@ class RabbitBrokerClient(BaseModel):
 
 
 class GNodeSettings(BaseSettings):
+    """
+    Template settings for a GNode. 
+    """
+    public: Public = Public()
+    algo_api_secrets: AlgoApiSecrets = AlgoApiSecrets()
+    rabbit: RabbitBrokerClient = RabbitBrokerClient()
+    redis_endpoint: str = "localhost"
+
     g_node_alias: str = "d1.isone.unknown.gnode"
     g_node_id: str = "e23eb2ec-4064-4921-89d4-b006edc81216"
     g_node_instance_id: str = "97eba574-bd20-45b5-bf82-9ba2f492d8f6"
@@ -73,10 +81,6 @@ class GNodeSettings(BaseSettings):
     ).int_timestamp
     log_level: str = "INFO"
     universe_type_value: str = "Dev"
-    rabbit: RabbitBrokerClient = RabbitBrokerClient()
-    redis_endpoint: str = "localhost"
-    public: Public = Public()
-    algo_api_secrets: AlgoApiSecrets = AlgoApiSecrets()
     minute_cron_file: str = "cron_last_minute.txt"
     hour_cron_file: str = "cron_last_hour.txt"
     day_cron_file: str = "cron_last_day.txt"
