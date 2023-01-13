@@ -13,6 +13,6 @@ class DcError(Exception):
     pass
 
 
-class RegistryError(Exception)
+class RegistryError(Exception):
     """Base class for registry errors"""
     pass
