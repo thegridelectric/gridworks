@@ -87,7 +87,7 @@ def status_by_versioned_type_name() -> Dict[str, str]:
         "sim.timestep.000": "Pending",
         "super.starter.000": "Pending",
         "supervisor.container.gt.000": "Pending",
-        "tavalidatorcert.algo.create.000": "Pending",
+        "tavalidatorcert.algo.create.000": "Active",
         "tavalidatorcert.algo.transfer.000": "Pending",
     }
 

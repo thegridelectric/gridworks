@@ -49,11 +49,11 @@
       "url": "https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr"
     },
     "Axiom2": {
-      "title": "Is AssetCreateTxn",
-      "description": "The transaction must have type AssetCreateTxn."
+      "title": "Is AssetConfigTxn",
+      "description": "The transaction must have type AssetConfigTxn."
     },
     "Axiom3": {
-      "title": "Is ValidatorCert",
+      "title": "Is TaValidatorCert",
       "description": "For the asset getting created: Total is 1, Decimals is 0, UnitName is VLDTR, Manager is GnfAdminAddr, AssetName is not blank.",
       "url": "https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate"
     },
@@ -61,5 +61,11 @@
       "title": "Uniqueness",
       "description": "There must not already be a TaValidatorCert belonging to the 2-sig [GnfAdminAddr, ValidatorAddr] address."
     }
+  },
+  "example": {
+    "ValidatorAddr": "7QQT4GN3ZPAQEFCNWF5BMF7NULVK3CWICZVT4GM3BQRISD52YEDLWJ4MII",
+    "HalfSignedCertCreationMtx": "gqRtc2lng6ZzdWJzaWeSgaJwa8Qgi1hzb1WaDzF+215cR8xmiRfUQMrnjqHtQV5PiFBAUtmConBrxCD8IT4Zu8vBAhRNsXoWF+2i6q2KyBZrPhmbDCKJD7rBBqFzxECeARrO2EeYKIqsObwggXge02aA+Lf5D/lXB23O98qsyuf7f9jqDu+WT2U/KB53CPR+XSUWGh5nonEUdp63TDIEo3RocgKhdgGjdHhuiaRhcGFyhKJhbq9Nb2xseSBNZXRlcm1haWShbcQgi1hzb1WaDzF+215cR8xmiRfUQMrnjqHtQV5PiFBAUtmhdAGidW6lVkxEVFKjZmVlzQPoomZ2A6NnZW6qc2FuZG5ldC12MaJnaMQgZGDSySH2HEYnRD3oWlUn77Xl6iBj3QBYmURoHXJQSRCibHbNA+ukbm90ZcQrTW9sbHkgSW5jIFRlbGVtZXRyeSBTdXJ2ZXlvcnMgYW5kIFB1cnZleW9yc6NzbmTEIMdnGF0JPZPHHFmVn8fmYiS7Wzi6UObcSZTp1gpcJYQHpHR5cGWkYWNmZw==",
+    "TypeName": "tavalidatorcert.algo.create",
+    "Version": "000"
   }
 }
