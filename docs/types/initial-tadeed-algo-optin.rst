@@ -21,6 +21,10 @@ Python pydantic class corresponding to  json type ```initial.tadeed.algo.optin``
     - Description: . Funding transaction for the TaDaemon account, signed by the TaOwner.
     - Format: AlgoMsgPackEncoded
 
+.. autoclass:: gridworks.types.initial_tadeed_algo_optin.check_is_left_right_dot
+    :members:
+
+
 .. autoclass:: gridworks.types.initial_tadeed_algo_optin.check_is_algo_address_string_format
     :members:
 

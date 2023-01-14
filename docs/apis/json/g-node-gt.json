@@ -1,7 +1,7 @@
 {
   "gwapi": "001",
   "type_name": "g.node.gt",
-  "version": "000",
+  "version": "001",
   "owner": "gridworks@gridworks-consulting.com",
   "description": "Used to send and receive updates about GNodes. GNodes are the building blocks of Gridworks. They have slowly-changing state that must be kept in sync across a distributed system. Therefore, they require a global registry to act as Single Source of Truth (SSoT). This class is used for that SSoT to share information with actors about their GNodes, and the GNodes that they will observe and communicate with.",
   "url": "https://gridworks.readthedocs.io/en/latest/g-node.html",
@@ -183,18 +183,6 @@
       "description": "Some GNodes, in particular those acting as avatars for physical devices that are part of or are attached to the electric grid, have physical locations. These locations are used to help validate the grid topology.",
       "required": false
     },
-    "ComponentId": {
-      "type": "string",
-      "format": "UuidCanonicalTextual",
-      "title": "Unique identifier for GNode's Component",
-      "description": "Used if a GNode is an avatar for a physical device. The serial number of a device is different from its make/model. The ComponentId captures the specific instance of the device.",
-      "required": false
-    },
-    "DisplayName": {
-      "type": "string",
-      "title": "Display Name",
-      "required": false
-    },
     "OwnershipDeedNftId": {
       "type": "integer",
       "minimum": 0,
@@ -202,17 +190,17 @@
       "description": "The Id of the TaDeed Algorand Standard Asset if the GNode is a TerminalAsset.",
       "required": false
     },
-    "OwnerAddr": {
-      "type": "string",
-      "format": "AlgoAddressStringFormat",
-      "title": "Algorand address of the deed owner",
-      "required": false
-    },
     "OwnershipDeedValidatorAddr": {
       "type": "string",
       "format": "AlgoAddressStringFormat",
       "title": "Algorand address of Validator",
       "description": "Deeds are issued by the GNodeFactory, in partnership with third party Validators.",
+      "required": false
+    },
+    "OwnerAddr": {
+      "type": "string",
+      "format": "AlgoAddressStringFormat",
+      "title": "Algorand address of the deed owner",
       "required": false
     },
     "DaemonAddr": {
@@ -229,15 +217,33 @@
       "description": "The Id of the TradingRights Algorand Standard Asset.",
       "required": false
     },
+    "ScadaAlgoAddr": {
+      "type": "string",
+      "format": "AlgoAddressStringFormat",
+      "title": "",
+      "required": false
+    },
+    "ComponentId": {
+      "type": "string",
+      "format": "UuidCanonicalTextual",
+      "title": "Unique identifier for GNode's Component",
+      "description": "Used if a GNode is an avatar for a physical device. The serial number of a device is different from its make/model. The ComponentId captures the specific instance of the device.",
+      "required": false
+    },
+    "DisplayName": {
+      "type": "string",
+      "title": "Display Name",
+      "required": false
+    },
     "TypeName": {
       "type": "string",
-      "value": "g.node.gt.000",
+      "value": "g.node.gt.001",
       "title": "The type name"
     },
     "Version": {
       "type": "string",
       "title": "The type version",
-      "default": "000",
+      "default": "001",
       "required": true
     }
   },

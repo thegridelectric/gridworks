@@ -67,7 +67,7 @@ class TavalidatorcertAlgoCreate(BaseModel):
     def check_validator_addr(cls, v: str) -> str:
         """
         Axiom 5: Uniqueness.
-        There must not already be a ValidatorCert belonging to the  2-sig [GnfAdminAddr, ValidatorAddr] address.
+        There must not already be a TaValidatorCert belonging to the  2-sig [GnfAdminAddr, ValidatorAddr] address.
         """
         try:
             check_is_algo_address_string_format(v)
@@ -83,12 +83,12 @@ class TavalidatorcertAlgoCreate(BaseModel):
         """
         Axioms 2, 3:
 
-        Axiom 2: Is AssetConfigTxn.
-        The transaction must have type AssetConfigTxn.
+        Axiom 2: Is AssetCreateTxn.
+        The transaction must have type AssetCreateTxn.
 
         Axiom 3: Is ValidatorCert.
-        For the asset getting created: total = 1, unit_name=VLDTR, manager is GnfAdminAddr,
-        asset_name and url not blank.
+        For the asset getting created: Total is 1, Decimals is 0, UnitName is VLDTR, Manager is GnfAdminAddr,
+        AssetName is not blank.
         [More info](https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate)
         """
         try:
@@ -105,18 +105,10 @@ class TavalidatorcertAlgoCreate(BaseModel):
         """
         Axiom 1: Is correct Multisig.
         Decoded HalfSignedCertCreationMtx must have type MultisigTransaction from the
-        2-sig MultiAccount  [GnfAdminAddr, ValidatorAddr].
+        2-sig MultiAccount  [GnfAdminAddr, ValidatorAddr], signed by ValidatorAddr.
         [More info](https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr)
         """
         raise NotImplementedError("Implement check for axiom 1")
-
-    @root_validator
-    def check_axiom_4(cls, v: dict) -> dict:
-        """
-        Axiom 4: TaValidator has signed.
-        ValidatorAddr must have signed the HalfSignedCertCreationMtx.
-        """
-        raise NotImplementedError("Implement check for axiom 4")
 
     def as_dict(self) -> Dict[str, Any]:
         d = self.dict()

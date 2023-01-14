@@ -51,7 +51,7 @@ def version_by_type_name() -> Dict[str, str]:
     """
 
     v: Dict[str, str] = {
-        "g.node.gt": "000",
+        "g.node.gt": "001",
         "g.node.instance.gt": "000",
         "gw.cert.id": "000",
         "heartbeat.a": "100",
@@ -76,7 +76,7 @@ def status_by_versioned_type_name() -> Dict[str, str]:
     """
 
     v: Dict[str, str] = {
-        "g.node.gt.000": "Pending",
+        "g.node.gt.001": "Pending",
         "g.node.instance.gt.000": "Pending",
         "gw.cert.id.000": "Pending",
         "heartbeat.a.100": "Pending",

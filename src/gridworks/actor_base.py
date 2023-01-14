@@ -1125,3 +1125,11 @@ class ActorBase(ABC):
 
     def time_str(self) -> str:
         return pendulum.from_timestamp(self.time()).strftime("%m/%d/%Y, %H:%M")
+
+    ###############################
+    # Other GNode-related methods
+    ###############################
+
+    @property
+    def short_alias(self) -> str:
+        return self.alias.split(".")[-1]

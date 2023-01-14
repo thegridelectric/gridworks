@@ -34,9 +34,10 @@ An entity is a TaValidator exactly if its Algorand address (TaValidatorAddr) own
 This certificate is an Algorand Standard Asset meeting the following criteria:
   - `Creator (aka Sender) <https://developer.algorand.org/docs/get-details/transactions/transactions/#sender>`_ is the 2-sig `MultiAddress <https://gridworks.readthedocs.io/en/latest/algo-utils.html#gridworks.algo_utils.MultisigAccount>`_ [GnfAdminAddr, ValidatorAddr]
   - `Total <https://developer.algorand.org/docs/get-details/transactions/transactions/#total>`_ is 1
+  - `Decimals <https://developer.algorand.org/docs/get-details/transactions/transactions/#decimals>`_ is 0
   - `UnitName <https://developer.algorand.org/docs/get-details/transactions/transactions/#unitname>`_ is "VLDTR"
   - Manager is GnfAdminAddr
-  - AssetName and Url are not blank
+  - AssetName its not blank
 
 
 Unpacking this a bit.

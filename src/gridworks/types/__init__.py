@@ -1,3 +1,5 @@
+""" List of all the schema types """
+
 from gridworks.types.g_node_gt import GNodeGt
 from gridworks.types.g_node_gt import GNodeGt_Maker
 from gridworks.types.g_node_instance_gt import GNodeInstanceGt

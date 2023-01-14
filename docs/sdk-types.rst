@@ -1,6 +1,6 @@
 
-SDK for Gridworks Types
-=======================
+SDK for `gridworks <https://pypi.org/project/gridworks/>`_  Types
+==================================================================
 
 The Python classes enumerated below provide an interpretation of GridWorks
 type instances (serialized JSON) as Python objects. Types are the building

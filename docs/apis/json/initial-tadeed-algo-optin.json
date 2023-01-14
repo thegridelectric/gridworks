@@ -5,6 +5,11 @@
   "owner": "gridworks@gridworks-consulting.com",
   "description": "Received by TaDaemon so that it can opt into intial TaDeed. The TaDaemon must opt into the TaDeed before receiving it. This message prompts that action.",
   "formats": {
+    "LeftRightDot": {
+      "type": "string",
+      "description": "Lowercase alphanumeric words separated by periods, most significant word (on the left) starting with an alphabet character.",
+      "example": "dw1.isone.me.freedom.apple"
+    },
     "AlgoAddressStringFormat": {
       "type": "string",
       "description": "String of length 32, characters are all base32 digits.",
