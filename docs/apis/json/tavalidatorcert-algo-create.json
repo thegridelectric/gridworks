@@ -45,25 +45,21 @@
   "axioms": {
     "Axiom1": {
       "title": "Is correct Multisig",
-      "description": "Decoded HalfSignedCertCreationMtx must have type MultisigTransaction from the 2-sig MultiAccount [GnfAdminAddr, ValidatorAddr].",
+      "description": "Decoded HalfSignedCertCreationMtx must have type MultisigTransaction from the 2-sig MultiAccount [GnfAdminAddr, ValidatorAddr], signed by ValidatorAddr.",
       "url": "https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr"
     },
     "Axiom2": {
-      "title": "Is AssetConfigTxn",
-      "description": "The transaction must have type AssetConfigTxn."
+      "title": "Is AssetCreateTxn",
+      "description": "The transaction must have type AssetCreateTxn."
     },
     "Axiom3": {
       "title": "Is ValidatorCert",
-      "description": "For the asset getting created: total = 1, unit_name=VLDTR, manager is GnfAdminAddr, asset_name and url not blank.",
+      "description": "For the asset getting created: Total is 1, Decimals is 0, UnitName is VLDTR, Manager is GnfAdminAddr, AssetName is not blank.",
       "url": "https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate"
-    },
-    "Axiom4": {
-      "title": "TaValidator has signed",
-      "description": "ValidatorAddr must have signed the HalfSignedCertCreationMtx."
     },
     "Axiom5": {
       "title": "Uniqueness",
-      "description": "There must not already be a ValidatorCert belonging to the 2-sig [GnfAdminAddr, ValidatorAddr] address."
+      "description": "There must not already be a TaValidatorCert belonging to the 2-sig [GnfAdminAddr, ValidatorAddr] address."
     }
   }
 }

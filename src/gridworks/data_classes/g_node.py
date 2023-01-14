@@ -43,6 +43,7 @@ class GNode:
         owner_addr: Optional[str] = None,
         daemon_addr: Optional[str] = None,
         trading_rights_nft_id: Optional[int] = None,
+        scada_algo_addr: Optional[str] = None,
         component_id: Optional[str] = None,
         display_name: Optional[str] = None,
     ):
@@ -61,6 +62,7 @@ class GNode:
             owner_addr (Optional[str], optional): _description_. Defaults to None.
             daemon_addr (Optional[str], optional): _description_. Defaults to None.
             trading_rights_nft_id (Optional[int], optional): _description_. Defaults to None.
+            scada_algo_addr ()(Optional[str], optional): _description_. Defaults to None.
             component_id (Optional[str], optional): _description_. Defaults to None.
             display_name (Optional[str], optional): _description_. Defaults to None.
 
@@ -83,6 +85,7 @@ class GNode:
         self.owner_addr = owner_addr
         self.daemon_addr = daemon_addr
         self.trading_rights_nft_id = trading_rights_nft_id
+        self.scada_algo_addr = scada_algo_addr
         self.component_id = component_id
         self.display_name = display_name
         self.__class__.by_alias[self.alias] = self

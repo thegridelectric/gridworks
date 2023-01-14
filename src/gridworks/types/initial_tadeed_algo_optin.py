@@ -12,6 +12,31 @@ from pydantic import validator
 from gridworks.errors import SchemaError
 
 
+def check_is_left_right_dot(v: str) -> None:
+    """
+    LeftRightDot format: Lowercase alphanumeric words separated by periods,
+    most significant word (on the left) starting with an alphabet character.
+
+    Raises:
+        ValueError: if not LeftRightDot format
+    """
+    from typing import List
+
+    try:
+        x: List[str] = v.split(".")
+    except:
+        raise ValueError(f"Failed to seperate {v} into words with split'.'")
+    first_word = x[0]
+    first_char = first_word[0]
+    if not first_char.isalpha():
+        raise ValueError(f"Most significant word of {v} must start with alphabet char.")
+    for word in x:
+        if not word.isalnum():
+            raise ValueError(f"words of {v} split by by '.' must be alphanumeric.")
+    if not v.islower():
+        raise ValueError(f"All characters of {v} must be lowercase.")
+
+
 def check_is_algo_address_string_format(v: str) -> None:
     """
     AlgoAddressStringFormat format: The public key of a private/public Ed25519

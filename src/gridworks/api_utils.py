@@ -311,3 +311,38 @@ def alias_from_deed_idx(asset_idx: int) -> Optional[str]:
     )
     info = client.asset_info(asset_idx)
     return info["params"]["name"]
+
+
+def is_validator_addr(validator_addr: str) -> bool:
+    """
+    Checks if Validator Multi has a single valid TaValidator certificate
+    """
+    settings = config.VanillaSettings(_env_file=dotenv.find_dotenv())
+    client: AlgodClient = AlgodClient(
+        settings.algo_api_secrets.algod_token.get_secret_value(),
+        settings.public.algod_address,
+    )
+    multi = get_validator_account_with_admin(validator_addr)
+    try:
+        created_assets = client.account_info(multi.addr)["created-assets"]
+    except:
+        return False
+    validator_certs = list(
+        filter(lambda x: x["params"]["unit-name"] == "VLDTR", created_assets)
+    )
+    if len(validator_certs) != 1:
+        return False
+    params = validator_certs[0]["params"]
+    if params["total"] != 1:
+        return False
+    if params["decimals"] != 0:
+        return False
+    if "name" not in params.keys():
+        return False
+    if params["name"] == "":
+        return False
+    if params["manager"] != settings.public.gnf_admin_addr:
+        return False
+    if params["creator"] != multi.addr:
+        return False
+    return True

@@ -32,7 +32,7 @@ They then react, in real time, when load is not exactly what they planned for, b
 
 ![alt_text](images/isone-system-load.png)
 
-The difficulty of this grid balancing task is exacerbated by the fact that there are several complex feedback loops in grid control that make the system inherently unstable. As Christopher DeMarco, professor of Electrical Engineering at the University of Wisconsin and one of the country’s leading experts on the stability of synchronous electric grids says, “Balancing the grid is a bit like balancing a broom on its handle.”
+The difficulty of this grid balancing task is exacerbated by the fact that there are several complex feedback loops in grid control that make the system inherently unstable. As Christopher DeMarco, [Gridworks Energy Consulting](https://gridworks-consulting.com/) principal and professor of Electrical Engineering at the University of Wisconsin and one of the country’s leading experts on the stability of synchronous electric grids says, “Balancing the grid is a bit like balancing a broom on its handle.”
 
 ![alt_text](images/balancing-broom.png)
 
