@@ -17,8 +17,8 @@ To learn how using and contributing to GridWorks can support a cost-effective an
 
 - Watch the beginning of the GridWorks story in `this 5 minute video <https://www.youtube.com/watch?v=5QFNQcp2Yzs>`_
 - Try some `Hello World <hello-gridworks.html>`_ examples
-- Walk through this `10 MW simulation <story.html>`_ of how GridWorks, if deployed in new heating systems, could cut home heating costs in half while reducing or eliminating the curtailing (i.e. turning off and wasting) of wind power
-- Learn the ropes of `GridWorks Communications <api-sdk-abi.html>`_
+- Read the `Millinocket Story <millinocket-story.html>`_ to learn how Transactive Devices could cut home heating costs in half while reducing or eliminating the curtailing (i.e. turning off and wasting) of wind power
+- Go through the partner `Millinocket Tutorial <millinocket-tutorial.html>`_.
 
 Algorand Blockchain Mechanics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -64,10 +64,11 @@ Installation
 
 .. toctree::
     :hidden:
-    :maxdepth: 2
-    :caption: Demo
+    :maxdepth: 3
+    :caption: Millinocket, ME
 
-    Story <story>
+    Millinocket Demo <millinocket-demo>
+    Millinocket Tutorial <millinocket-tutorial>
 
 .. toctree::
     :hidden:

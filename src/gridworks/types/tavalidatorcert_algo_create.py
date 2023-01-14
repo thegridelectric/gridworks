@@ -122,30 +122,30 @@ class TavalidatorcertAlgoCreate(BaseModel):
             raise ValueError(
                 "Axiom 3: TaValidatorCert ASA Total must be 1, "
                 f" got {txn.total}."
-                " See https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr"
+                " See https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate"
             )
         if not txn.decimals == 0:
             raise ValueError(
                 "Axiom 3: TaValidatorCert ASA Decimals must be 0, "
                 f" got {txn.decimals}."
-                " See https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr"
+                " See https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate"
             )
         if not txn.unit_name == "VLDTR":
             raise ValueError(
                 "Axiom 3: TaValidatorCert ASA UnitName must be 'VLDTR', "
                 f" got {txn.decimals}."
-                " See https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr"
+                " See https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate"
             )
         if not txn.manager == gnf_admin_addr:
             raise ValueError(
                 "Axiom 3: TaValidatorCert manager must be Universe gnf_admin_addr, "
                 f" got {txn.decimals}."
-                " See https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr"
+                " See https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate"
             )
         if (txn.asset_name is None) or (txn.asset_name == ""):
             raise ValueError(
                 "Axiom 3: TaValidatorCert AssetName cannot be blank, "
-                " See https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr"
+                " See https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate"
             )
         return v
 

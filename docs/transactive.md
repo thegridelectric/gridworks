@@ -58,3 +58,22 @@ The thermal storage in these systems allow them to buy energy from the grid when
 - This type of system requires sophisticated Forward-Looking Optimization techniques, using weather and price forecasts to plan future energy purchases and react in real time to unexpected weather and/or market conditions.
 
 The [Transactive Heat Pilot in Maine](story) will demonstrate the ability of the GridWorks TER platform to keep houses warm, reduce curtailment of wind farms, and lower the cost of home heating for thousands of people in and around Millinocket.
+
+## The Millocket Demo
+
+## In the field
+
+Efficiency Maine is a quasi-governmental organization with a mandate to install 100,000 heat pumps across the state. They are concerned that they do not have a solution that is cost effective and that
+can keep up with the coldest days. Therefore, they have funded a pilot project to test out the capabilities of transactive thermal storage heat systems. Over the next year, this will likely be
+on the scale of 20 homes. If the solution proves to keep people warm and is cost effective, they
+are poised to roll out rapidly at scale after that.
+
+### Freedom ME
+
+To support this real demonstration, GridWorks has developed open-source
+[SCADA code](https://github.com/thegridelectric/gw-scada-spaceheat-python) (based on our previous experience at [VCharge](https://www.greentechmedia.com/articles/read/vcharge-turning-hot-bricks-into-grid-batteries), where we designed and deploying SCADA systems as retrofits for thousands of ceramic brick thermal stoage heaters). We have also agreed to build prototype SCADA boxes (built with off-the-shelf parts,
+with a raspberry Pi 4 as the brain) for the first several dozen installations.
+
+**Dec 30 2022** The first SCADA is deployed in Freedom Maine! The thermal storage and heat pump have also been installed, waiting on some upgrades to the heat distribution system before going live.
+
+![alt_text](images/freedom-apple-thermal-store.png)
