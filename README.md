@@ -21,25 +21,25 @@
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [black]: https://github.com/psf/black
 
-GridWorks uses distributed actors to balance the electric grid. What does this mean?
-In today's world, more power comes from highly variable power sources such as wind and
-solar. And yet, the number of electrons going into the grid must match the number coming
-out. This is where GridWorks comes in. GridWorks technology enables electrical devices
-with some embedded storage or with flexibility to provide grid balancing. Furthermore,
-GridWorks allows these appliances to be more thrifty, using electricity when it is
-cheap and green.
+GridWorks uses distributed actors to balance the electric grid. What does this mean? In today's world, more
+power comes from highly variable power sources such as wind and solar. And yet, the number
+of electrons going into the grid must match the number coming out. This is where GridWorks comes in.
+GridWorks technology enables electrical devices with some embedded storage or with flexibility to provide grid
+balancing. Furthermore, GridWorks allows these appliances to be more thrifty, using electricity when
+it is cheap and green.
 
 To learn how using and contributing to GridWorks can support a cost-effective and rapid transition to a sustainable future:
 
-- Watch the beginning of the GridWorks story in [this 5 minute video](https://www.youtube.com/watch?v=5QFNQcp2Yzs)
-- Try some [Hello World](https://gridworks.readthedocs.io/en/latest/hello-gridworks.html) examples
-- Walk through this [10 MW simulation](https://gridworks.readthedocs.io/en/latest/story.html) of how GridWorks, if deployed in new heating systems, could cut home heating costs in half while reducing or eliminating the curtailing (i.e. turning off and wasting) of wind power
-- Learn the ropes of [GridWorks Communications](https://gridworks.readthedocs.io/en/latest/api-sdk-abi.html)
+- Try some simple [Hello World](https://gridworks.readthedocs.io/en/latest/hello-gridworks.html) examples;
+- Read the [Millinocket Story](https://gridworks.readthedocs.io/en/latest/millinocket-demo.html) to learn how to exploit the synergy between wind power and space heating;
+- Go through the partner [Millinocket Tutorial](https://gridworks.readthedocs.io/en/latest/millinocket-tutorial.html).
 
-## Algorand Blockchain Mechanics
+Algorand Blockchain Mechanics
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Gridworks runs markets between distributed actors acting as avatars for physical devices on the grid. It needs a foundation of trustless, secure, scalabe validation and authentication. Out of the gate, you will need to understand how to work with the Algorand blockchain. If Algorand
-development is new to you or you want a refresher, consider starting [here](https://gridworks.readthedocs.io/en/latest/blockchain.html).
+Gridworks runs markets between distributed actors acting as avatars for physical devices on the grid. It needs a
+foundation of trustless, secure, scalable validation and authentication. It heavily uses the Algorand blockchain. If
+you want to undestand more about how and why this is, go [here](https://gridworks.readthedocs.io/en/latest/blockchain.html).
 
 ## Usage
 
