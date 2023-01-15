@@ -14,6 +14,7 @@ import dotenv
 from algosdk import account  # type: ignore[import]
 from algosdk import encoding
 from algosdk import mnemonic
+from algosdk.atomic_transaction_composer import AccountTransactionSigner
 from algosdk.future import transaction  # type: ignore[import]
 from algosdk.future.transaction import Multisig  # type: ignore[import]
 from algosdk.future.transaction import MultisigTransaction
@@ -138,11 +139,17 @@ class BasicAccount:
     x = BasicAccount() will generate a new BasicAccount.
     """
 
-    def __init__(self, private_key: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        private_key: Optional[str] = None,
+    ) -> None:
         if private_key is None:
             private_key = account.generate_account()[0]
         self._sk: str = private_key
         self._addr: str = account.address_from_private_key(private_key)
+
+    def as_signer(self) -> AccountTransactionSigner:
+        return AccountTransactionSigner(self.sk)
 
     @cached_property
     def sk(self) -> str:
