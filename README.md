@@ -21,9 +21,9 @@
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [black]: https://github.com/psf/black
 
-GridWorks uses distributed actors to balance the electric grid. What does this mean? In today's world, more
+GridWorks uses distributed actors to balance the electric grid. What does this mean?  In today's world, more
 power comes from highly variable power sources such as wind and solar. And yet, the number
-of electrons going into the grid must match the number coming out. This is where GridWorks comes in.
+of electrons going into the grid must match the number coming out.  This is where GridWorks comes in.
 GridWorks technology enables electrical devices with some embedded storage or with flexibility to provide grid
 balancing. Furthermore, GridWorks allows these appliances to be more thrifty, using electricity when
 it is cheap and green.
@@ -34,8 +34,7 @@ To learn how using and contributing to GridWorks can support a cost-effective an
 - Read the [Millinocket Story](https://gridworks.readthedocs.io/en/latest/millinocket-demo.html) to learn how to exploit the synergy between wind power and space heating;
 - Go through the partner [Millinocket Tutorial](https://gridworks.readthedocs.io/en/latest/millinocket-tutorial.html).
 
-Algorand Blockchain Mechanics
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**GridWorks and Algorand**
 
 Gridworks runs markets between distributed actors acting as avatars for physical devices on the grid. It needs a
 foundation of trustless, secure, scalable validation and authentication. It heavily uses the Algorand blockchain. If
