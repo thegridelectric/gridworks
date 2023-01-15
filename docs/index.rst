@@ -11,7 +11,7 @@ it is cheap and green.
 To learn how using and contributing to GridWorks can support a cost-effective and rapid transition to a sustainable future:
 
 - Try some simple `Hello World <hello-gridworks.html>`_ examples;
-- Read the `Millinocket Story <millinocket-story.html>`_ to learn how to exploit the synergy between wind power and space heating;
+- Read the `Millinocket Story <millinocket-demo.html>`_ to learn how to exploit the synergy between wind power and space heating;
 - Go through the partner `Millinocket Tutorial <millinocket-tutorial.html>`_.
 
 Algorand Blockchain Mechanics

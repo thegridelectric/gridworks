@@ -78,7 +78,7 @@ def status_by_versioned_type_name() -> Dict[str, str]:
     v: Dict[str, str] = {
         "g.node.gt.002": "Pending",
         "g.node.instance.gt.000": "Pending",
-        "gw.cert.id.000": "Pending",
+        "gw.cert.id.000": "Active",
         "heartbeat.a.100": "Pending",
         "initial.tadeed.algo.create.000": "Pending",
         "initial.tadeed.algo.optin.002": "Pending",

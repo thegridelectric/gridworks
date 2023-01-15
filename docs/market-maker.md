@@ -15,7 +15,7 @@ specifies:
 - The Alias of the MarketMaker GNode
 
 The Atn provides its bid via the GridWorks type [atn.bid](https://gridworks-atn.readthedocs.io/en/latest/apis/types.html#atnbid).
-We explain what is going on in this bid, and the rules it must satisfy in order to
+We explain what is going on in this bid.
 We will work an example below with the MarketMaker for the Keene Rd constraint in the [Millinocket demo](millinocket-demo).
 This MarketMaker has a _single_ MarketType, which means for example that the question "what is current Keene Rd price?" is well-formed,
 since at any time there is only one MarketSlot containing that time.

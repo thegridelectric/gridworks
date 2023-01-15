@@ -82,11 +82,11 @@ class GNode:
         self.g_node_registry_addr = g_node_registry_addr
         self.prev_alias = prev_alias
         self.gps_point_id = gps_point_id
-        self.ownership_deed_nft_id = ownership_deed_nft_id
+        self.ownership_deed_id = ownership_deed_id
         self.ownership_deed_validator_addr = ownership_deed_validator_addr
         self.owner_addr = owner_addr
         self.daemon_addr = daemon_addr
-        self.trading_rights_nft_id = trading_rights_nft_id
+        self.trading_rights_id = trading_rights_id
         self.scada_algo_addr = scada_algo_addr
         self.scada_cert_id = scada_cert_id
         self.component_id = component_id
@@ -95,8 +95,8 @@ class GNode:
 
     def __repr__(self) -> str:
         rs = f"GNode Alias: {self.alias}, Role: {self.role.value}, Status: {self.status.value}"
-        if self.ownership_deed_nft_id and self.role == GNodeRole.TerminalAsset:
-            rs += f", TaDeedIdx: {self.ownership_deed_nft_id}"
+        if self.ownership_deed_id and self.role == GNodeRole.TerminalAsset:
+            rs += f", TaDeedIdx: {self.ownership_deed_id}"
         return rs
 
     def gps_point(self) -> Optional[GpsPoint]:

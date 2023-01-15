@@ -1,9 +1,12 @@
 # Transactive Device
 
-A **Transactive Device** is real-world electrical device that is consuming energy [transactively](transactive).
-Consider the first [Maine demo](maine-demo) installation at the house of one of the demo team members - an underfloor
-heating system on the first floor, and a combination of radiant heat and air on the second. Plumbed into this is a 3
-water tanks with 9 kW of resistive boost elements and a Spacepak heat pump with a max draw of 4.5 kW. The heat pump
+A **Transactive Device** is real-world electrical device that is consuming or producing energy [transactively](transactive).
+Consider the first [Maine demo](maine-demo) installation at the house of one of the demo team members.
+The space heating distribution system in their house is an underfloor
+heating system on the first floor, and a combination of radiant heat and air on the second. The
+distribution system can keep the house warm with water at 120F, even on the coldest day. Plumbed into this is 3
+water tanks with 9 kW of resistive boost elements and a Spacepak heat pump with a max draw of 4.5 kW,
+capable of producing 135 F water. The heat pump
 and resistive elements are metered by an eGauge meter.
 
 ![Geographical Location](images/transactive-device-1.png)

@@ -296,6 +296,79 @@ class </xsl:text><xsl:value-of select="$enum-local-name"/><xsl:text>Map:
 <xsl:if test="count(PropertyFormatsUsed)>0">
 <xsl:for-each select="$airtable//PropertyFormats/PropertyFormat[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$schema-id])>0)]">
 
+    <xsl:if test="Name='IsoFormat'">
+    <xsl:text>
+
+
+def check_is_iso_format(v: str) -> None:
+    import datetime
+
+    try:
+        datetime.datetime.fromisoformat(v.replace("Z", "+00:00"))
+    except:
+        raise ValueError(f"{v} is not IsoFormat")</xsl:text>
+    </xsl:if>
+
+    <xsl:if test="Name='MarketSlotNameLrdFormat'">
+    <xsl:text>
+
+
+def check_is_market_type_name_lrd_format(v: str) -> None:
+    from gridworks.enums import MarketTypeName
+    try:
+        x = v.split(".")
+    except AttributeError:
+        raise ValueError(f"{v} failed to split on '.'")
+    if not x[0] in MarketTypeName.values():
+        raise ValueError(f"{v} not recognized MarketType")
+    g_node_alias = ".".join(x[1:])
+    check_is_left_right_dot(g_node_alias)
+
+
+def check_is_market_slot_name_lrd_format(v: str) -> None:
+    """
+    MaketSlotNameLrdFormat: the format of a MarketSlotName.
+      - The first word must be a MarketTypeName
+      - The last word (unix time of market slot start) must
+      be a 10-digit integer divisible by 300 (i.e. all MarketSlots
+      start at the top of 5 minutes)
+      - More strictly, the last word must be the start of a
+      MarketSlot for that MarketType (i.e. divisible by 3600
+      for hourly markets)
+      - The middle words have LeftRightDot format (GNodeAlias
+      of the MarketMaker)
+    Example: rt60gate5.d1.isone.ver.keene.1673539200
+
+    """
+    from gridworks.data_classes.market_type import MarketType
+    try:
+        x = v.split(".")
+    except AttributeError:
+        raise ValueError(f"{v} failed to split on '.'")
+    slot_start = x[-1]
+    if len(slot_start) != 10:
+        raise ValueError(f"slot start {slot_start} not of length 10")
+    try:
+        slot_start = int(slot_start)
+    except ValueError:
+        raise ValueError(f"slot start {slot_start} not an int")
+    if slot_start % 300 != 0:
+        raise ValueError(f"slot start {slot_start} not a multiple of 300")
+
+    market_type_name_lrd = ".".join(x[:-1])
+    try:
+        check_is_market_type_name_lrd_format(market_type_name_lrd)
+    except ValueError as e:
+        raise ValueError(f"e")
+
+    market_type = MarketType.by_id[market_type_name_lrd.split(".")[0]]
+    if not slot_start % (market_type.duration_minutes * 60) == 0:
+        raise ValueError(
+            f"market_slot_start_s mod {(market_type.duration_minutes * 60)} must be 0"
+        )</xsl:text>
+    </xsl:if>
+
+
     <xsl:if test="Name='AlgoAddressStringFormat'">
     <xsl:text>
 

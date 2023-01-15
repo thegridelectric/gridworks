@@ -5,8 +5,8 @@ Gridworks is building a platform enabling distributed, decentralized, secure, an
 By `trustless`, what we mean is that counterparties do not need to rely on some central third party to broker their contract.
 In fact, Gridworks foundations for a scalable, decentralized trustless market structure is based in establishing _links of trust_:
 blockchain ASAs and/or SmartSigs establishing the rights of a GNode Actor to act as an avatar for a physical device. For example,
-the TaDeed (and its relationship to a TaValidatorCert) bridges the gap between a third-party inspector evaluating the accuracy
-of an electricity meter at a house, and the TerminalAsset GNode avatar of the Transactive Device behind that meter.
+a) (and its relationship to a TaValidatorCert) bridges the gap between a third-party inspector evaluating the accuracy
+of an electricity meter at a house, and the [TerminalAsset](terminal-asset) [GNode](g-node) avatar of the [Transactive Device](transactive-device) behind that meter.
 For more information on this, read about why we call a TaDeed a [Link of Trust](https://gridworks.readthedocs.io/en/latest/ta-deed.html#link-of-trust).
 
 Working knowledge of some basic Algorand tech is necessary to start developing with GridWorks:
