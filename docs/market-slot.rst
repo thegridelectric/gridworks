@@ -1,7 +1,7 @@
 MarketSlot
 ==========
 
-A `MarketMaker <market-maker.html_>` can run several types of Markets. For example, it can run an
+A `MarketMaker <market-maker.html>`_ can run several types of Markets. For example, it can run an
 hourly real-time market and also an ancillary services market for Regulation.
 
 This is captured by the concept of `MarketType <market-type.html>`_.

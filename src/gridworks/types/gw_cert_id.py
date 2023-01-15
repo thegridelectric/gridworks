@@ -131,7 +131,21 @@ class GwCertId(BaseModel):
         If Type is ASA, then Id exists and Addr does not. Otherwise, Addr exists
         and Id does not.
         """
-        raise NotImplementedError("Implement check for axiom 1")
+        Type: AlgoCertType = v.get("Type", None)
+        Idx: int = v.get("Idx", None)
+        Addr: str = v.get("Addr", None)
+
+        if Type == AlgoCertType.ASA:
+            if Idx is None:
+                raise ValueError("If Type is ASA then Idx must exist")
+            if Addr is not None:
+                raise ValueError("If Type is ASA then Addr must be None")
+        if Type == AlgoCertType.SmartSig:
+            if Idx is not None:
+                raise ValueError("If Type is SmartSig then Idx must be None")
+            if Addr is None:
+                raise ValueError("If Type is SmartSig then Addr must exist")
+        return v
 
     def as_dict(self) -> Dict[str, Any]:
         d = self.dict()

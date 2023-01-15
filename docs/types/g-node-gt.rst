@@ -31,7 +31,7 @@ Python pydantic class corresponding to  json type ```g.node.gt```.
     - Description: Lat/lon of GNode. Some GNodes, in particular those acting as avatars for physical devices that are part of or are attached to the electric grid, have physical locations. These locations are used to help validate the grid topology.
     - Format: UuidCanonicalTextual
 
-**OwnershipDeedNftId**:
+**OwnershipDeedId**:
     - Description: Algorand Id of ASA Deed. The Id of the TaDeed Algorand Standard Asset if the GNode is a TerminalAsset.
 
 **OwnershipDeedValidatorAddr**:
@@ -46,12 +46,15 @@ Python pydantic class corresponding to  json type ```g.node.gt```.
     - Description: Algorand address of the daemon app. Some GNodes have Daemon applications associated to them to handle blockchain operations.
     - Format: AlgoAddressStringFormat
 
-**TradingRightsNftId**:
+**TradingRightsId**:
     - Description: Algorand Id of ASA TradingRights. The Id of the TradingRights Algorand Standard Asset.
 
 **ScadaAlgoAddr**:
     - Description:
     - Format: AlgoAddressStringFormat
+
+**ScadaCertId**:
+    - Description:
 
 **ComponentId**:
     - Description: Unique identifier for GNode's Component. Used if a GNode is an avatar for a physical device. The serial number of a device is different from its make/model. The ComponentId captures the specific instance of the device.

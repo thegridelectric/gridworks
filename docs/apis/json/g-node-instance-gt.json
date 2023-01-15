@@ -97,7 +97,7 @@
       "required": true
     },
     "GNode": {
-      "type": "g.node.gt.001",
+      "type": "g.node.gt.002",
       "title": "The GNode represented by the Gni",
       "required": true
     },

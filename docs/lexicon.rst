@@ -25,6 +25,7 @@ GridWorks lexicon
     MarketSlot <market-slot>
     MarketType <market-type>
     PriceService <price-service>
+    RepresentationContract <representation-contract>
     SCADA <scada>
     Supervisor <supervisor>
     TaDaemon <ta-daemon>

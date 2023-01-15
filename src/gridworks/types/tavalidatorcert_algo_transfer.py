@@ -93,7 +93,7 @@ class TavalidatorcertAlgoTransfer(BaseModel):
         """
         Axiom 1: Is correct Multisig.
         Decoded HalfSignedCertTransferMtx must have type MultisigTransaction from the
-        2-sig MultiAccount  [GnfAdminAddr, ValidatorAddr].
+        2-sig MultiAccount  [GnfAdminAddr, ValidatorAddr], signed by the ValidatorAddr
         [More info](https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr)
         """
         raise NotImplementedError("Implement check for axiom 1")
@@ -103,14 +103,13 @@ class TavalidatorcertAlgoTransfer(BaseModel):
         """
         Axiom 2: Transfers correct certificate.
          - The transaction must be the transfer of an Algorand Standard Asset
-         - It must be getting transferred from its creator, which must be the 2-sig Multi [GnfAdmin, TaValidatorAddr]
+         -The sender must be the 2-sig Multi [GnfAdminAddr, TaValidatorAddr], which also created and owns the ASA
          - It must be getting sent to the ValidatorAddr
          -The ASA must have:
            - Total = 1
            - UnitName=VLDITR
            - GnfAdminAddr as manage
-           - AssetName and
-           - Url not blank.
+           - AssetName not blank
         - The transfer amount must be 1
         [More info](https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate)
         """
@@ -123,14 +122,6 @@ class TavalidatorcertAlgoTransfer(BaseModel):
         ValidatorAddr must be opted into the transferring ASA.
         """
         raise NotImplementedError("Implement check for axiom 3")
-
-    @root_validator
-    def check_axiom_5(cls, v: dict) -> dict:
-        """
-        Axiom 5: TaValidator has signed.
-        ValidatorAddr must have signed the mtx.
-        """
-        raise NotImplementedError("Implement check for axiom 5")
 
     def as_dict(self) -> Dict[str, Any]:
         d = self.dict()

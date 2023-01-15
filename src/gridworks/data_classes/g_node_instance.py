@@ -94,8 +94,8 @@ class GNodeInstance:
         return self.g_node.gps_point_id
 
     @property
-    def ownership_deed_nft_id(self) -> Optional[int]:
-        return self.g_node.ownership_deed_nft_id
+    def ownership_deed_id(self) -> Optional[int]:
+        return self.g_node.ownership_deed_id
 
     @property
     def ownership_deed_validator_addr(self) -> Optional[str]:
@@ -110,8 +110,8 @@ class GNodeInstance:
         return self.g_node.daemon_addr
 
     @property
-    def trading_rights_nft_id(self) -> Optional[int]:
-        return self.g_node.trading_rights_nft_id
+    def trading_rights_id(self) -> Optional[int]:
+        return self.g_node.trading_rights_id
 
     @property
     def component_id(self) -> Optional[str]:

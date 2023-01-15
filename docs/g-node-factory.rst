@@ -4,7 +4,7 @@ GNodeFactory
 The GNodeFactory is responsible for
 the topology of the GNodeTree - and importantly its copper sub-tree. It also managing
 the process of creating and updating Algorand certificates (TaDeeds, TaTradingRights,
-DiscoveryCertificates). This provides the foundation for scalable, trustless verification
+DiscoveryCertificates). This provides the foundation for scalable, decentralized verification
 of the bijection between online avatars and their real-life partners
 (e.g. `TerminalAssets <terminal-asset.html>`_ <-> `Transactive Device <transactive-device.html>`_).
 This validation process uses the `Algorand blockchain <blockchain.html>`_.

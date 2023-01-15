@@ -8,23 +8,18 @@ GridWorks technology enables electrical devices with some embedded storage or wi
 balancing. Furthermore, GridWorks allows these appliances to be more thrifty, using electricity when
 it is cheap and green.
 
-To start learning how to use this SDK, and how developing GridWorks actors can support a cost-effective and rapid transition to a sustainable future,
-watch the beginning of the GridWorks story in `this 5 minute video <https://www.youtube.com/watch?v=5QFNQcp2Yzs>`_,
-and then go through the `demo <story.html>`_ sequence, where we walk through a 10 MW simulation of transactive heating in
-and around wind farms in New England - wind farms that are getting curtailed off more than 20% of the year.
-
 To learn how using and contributing to GridWorks can support a cost-effective and rapid transition to a sustainable future:
 
-- Watch the beginning of the GridWorks story in `this 5 minute video <https://www.youtube.com/watch?v=5QFNQcp2Yzs>`_
-- Try some `Hello World <hello-gridworks.html>`_ examples
-- Walk through this `10 MW simulation <story.html>`_ of how GridWorks, if deployed in new heating systems, could cut home heating costs in half while reducing or eliminating the curtailing (i.e. turning off and wasting) of wind power
-- Learn the ropes of `GridWorks Communications <api-sdk-abi.html>`_
+- Try some simple `Hello World <hello-gridworks.html>`_ examples;
+- Read the `Millinocket Story <millinocket-demo.html>`_ to learn how to exploit the synergy between wind power and space heating;
+- Go through the partner `Millinocket Tutorial <millinocket-tutorial.html>`_.
 
 Algorand Blockchain Mechanics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Gridworks runs markets between distributed actors acting as avatars for physical devices on the grid. It needs a foundation of trustless, secure, scalabe validation and authentication. Out of the gate, you will need to understand how to work with the Algorand blockchain. If Algorand
-development is new to you or you want a refresher, consider starting `here <blockchain.html>`_.
+Gridworks runs markets between distributed actors acting as avatars for physical devices on the grid. It needs a
+foundation of trustless, secure, scalable validation and authentication. It heavily uses the Algorand blockchain. If
+you want to undestand more about how and why this is, go `here <blockchain.html>`_.
 
 **GridWorks SDKs**
 
@@ -64,10 +59,11 @@ Installation
 
 .. toctree::
     :hidden:
-    :maxdepth: 2
-    :caption: Demo
+    :maxdepth: 3
+    :caption: Millinocket, ME
 
-    Story <story>
+    Millinocket Demo <millinocket-demo>
+    Millinocket Tutorial <millinocket-tutorial>
 
 .. toctree::
     :hidden:

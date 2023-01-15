@@ -38,8 +38,14 @@ Wait for the `rabbit admin page <http://0.0.0.0:15672/>`_ to load (username/pass
 Hello Algorand
 ^^^^^^^^^^^^^^^
 
-Before you start, clone the  [Algorand sandbox](https://github.com/algorand/sandbox) and start it up in dev mode by
-running `./sandbox up dev` at its top level directory (you will need docker installed). Also,
+Before you start, clone the `Algorand sandbox <https://github.com/algorand/sandbox>`_ and start it up in dev mode by
+running `./sandbox up dev` at its top level directory (you will need docker installed).
+
+In order for an Algorand Account or Smart Contract to do any actions on-chain, it must be funded. The dev sandbox
+is running a local dev Algorand blockchain on your computer, which comes with a couple pre-funded genesis
+accounts. The **gridworks** package has a method called `dev_fund_to_min <algo-setup.html#gridworks.dev_utils.algo_setup.dev_fund_to_min>`_
+which can be called in the dev environment to fund an account from one of the sandbox genesis accounts.
+
 
 .. code-block:: python
    :caption: Create and fund a dev account
@@ -56,7 +62,6 @@ running `./sandbox up dev` at its top level directory (you will need docker inst
    assert algo_utils.algos(acct.addr) == 3
 
 
-
 The first Algorand transaction that occurs in any full simulation is the creation of a `TaValidator Certificate <ta-validator.html#tavalidator-certificate>`_.
 (For quick context, a TaValidator is an entity involved in establishing the link between GridWorks avatars for real-world devices attached to the electric grid.)
 
@@ -68,28 +73,38 @@ s an identifiable object that can only be owned by a single entity.
 
 All ASAs have *creators* -  identified by the Algorand address that pays the fee for the creation transaction
 (aka the `sender <https://developer.algorand.org/docs/get-details/transactions/transactions/#sender>`_). One of the criterion for an ASA being a
-TaValidator Certificate is that the creator's address  must be a 2-signature MultiSig address.
+TaValidator Certificate is that the creator's address  must be a 2-signature MultiSig address
+(examine all of the criteria `here <ta-validator.html#tavalidator-certificate>`_, and also note that this is enforced
+in the validation of a `tavalidator.algo.create  <apis/types.html#tavalidatorcertalgocreate>`_ type, in Axiom 3).
+
+Gridworks has a  `MultiAccount <algo-utils.html#gridworks.algo_utils.MultisigAccount>`_ object used for this purpose:
 
 
 .. code-block:: python
-   :caption: Creating a 2-sig MultiAddress [GnfAdminAddr, ValidatorAddr]
+   :caption: Creating a 2-sig MultiAccount[GnfAdminAddr, ValidatorAddr]
 
-from gridworks.gw_config import Public
-from gridworks.algo_utils import BasicAccount
-from gridworks.algo_utils import MultisigAccount
+   from gridworks.gw_config import Public
+   from gridworks.algo_utils import BasicAccount
+   from gridworks.algo_utils import MultisigAccount
 
-validator_acct = BasicAccount()
-gnf_admin_addr = Public().gnf_admin_addr
-multi = MultisigAccount(
-   version=1,
-   threshold=2,
-   addresses = [gnf_admin_addr, validator_acct.addr]
-)
+   validator_acct = BasicAccount()
+   gnf_admin_addr = Public().gnf_admin_addr
+   multi = MultisigAccount(
+      version=1,
+      threshold=2,
+      addresses = [gnf_admin_addr, validator_acct.addr]
+   )
 
-   print(msig.addr())
+   print(multi.addr)
+
+GridWorks always uses its MultiAccount instead of the  **algosdk.futures.transaction.Multisig** object.
+The algosdk Multisig object
+is not designed for multiple transactions, as it stores transaction signatures. Gotcha note. Sometimes Gridworks
+methods  duck-type BasicAccount and MultiAccount. This only works if the method only accesses their public address
+(e.g. **acct.addr**). MultiAccounts do not have a secret key, since it does not store the private information
+of their signatories.
 
 
 
 
-Hello FastAPI
-^^^^^^^^^^^^^^
+To continue with more tutorial-type instructions, please go to the `Millinocket tutorial <millinocket-tutorial.html>`_.

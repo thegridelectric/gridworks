@@ -25,6 +25,7 @@ class Public(BaseModel):
     dev_market_maker_api_root: str = "http://localhost:7997"
     dev_ta_validator_api_root: str = "http://localhost:8001"
     gnf_admin_addr: str = "RNMHG32VTIHTC7W3LZOEPTDGREL5IQGK46HKD3KBLZHYQUCAKLMT4G5ALI"
+    gnr_addr: str = "X2ASUAUPK5ICMGDXQZQKBPSXWEJLBA4KKQ2TXW2KWO2JQTLY3J2Q4S33WE"
     dev_market_maker_addr: str = (
         "JMEUH2AXM6UGRJO2DBZXDOA2OMIWQFNQZ54LCVC4GQX6QDOX5Z6JRGMWFA"
     )

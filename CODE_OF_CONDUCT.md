@@ -23,7 +23,6 @@ send an email to her at [gridworks@gridworks-consulting.com](mailto:gridworks@gr
 All complaints will be reviewed and investigated, and GridWorks Energy Consulting will respect
 the privacy and security of the reporter of any incident.
 
-
 ## Suggestions
 
 - Respect privacy
