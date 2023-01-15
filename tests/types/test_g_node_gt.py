@@ -1,4 +1,4 @@
-"""Tests g.node.gt type, version 001"""
+"""Tests g.node.gt type, version 002"""
 import json
 
 import pytest
@@ -19,16 +19,17 @@ def test_g_node_gt_generated() -> None:
         "GNodeRegistryAddr": "MONSDN5MXG4VMIOHJNCJJBVASG7HEZQSCEIKJAPEPVI5ZJUMQGXQKSOAYU",
         "PrevAlias": "d1",
         "GpsPointId": "50f3f6e8-5937-47c2-8d05-06525ef6467d",
-        "OwnershipDeedNftId": 5,
+        "OwnershipDeedId": 5,
         "OwnershipDeedValidatorAddr": "RNMHG32VTIHTC7W3LZOEPTDGREL5IQGK46HKD3KBLZHYQUCAKLMT4G5ALI",
         "OwnerAddr": "7QQT4GN3ZPAQEFCNWF5BMF7NULVK3CWICZVT4GM3BQRISD52YEDLWJ4MII",
         "DaemonAddr": "7QQT4GN3ZPAQEFCNWF5BMF7NULVK3CWICZVT4GM3BQRISD52YEDLWJ4MII",
-        "TradingRightsNftId": 1,
+        "TradingRightsId": 1,
         "ScadaAlgoAddr": "MONSDN5MXG4VMIOHJNCJJBVASG7HEZQSCEIKJAPEPVI5ZJUMQGXQKSOAYU",
+        "ScadaCertId": 10,
         "ComponentId": "19d3dd42-14de-427f-a489-d96b404ae3c5",
         "DisplayName": "Simulated Freedom House 1",
         "TypeName": "g.node.gt",
-        "Version": "001",
+        "Version": "002",
     }
 
     with pytest.raises(SchemaError):
@@ -53,12 +54,13 @@ def test_g_node_gt_generated() -> None:
         g_node_registry_addr=gtuple.GNodeRegistryAddr,
         prev_alias=gtuple.PrevAlias,
         gps_point_id=gtuple.GpsPointId,
-        ownership_deed_nft_id=gtuple.OwnershipDeedNftId,
+        ownership_deed_id=gtuple.OwnershipDeedId,
         ownership_deed_validator_addr=gtuple.OwnershipDeedValidatorAddr,
         owner_addr=gtuple.OwnerAddr,
         daemon_addr=gtuple.DaemonAddr,
-        trading_rights_nft_id=gtuple.TradingRightsNftId,
+        trading_rights_id=gtuple.TradingRightsId,
         scada_algo_addr=gtuple.ScadaAlgoAddr,
+        scada_cert_id=gtuple.ScadaCertId,
         component_id=gtuple.ComponentId,
         display_name=gtuple.DisplayName,
     ).tuple
@@ -121,8 +123,8 @@ def test_g_node_gt_generated() -> None:
     Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    if "OwnershipDeedNftId" in d2.keys():
-        del d2["OwnershipDeedNftId"]
+    if "OwnershipDeedId" in d2.keys():
+        del d2["OwnershipDeedId"]
     Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
@@ -141,13 +143,18 @@ def test_g_node_gt_generated() -> None:
     Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
-    if "TradingRightsNftId" in d2.keys():
-        del d2["TradingRightsNftId"]
+    if "TradingRightsId" in d2.keys():
+        del d2["TradingRightsId"]
     Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
     if "ScadaAlgoAddr" in d2.keys():
         del d2["ScadaAlgoAddr"]
+    Maker.dict_to_tuple(d2)
+
+    d2 = dict(d)
+    if "ScadaCertId" in d2.keys():
+        del d2["ScadaCertId"]
     Maker.dict_to_tuple(d2)
 
     d2 = dict(d)
@@ -170,11 +177,15 @@ def test_g_node_gt_generated() -> None:
     d2 = dict(d, RoleGtEnumSymbol="hi")
     Maker.dict_to_tuple(d2).Role = GNodeRole.default()
 
-    d2 = dict(d, OwnershipDeedNftId="5.1")
+    d2 = dict(d, OwnershipDeedId="5.1")
     with pytest.raises(ValidationError):
         Maker.dict_to_tuple(d2)
 
-    d2 = dict(d, TradingRightsNftId="1.1")
+    d2 = dict(d, TradingRightsId="1.1")
+    with pytest.raises(ValidationError):
+        Maker.dict_to_tuple(d2)
+
+    d2 = dict(d, ScadaCertId="10.1")
     with pytest.raises(ValidationError):
         Maker.dict_to_tuple(d2)
 

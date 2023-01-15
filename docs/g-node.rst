@@ -3,7 +3,7 @@ GNode
 
 A **GNode** is the fundamental building block of GridWorks. The `G` stands for grid.
 
-Many of the lead roles in the `demo <story.html>`_ are GNodes: the
+Many of the lead roles in the `Millinocket demo <millinocket-demo.html>`_ are GNodes: the
 `SCADA <scada.html>`_, the `TerminalAsset <terminal-asset.html>`_,
 the `MarketMaker <market-maker.html>`_ and the `AtomicTNodes <atomic-t-node.html>`_.
 

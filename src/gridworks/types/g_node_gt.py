@@ -1,4 +1,4 @@
-"""Type g.node.gt, version 001"""
+"""Type g.node.gt, version 002"""
 import json
 from enum import auto
 from typing import Any
@@ -300,7 +300,7 @@ class GNodeGt(BaseModel):
         description="Some GNodes, in particular those acting as avatars for physical devices that are part of or are attached to the electric grid, have physical locations. These locations are used to help validate the grid topology.",
         default=None,
     )
-    OwnershipDeedNftId: Optional[int] = Field(
+    OwnershipDeedId: Optional[int] = Field(
         title="Algorand Id of ASA Deed",
         description="The Id of the TaDeed Algorand Standard Asset if the GNode is a TerminalAsset. [More info](https://gridworks.readthedocs.io/en/latest/ta-deed.html).",
         default=None,
@@ -319,13 +319,17 @@ class GNodeGt(BaseModel):
         description="Some GNodes have Daemon applications associated to them to handle blockchain operations.",
         default=None,
     )
-    TradingRightsNftId: Optional[int] = Field(
+    TradingRightsId: Optional[int] = Field(
         title="Algorand Id of ASA TradingRights",
         description="The Id of the TradingRights Algorand Standard Asset.",
         default=None,
     )
     ScadaAlgoAddr: Optional[str] = Field(
         title="ScadaAlgoAddr",
+        default=None,
+    )
+    ScadaCertId: Optional[int] = Field(
+        title="ScadaCertId",
         default=None,
     )
     ComponentId: Optional[str] = Field(
@@ -338,7 +342,7 @@ class GNodeGt(BaseModel):
         default=None,
     )
     TypeName: Literal["g.node.gt"] = "g.node.gt"
-    Version: str = "001"
+    Version: str = "002"
 
     @validator("GNodeId")
     def _check_g_node_id(cls, v: str) -> str:
@@ -470,18 +474,20 @@ class GNodeGt(BaseModel):
             del d["PrevAlias"]
         if d["GpsPointId"] is None:
             del d["GpsPointId"]
-        if d["OwnershipDeedNftId"] is None:
-            del d["OwnershipDeedNftId"]
+        if d["OwnershipDeedId"] is None:
+            del d["OwnershipDeedId"]
         if d["OwnershipDeedValidatorAddr"] is None:
             del d["OwnershipDeedValidatorAddr"]
         if d["OwnerAddr"] is None:
             del d["OwnerAddr"]
         if d["DaemonAddr"] is None:
             del d["DaemonAddr"]
-        if d["TradingRightsNftId"] is None:
-            del d["TradingRightsNftId"]
+        if d["TradingRightsId"] is None:
+            del d["TradingRightsId"]
         if d["ScadaAlgoAddr"] is None:
             del d["ScadaAlgoAddr"]
+        if d["ScadaCertId"] is None:
+            del d["ScadaCertId"]
         if d["ComponentId"] is None:
             del d["ComponentId"]
         if d["DisplayName"] is None:
@@ -494,7 +500,7 @@ class GNodeGt(BaseModel):
 
 class GNodeGt_Maker:
     type_name = "g.node.gt"
-    version = "001"
+    version = "002"
 
     def __init__(
         self,
@@ -505,12 +511,13 @@ class GNodeGt_Maker:
         g_node_registry_addr: str,
         prev_alias: Optional[str],
         gps_point_id: Optional[str],
-        ownership_deed_nft_id: Optional[int],
+        ownership_deed_id: Optional[int],
         ownership_deed_validator_addr: Optional[str],
         owner_addr: Optional[str],
         daemon_addr: Optional[str],
-        trading_rights_nft_id: Optional[int],
+        trading_rights_id: Optional[int],
         scada_algo_addr: Optional[str],
+        scada_cert_id: Optional[int],
         component_id: Optional[str],
         display_name: Optional[str],
     ):
@@ -522,12 +529,13 @@ class GNodeGt_Maker:
             GNodeRegistryAddr=g_node_registry_addr,
             PrevAlias=prev_alias,
             GpsPointId=gps_point_id,
-            OwnershipDeedNftId=ownership_deed_nft_id,
+            OwnershipDeedId=ownership_deed_id,
             OwnershipDeedValidatorAddr=ownership_deed_validator_addr,
             OwnerAddr=owner_addr,
             DaemonAddr=daemon_addr,
-            TradingRightsNftId=trading_rights_nft_id,
+            TradingRightsId=trading_rights_id,
             ScadaAlgoAddr=scada_algo_addr,
+            ScadaCertId=scada_cert_id,
             ComponentId=component_id,
             DisplayName=display_name,
             #
@@ -578,18 +586,20 @@ class GNodeGt_Maker:
             d2["PrevAlias"] = None
         if "GpsPointId" not in d2.keys():
             d2["GpsPointId"] = None
-        if "OwnershipDeedNftId" not in d2.keys():
-            d2["OwnershipDeedNftId"] = None
+        if "OwnershipDeedId" not in d2.keys():
+            d2["OwnershipDeedId"] = None
         if "OwnershipDeedValidatorAddr" not in d2.keys():
             d2["OwnershipDeedValidatorAddr"] = None
         if "OwnerAddr" not in d2.keys():
             d2["OwnerAddr"] = None
         if "DaemonAddr" not in d2.keys():
             d2["DaemonAddr"] = None
-        if "TradingRightsNftId" not in d2.keys():
-            d2["TradingRightsNftId"] = None
+        if "TradingRightsId" not in d2.keys():
+            d2["TradingRightsId"] = None
         if "ScadaAlgoAddr" not in d2.keys():
             d2["ScadaAlgoAddr"] = None
+        if "ScadaCertId" not in d2.keys():
+            d2["ScadaCertId"] = None
         if "ComponentId" not in d2.keys():
             d2["ComponentId"] = None
         if "DisplayName" not in d2.keys():
@@ -605,16 +615,17 @@ class GNodeGt_Maker:
             GNodeRegistryAddr=d2["GNodeRegistryAddr"],
             PrevAlias=d2["PrevAlias"],
             GpsPointId=d2["GpsPointId"],
-            OwnershipDeedNftId=d2["OwnershipDeedNftId"],
+            OwnershipDeedId=d2["OwnershipDeedId"],
             OwnershipDeedValidatorAddr=d2["OwnershipDeedValidatorAddr"],
             OwnerAddr=d2["OwnerAddr"],
             DaemonAddr=d2["DaemonAddr"],
-            TradingRightsNftId=d2["TradingRightsNftId"],
+            TradingRightsId=d2["TradingRightsId"],
             ScadaAlgoAddr=d2["ScadaAlgoAddr"],
+            ScadaCertId=d2["ScadaCertId"],
             ComponentId=d2["ComponentId"],
             DisplayName=d2["DisplayName"],
             TypeName=d2["TypeName"],
-            Version="001",
+            Version="002",
         )
 
     @classmethod
@@ -630,12 +641,13 @@ class GNodeGt_Maker:
                 g_node_registry_addr=t.GNodeRegistryAddr,
                 prev_alias=t.PrevAlias,
                 gps_point_id=t.GpsPointId,
-                ownership_deed_nft_id=t.OwnershipDeedNftId,
+                ownership_deed_id=t.OwnershipDeedId,
                 ownership_deed_validator_addr=t.OwnershipDeedValidatorAddr,
                 owner_addr=t.OwnerAddr,
                 daemon_addr=t.DaemonAddr,
-                trading_rights_nft_id=t.TradingRightsNftId,
+                trading_rights_id=t.TradingRightsId,
                 scada_algo_addr=t.ScadaAlgoAddr,
+                scada_cert_id=t.ScadaCertId,
                 component_id=t.ComponentId,
                 display_name=t.DisplayName,
             )
@@ -652,12 +664,13 @@ class GNodeGt_Maker:
             g_node_registry_addr=dc.g_node_registry_addr,
             prev_alias=dc.prev_alias,
             gps_point_id=dc.gps_point_id,
-            ownership_deed_nft_id=dc.ownership_deed_nft_id,
+            ownership_deed_id=dc.ownership_deed_id,
             ownership_deed_validator_addr=dc.ownership_deed_validator_addr,
             owner_addr=dc.owner_addr,
             daemon_addr=dc.daemon_addr,
-            trading_rights_nft_id=dc.trading_rights_nft_id,
+            trading_rights_id=dc.trading_rights_id,
             scada_algo_addr=dc.scada_algo_addr,
+            scada_cert_id=dc.scada_cert_id,
             component_id=dc.component_id,
             display_name=dc.display_name,
         ).tuple

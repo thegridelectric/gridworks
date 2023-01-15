@@ -38,12 +38,13 @@ class GNode:
         g_node_registry_addr: str,
         prev_alias: Optional[str] = None,
         gps_point_id: Optional[str] = None,
-        ownership_deed_nft_id: Optional[int] = None,
+        ownership_deed_id: Optional[int] = None,
         ownership_deed_validator_addr: Optional[str] = None,
         owner_addr: Optional[str] = None,
         daemon_addr: Optional[str] = None,
-        trading_rights_nft_id: Optional[int] = None,
+        trading_rights_id: Optional[int] = None,
         scada_algo_addr: Optional[str] = None,
+        scada_cert_id: Optional[int] = None,
         component_id: Optional[str] = None,
         display_name: Optional[str] = None,
     ):
@@ -57,12 +58,13 @@ class GNode:
             g_node_registry_addr (str): _description_
             prev_alias (Optional[str], optional): _description_. Defaults to None.
             gps_point_id (Optional[str], optional): _description_. Defaults to None.
-            ownership_deed_nft_id (Optional[int], optional): _description_. Defaults to None.
+            ownership_deed_id (Optional[int], optional): _description_. Defaults to None.
             ownership_deed_validator_addr (Optional[str], optional): _description_. Defaults to None.
             owner_addr (Optional[str], optional): _description_. Defaults to None.
             daemon_addr (Optional[str], optional): _description_. Defaults to None.
-            trading_rights_nft_id (Optional[int], optional): _description_. Defaults to None.
+            trading_rights_id (Optional[int], optional): _description_. Defaults to None.
             scada_algo_addr ()(Optional[str], optional): _description_. Defaults to None.
+            scada_cert_id (Optional[int], optional): _description_. Defaults to None.
             component_id (Optional[str], optional): _description_. Defaults to None.
             display_name (Optional[str], optional): _description_. Defaults to None.
 
@@ -86,6 +88,7 @@ class GNode:
         self.daemon_addr = daemon_addr
         self.trading_rights_nft_id = trading_rights_nft_id
         self.scada_algo_addr = scada_algo_addr
+        self.scada_cert_id = scada_cert_id
         self.component_id = component_id
         self.display_name = display_name
         self.__class__.by_alias[self.alias] = self

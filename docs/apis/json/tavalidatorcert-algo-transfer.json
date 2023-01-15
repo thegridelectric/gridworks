@@ -45,12 +45,12 @@
   "axioms": {
     "Axiom1": {
       "title": "Is correct Multisig",
-      "description": "Decoded HalfSignedCertTransferMtx must have type MultisigTransaction from the 2-sig MultiAccount [GnfAdminAddr, ValidatorAddr].",
+      "description": "Decoded HalfSignedCertTransferMtx must have type MultisigTransaction from the 2-sig MultiAccount [GnfAdminAddr, ValidatorAddr], signed by the ValidatorAddr",
       "url": "https://gridworks.readthedocs.io/en/latest/g-node-factory.html#gnfadminaddr"
     },
     "Axiom2": {
       "title": "Transfers correct certificate",
-      "description": "- The transaction must be the transfer of an Algorand Standard Asset - It must be getting transferred from its creator, which must be the 2-sig Multi [GnfAdmin, TaValidatorAddr] - It must be getting sent to the ValidatorAddr -The ASA must have: - Total = 1 - UnitName=VLDITR - GnfAdminAddr as manage - AssetName and - Url not blank. - The transfer amount must be 1",
+      "description": "- The transaction must be the transfer of an Algorand Standard Asset -The sender must be the 2-sig Multi [GnfAdminAddr, TaValidatorAddr], which also created and owns the ASA - It must be getting sent to the ValidatorAddr -The ASA must have: - Total = 1 - UnitName=VLDITR - GnfAdminAddr as manage - AssetName not blank - The transfer amount must be 1",
       "url": "https://gridworks.readthedocs.io/en/latest/ta-validator.html#tavalidator-certificate"
     },
     "Axiom3": {
@@ -60,10 +60,6 @@
     "Axiom4": {
       "title": "TaValidator has sufficient Algos",
       "description": "ValidatorAddr must have enough Algos to meet the GNodeFactory criterion."
-    },
-    "Axiom5": {
-      "title": "TaValidator has signed",
-      "description": "ValidatorAddr must have signed the mtx."
     }
   }
 }

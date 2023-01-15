@@ -1,7 +1,7 @@
 {
   "gwapi": "001",
   "type_name": "g.node.gt",
-  "version": "001",
+  "version": "002",
   "owner": "gridworks@gridworks-consulting.com",
   "description": "Used to send and receive updates about GNodes. GNodes are the building blocks of Gridworks. They have slowly-changing state that must be kept in sync across a distributed system. Therefore, they require a global registry to act as Single Source of Truth (SSoT). This class is used for that SSoT to share information with actors about their GNodes, and the GNodes that they will observe and communicate with.",
   "url": "https://gridworks.readthedocs.io/en/latest/g-node.html",
@@ -183,7 +183,7 @@
       "description": "Some GNodes, in particular those acting as avatars for physical devices that are part of or are attached to the electric grid, have physical locations. These locations are used to help validate the grid topology.",
       "required": false
     },
-    "OwnershipDeedNftId": {
+    "OwnershipDeedId": {
       "type": "integer",
       "minimum": 0,
       "title": "Algorand Id of ASA Deed",
@@ -210,7 +210,7 @@
       "description": "Some GNodes have Daemon applications associated to them to handle blockchain operations.",
       "required": false
     },
-    "TradingRightsNftId": {
+    "TradingRightsId": {
       "type": "integer",
       "minimum": 0,
       "title": "Algorand Id of ASA TradingRights",
@@ -220,6 +220,12 @@
     "ScadaAlgoAddr": {
       "type": "string",
       "format": "AlgoAddressStringFormat",
+      "title": "",
+      "required": false
+    },
+    "ScadaCertId": {
+      "type": "integer",
+      "minimum": 0,
       "title": "",
       "required": false
     },
@@ -237,13 +243,13 @@
     },
     "TypeName": {
       "type": "string",
-      "value": "g.node.gt.001",
+      "value": "g.node.gt.002",
       "title": "The type name"
     },
     "Version": {
       "type": "string",
       "title": "The type version",
-      "default": "001",
+      "default": "002",
       "required": true
     }
   },

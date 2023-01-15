@@ -8,8 +8,8 @@ Anyone can become a TaValidator, once they have gone through the
 validator certification process with the GNodeFactory.
 
 
-The TaValidator role is a key in establishing the `link of trust <ta-deed.html#link-of-trust>`_ between a Transactive Devices
-and its `TerminalAsset <terminal-asset.html>`_. In the `Millinocket demo <story>`_, the first step is a fictitious entity called
+The TaValidator role is a key in establishing the `link of trust <ta-deed.html#link-of-trust.html>`_ between a Transactive Devices
+and its `TerminalAsset <terminal-asset.html>`_. In the `Millinocket demo <millinocket-demo.html>`_, the first step is a fictitious entity called
 Molly Metermaid becoming a TaValidator.
 
 .. image:: images/mollymetermaid-actor-artifact-v1.png

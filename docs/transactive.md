@@ -19,6 +19,11 @@ Several things need to change for load to become Transactive and begin to solve 
 - Forward-looking optimization techniques will be required to ensure that load assets can meet the needs of the grid while also fulfilling their primary function.
 - A mechanism for distributed, decentralized, secure, and trustless transactions must be developed so that potentially millions of Transactive Energy Resources can interact with each other, the Grid Operator, and end users. This will include the development of new Service Level Agreements between TER Aggregators and end users.
 
+By `trustless`, what we mean is that counterparties do not need to rely on some central third party to broker their contract.
+We use this word in the context of already having established the rights of a GNode to act as an avatar for a physical device.
+This is established using a trust mechanism that bridges the gap between evaluating a real power meter and the blockchain.
+For more information on this, read about why we call a TaDeed a [Link of Trust](https://gridworks.readthedocs.io/en/latest/ta-deed.html#link-of-trust).
+
 ## Service Level Agreements
 
 What is a Service Level Agreement (SLA), and why is it important for transactive energy?
@@ -27,14 +32,13 @@ Your current SLA with your electricity supplier is simple: whenever you turn on 
 
 Even though there may be significant flexibility in when your car needs to charge, or your fridge needs to come on, or when you next need hot water, under the current SLA your energy supplier has no flexibility in when it draws power from the grid and delivers it to you.
 
-For traditional Demand Response, you get paid by an Aggregator for occasionally inconveniencing you. This works because it is occasional. But with
-transactive energy, the grid interaction is happening 24-7: _all_ decisions
+For traditional Demand Response, you get paid by an Aggregator for occasionally inconveniencing you. This works because it is occasional. But with transactive energy, the grid interaction is happening 24-7: _all_ decisions
 about when to consume electricity are made in the context if it is the cheapest
 time to do it.
 
 But cheapest compared to what?
 
-From the perspective of the developers writing code for the [AtomicTNode](https://gridworks-atn.readthedocs.io/en/latest/), the Service Level Agreement contains a _contract_ defining the operating bounds of the AtomicTNode's bidding strategy.
+From the perspective of the developers writing code for the [AtomicTNode](https://gridworks-atn.readthedocs.io/en/latest/atomic-t-node.html), the Service Level Agreement contains a _contract_ defining the operating bounds of the AtomicTNode's bidding strategy.
 
 From the perspective of the person paying the bills, the Service Level Agreement articulates what they can expect in terms of the performance of their
 device.
@@ -57,7 +61,7 @@ The thermal storage in these systems allow them to buy energy from the grid when
 
 - This type of system requires sophisticated Forward-Looking Optimization techniques, using weather and price forecasts to plan future energy purchases and react in real time to unexpected weather and/or market conditions.
 
-The [Transactive Heat Pilot in Maine](story) will demonstrate the ability of the GridWorks TER platform to keep houses warm, reduce curtailment of wind farms, and lower the cost of home heating for thousands of people in and around Millinocket.
+The [Transactive Heat Pilot in Maine](millinocket-demo) will demonstrate the ability of the GridWorks TER platform to keep houses warm, reduce curtailment of wind farms, and lower the cost of home heating for thousands of people in and around Millinocket.
 
 ## The Millocket Demo
 
