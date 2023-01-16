@@ -35,6 +35,7 @@ class RabbitRole(StrEnum):
     atomictnode = auto()
     gnode = auto()
     marketmaker = auto()
+    scada = auto()
     supervisor = auto()
     timecoordinator = auto()
     world = auto()
@@ -48,6 +49,7 @@ RoleByRabbitRole: Dict[RabbitRole, GNodeRole] = {
     RabbitRole.atomictnode: GNodeRole.AtomicTNode,
     RabbitRole.gnode: GNodeRole.GNode,
     RabbitRole.marketmaker: GNodeRole.MarketMaker,
+    RabbitRole.scada: GNodeRole.Scada,
     RabbitRole.supervisor: GNodeRole.Supervisor,
     RabbitRole.timecoordinator: GNodeRole.TimeCoordinator,
     RabbitRole.world: GNodeRole.World,
@@ -58,6 +60,7 @@ RabbitRolebyRole: Dict[GNodeRole, RabbitRole] = {
     GNodeRole.AtomicTNode: RabbitRole.atomictnode,
     GNodeRole.GNode: RabbitRole.gnode,
     GNodeRole.MarketMaker: RabbitRole.marketmaker,
+    GNodeRole.Scada: RabbitRole.scada,
     GNodeRole.Supervisor: RabbitRole.supervisor,
     GNodeRole.TimeCoordinator: RabbitRole.timecoordinator,
     GNodeRole.World: RabbitRole.world,
