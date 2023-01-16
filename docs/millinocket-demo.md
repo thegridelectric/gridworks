@@ -25,7 +25,7 @@ Meanwhile, people around Millinocket are shivering, turning down their thermosta
 
 GridWorks is working with Efficient Maine Trust and other partners to replace oil boilers in homes around Millinocket with heat pumps with thermal storage. The systems use air-to-water heat pumps (located outside), with hot water tanks as thermal stores located in the basement.
 
-Heat Pump and Storage Tank
+Heat Pump and Storage Tank, curently being installed in [Freedom ME](https://gridworks.readthedocs.io/en/latest/transactive-device.html)
 ![alt_text](images/heat-pump-and-tank.png)
 
 These heating systems will allow homes to heat with otherwise curtailed wind power, heating the thermal stores when electricity prices are low or negative, and then using this stored heat to keep people warm 24-7.
