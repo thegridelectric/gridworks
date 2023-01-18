@@ -2,8 +2,8 @@ Millinocket Demo Tutorial
 ==========================
 
 First, `here <https://www.youtube.com/watch?v=a8hCFfaFrok>`_ is  a
-non-technical video about Millinocket that is geared towards developers that 
-can serve as a motication and introduction to this section. Below you will find a series of code 
+non-technical video about Millinocket that is geared towards developers that
+can serve as a motication and introduction to this section. Below you will find a series of code
 snippets and videos designed to walk you through the
 `Millinocket Demo <millinocket-demo.html>`_. It is designed to bring you up to speed on
 the infrastructure and domain-specific concepts embedded in GridWorks APIs, SDKs,
@@ -393,7 +393,7 @@ TaDeed and TaTradingRights
 ---------------------------
 
 The TaDeeds are interesting in two ways: they are  made by a Multi-Account tying local and global authority together, and in the future they
-can *either* be Algorand Standard Assets or Smart Signatures. What is more interesting than the technicalitiies around the TaDeed and the 
+can *either* be Algorand Standard Assets or Smart Signatures. What is more interesting than the technicalitiies around the TaDeed and the
 TaTradingRights is their ramificactions on the rest of GridWorks. You can start reading about that `here <ta-deed.html>`_ and by generally
 looking through the `lexicon <lexicon.html>`_ as well as the sections on `physics, <physics.html>`_ ,  `economics , <economics.html>`_,
 and `Transactive Energy <transactive>`_.
@@ -415,36 +415,62 @@ The Dispatch Contract
 Establishing Communication
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 `This tutorial <https://youtu.be/lznot3klkUU>`_ discusses the graphics from the end of the  `Millinocket Demo <millnocket-demo.hmtl>`_ section,
-honing in on the relationship between two central actors in GridWorks: the `AtomicTNode <atomic-t-node.html>`_ and the `Scada <scada.html>`_. 
+honing in on the relationship between two central actors in GridWorks: the `AtomicTNode <atomic-t-node.html>`_ and the `Scada <scada.html>`_.
 This relationship is *not* captured by the DispatchContract between them. Rather, the Dispatch Contract seeks to establish a common ground
 not only between these two pieces of code, but also common ground that can be shared by the dispirate human and business enities involved with
 the major collective challenges brought about by and faced by humanity as we tackle issues around renewable energy and the electric grid.
-In short, the purpose of the Dispatch Contract is to serve as a third-party objective umpire (at least for past states) about when 
-these two actors are **Talking With** each other. 
+In short, the purpose of the Dispatch Contract is to serve as a third-party objective umpire (at least for past states) about when
+these two actors are **Talking With** each other.
 
-We are excited to use boxes as a near-real-time audit-role, not only for tracking the state of **TalkingWith** between the AtomicTNode and 
-SCADA pairs, but also for auditing energy and power transactions. Note that by moving the responsibility of the Dispatch Contract from 
-the present to historical, we remove the need for the Smart Contract to rely on blockchain time. 
+We are excited to use boxes as a near-real-time audit-role, not only for tracking the state of **TalkingWith** between the AtomicTNode and
+SCADA pairs, but also for auditing energy and power transactions. Note that by moving the responsibility of the Dispatch Contract from
+the present to historical, we remove the need for the Smart Contract to rely on blockchain time.
 
 Beaker and the Dispatch Contract
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-GridWorks `Type APIs <apis/typeshtml>`_ and our work connecting `ABIs with SDKs <api-sdk-abi.html>`_ in order to accurately articulate and formalize 
+GridWorks `Type APIs <apis/typeshtml>`_ and our work connecting `ABIs with SDKs <api-sdk-abi.html>`_ in order to accurately articulate and formalize
 the boundaries between distributed systems (with both semantics and syntax) dovetails very significantly with the work that Algorand has done with
-ABIs and additional layers of abstraction. I would like to highlight `beaker <https://github.com/algorand-devrel/beaker/>`_ for how it supports the 
+ABIs and additional layers of abstraction. I would like to highlight `beaker <https://github.com/algorand-devrel/beaker/>`_ for how it supports the
 evolution of abstraction on the Algorand, with a particular shout-out to its `Fight Club boxes example <https://github.com/algorand-devrel/beaker/blob/master/examples/boxen/application.py>`_
 and its nicely commented and written `AMM demo <https://github.com/algorand-devrel/beaker/tree/master/examples/amm>`_ .
 
-`In this video <https://youtu.be/rupb2A8FHGQ>`_ I go over how the Dispatch Contract works by walking through code. The sample code is 
-in `this directory <https://github.com/thegridelectric/gridworks-atn/tree/dev/tutorial>`_ of the **gridworks-atn** package. Follow set-up instructions 
+`In this video <https://youtu.be/rupb2A8FHGQ>`_ I go over how the Dispatch Contract works by walking through code. The sample code is
+in `this directory <https://github.com/thegridelectric/gridworks-atn/tree/dev/tutorial>`_ of the **gridworks-atn** package. Follow set-up instructions
 at the beginning of this section.
 
-What's Next 
+
+Running the Demo
+----------------------
+
+1. Start with the instructions from demo prep
+
+2. In the **g-node-factory** repo, run:
+
+.. code-block:: python
+
+    python millinocket.py
+
+This will reset the Algorand sandbox, flush the GNodeFactory
+database, and then start up the GNodeFactory API with the
+following GNodes pre-loaded:
+
+.. image:: images/initial-millinocket-g-nodes.png
+   :alt: Initial Millinocket GNodes
+   :align: center
+
+Check http://0.0.0.0:8000/base-g-nodes/ to confirm these 4 BaseGNodes are loaded
+
+3. In the **gridworks-marketmaker** repo, run:
+
+
+
+What's Next
 ------------
 
 GridWorks Energy Consulting continues to focus on two parallel paths: rolling out transactive space heating for real in cold places,
-and expanding the scope and reach of GridWorks as a technical platform.   Our 
-larger simulations (2-10MW) include a combination of open-source and proprietary actors and needed significant cloud-computing. The 
+and expanding the scope and reach of GridWorks as a technical platform.   Our
+larger simulations (2-10MW) include a combination of open-source and proprietary actors and needed significant cloud-computing. The
 results of these simulations are described in `the previous section <millinocket_demo.html>`_. Finally,
 we are experimenting with running near-real-time simulations in order to better test out and think through what builds
 on top of the Dispatch Contract. We expect to be writing a couple of white papers based on the findings

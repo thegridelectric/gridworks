@@ -18,7 +18,7 @@ GNode. A GNode's role  is determined by the `GNodeFactory <g-node-factory.html>`
     - `AtomicMeteringNode <atomic-metering-node.html>`_ **CoreGNodeRole**
     - `ConductorTopologyNode <conductor-topology-node.html>`_ **CoreGNodeRole**
     - `InterconnectionComponent <interconnection-component.html>`_ **CoreGNodeRole**
-    - `World <world-role.html>`_ **CoreGNodeRole**
+    - `World <world-role.html>`_
     - `TimeCoordinator <time-coordinator.html>`_
     - `Supervisor <supervisor.html>`_
     - `Scada <scada.html>`_
