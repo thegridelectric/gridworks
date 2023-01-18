@@ -35,7 +35,7 @@ of the grid. The decentralized, hierararchical structure of MarketMakers designe
 the flow of real electrons on real copper need some reason to **trust**  its blockchain transactions
 of energy for money. More specifically, when a MarketMaker examines an `AtomicTNode's <atomic-t-node.html>`_
 `DispatchContract <dispatch-contract>`_ for the audit trail of actual energy and power consumed,
-there must be some reason for it trust that these are are accurate representations of *what*,  *when*, and
+there must be some reason for it to trust that these are are accurate representations of *what*,  *when*, and
 *where* the corresponding `Transactive Device <transactive-device>`_ consumed or provided electricity.
 
 The GridWorks solution to this is a framework allowing for decentralized entities
@@ -58,13 +58,13 @@ a TaValidator.
 When possible, GridWorks reduces or removes mechanisms that could force or encourage unhelpful patterns
 of taking on faith the word and expertise of centralized
 authorities. Indeed, the grand GridWorks ambition is to move the heavy lifting of grid control and coordination
-*out* of the purview of centralized Grid Operators and into the pruview of a decentralized
+*out* of the purview of centralized Grid Operators and into the purview of a decentralized
 hierarchy of MarketMakers.  As another example, *any* entity
 can become a TaValidator in GridWorks. This is in contrast to a design decision that, say, would only allow
 existing utilities or other large energy companies to authorize Transactive Devices.
 
 That being said, we ignore the physical reality of the copper to our own collective sorrow, a
-fact that is dawning slowly as humanity as renewable energy starts to scale and we  begin to incur
+fact that is dawning slowly on humanity as renewable energy starts to scale and we begin to recognize
 the ramifications of mis-aligned regulatory policy.  Therefore, we choose to highlight this necessity
 of having a reason to trust the alignment by calling the creation of TaDeed
 by a TaValidator a process of creating a  **link of trust** between a real-world device and its
@@ -80,7 +80,7 @@ Algorand address of the `TaValidator <ta-validator.html>`_.
 Why are there two variants of a TaDeed?
 
   - On the one hand, ASAs are easier for people learning the ropes with Algorand development. Anyone who has made an NFT will be familiar with the mechanics, and it is easier to track transactions in an online tool like  `Algosearch <https://developer.algorand.org/tutorials/algosearch-setup/>`_.
-  - On the other hand, the GNodeAlias length cannot exceed 32 characters fo an ASA TaDeed.  Many TerminalAssets will start with GNodeAliases less than 32 characters, but some will not. In addition, as the online mapping of the  electric grid captured by the set of GNodeAliases expands, a TerminalAsset (which represents a leaf node in that tree) will likely get longer.
+  - On the other hand, the GNodeAlias length cannot exceed 32 characters for an ASA TaDeed.  Many TerminalAssets will start with GNodeAliases less than 32 characters, but some will not. In addition, as the online mapping of the  electric grid captured by the set of GNodeAliases expands, a TerminalAsset (which represents a leaf node in that tree) will likely get longer.
 
 There is a practical issue with this: the unique ids for ASAs are ints, and the unique ids for SmartSigs are
 strings (their public AlgoAddress).
