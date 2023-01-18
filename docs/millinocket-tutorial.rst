@@ -57,7 +57,7 @@ This takes a few minutes to initiate.
 The broker takes a few minutes to initiate. Check that it is up at the admin web page http://0.0.0.0:15672/#/,  password and username both `smqPublic`
 
 You can now either continue step by step through what is happening directly below, or skip forward to
-the end to `run the full demo <millinocket-tutorial.html#running-the-demo>`_.
+the end to `run the full demo <millinocket-tutorial.html#run-the-simulation>`_.
 
 TaValidator Certification
 --------------------------
@@ -443,8 +443,8 @@ in `this directory <https://github.com/thegridelectric/gridworks-atn/tree/dev/tu
 at the beginning of this section.
 
 
-Run the Full Demo
---------------------
+Run the Simulation
+-------------------
 
 1. Start with the instructions from `demo prep <millinocket-tutorial.html#demo-prep>`_ above.
 
