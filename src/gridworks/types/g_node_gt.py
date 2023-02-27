@@ -36,6 +36,7 @@ class GNodeRole000SchemaEnum:
         "2161739f",
         "1dce1efd",
         "db57d184",
+        "07f28817",
     ]
 
     @classmethod
@@ -60,6 +61,7 @@ class GNodeRole000(StrEnum):
     PriceService = auto()
     WeatherService = auto()
     AggregatedTNode = auto()
+    Persister = auto()
 
     @classmethod
     def default(cls) -> "GNodeRole000":
@@ -100,6 +102,7 @@ class GNodeRoleMap:
         "2161739f": GNodeRole000.PriceService,
         "1dce1efd": GNodeRole000.WeatherService,
         "db57d184": GNodeRole000.AggregatedTNode,
+        "07f28817": GNodeRole000.Persister,
     }
 
     versioned_enum_to_type_dict: Dict[GNodeRole000, str] = {
@@ -117,6 +120,7 @@ class GNodeRoleMap:
         GNodeRole000.PriceService: "2161739f",
         GNodeRole000.WeatherService: "1dce1efd",
         GNodeRole000.AggregatedTNode: "db57d184",
+        GNodeRole000.Persister: "07f28817",
     }
 
 

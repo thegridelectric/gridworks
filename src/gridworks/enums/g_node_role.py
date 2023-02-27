@@ -24,6 +24,7 @@ class GNodeRole(StrEnum):
       * PriceService: Provides price forecasts for markets run by MarketMakers
       * WeatherService: Provides weather forecasts
       * AggregatedTNode: An aggregation of AtomicTNodes
+      * Persister: Responsible for acking events with delivery guarantees
     """
 
     GNode = auto()
@@ -32,6 +33,7 @@ class GNodeRole(StrEnum):
     PriceService = auto()
     WeatherService = auto()
     AggregatedTNode = auto()
+    Persister = auto()
     AtomicTNode = auto()
     MarketMaker = auto()
     AtomicMeteringNode = auto()
