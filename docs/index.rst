@@ -19,7 +19,11 @@ Blockchain Mechanics
 
 Gridworks runs markets between distributed actors acting as avatars for physical devices on the grid. It needs a
 foundation of trustless, secure, scalable validation and authentication. It heavily uses the Algorand blockchain. If
-you want to undestand more about how and why this is, go `here <blockchain.html>`_.
+you want to undestand more about how and why this is, go `here <blockchain.html>`_. 
+
+Despite the current negative view of crypto technology, blockchain is actually a valuable technology which we
+use for validating the location and metering accuracy of Transactive Devices, and for creating a scalable 
+mechanism for auditing energy transactions.
 
 GridWorks SDKs
 ^^^^^^^^^^^^^^^

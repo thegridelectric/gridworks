@@ -56,6 +56,9 @@ This takes a few minutes to initiate.
 
 The broker takes a few minutes to initiate. Check that it is up at the admin web page http://0.0.0.0:15672/#/,  password and username both `smqPublic`
 
+You can now either continue step by step through what is happening directly below, or skip forward to
+the end to `run the full demo <millinocket-tutorial.html#run-the-simulation>`_.
+
 TaValidator Certification
 --------------------------
 
@@ -440,10 +443,10 @@ in `this directory <https://github.com/thegridelectric/gridworks-atn/tree/dev/tu
 at the beginning of this section.
 
 
-Running the Demo
-----------------------
+Run the Simulation
+-------------------
 
-1. Start with the instructions from demo prep
+1. Start with the instructions from `demo prep <millinocket-tutorial.html#demo-prep>`_ above.
 
 2. In the **g-node-factory** repo, run:
 
@@ -461,16 +464,30 @@ following GNodes pre-loaded:
 
 Check http://0.0.0.0:8000/base-g-nodes/ to confirm these 4 BaseGNodes are loaded
 
-3. In the **gridworks-marketmaker** repo, run:
+3. In the **gridworks-marketmaker** repo, start up the two halves of the Keene Rd MarketMaker.
 
 
+.. code-block:: python
+    :caption: 3a) API half of the MarketMaker
 
-What's Next
-------------
+    ./millinocket_api.sh
 
-GridWorks Energy Consulting continues to focus on two parallel paths: rolling out transactive space heating for real in cold places,
-and expanding the scope and reach of GridWorks as a technical platform.   Our
-larger simulations (2-10MW) include a combination of open-source and proprietary actors and needed significant cloud-computing. The
-results of these simulations are described in `the previous section <millinocket_demo.html>`_. Finally,
-we are experimenting with running near-real-time simulations in order to better test out and think through what builds
-on top of the Dispatch Contract. We expect to be writing a couple of white papers based on the findings
+Verify that it is working:
+
+- http://localhost:7997/ shows market maker information
+- http://localhost:7997/get-time/ shows the current time of the simulation
+
+.. code-block:: python
+    :caption: 3b) Rabbit half of the MarketMaker
+
+    python millinocket_mm.py
+
+Verify that it is working:  Look for a queue named **d1.isone.ver.keene-FXXX** at the rabbit broker admin pg http://0.0.0.0:15672/#/queues
+
+
+4. The final step is done in the **gridworks-atn** repo. 
+
+.. code-block:: python
+    :caption: From top level of gridworks-atn repo
+
+    python millinocket.py

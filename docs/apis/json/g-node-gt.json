@@ -99,6 +99,11 @@
           "const": "db57d184",
           "title": "AggregatedTNode",
           "description": "An aggregation of AtomicTNodes"
+        },
+        {
+          "const": "07f28817",
+          "title": "Persister",
+          "description": "Responsible for acking events with delivery guarantees"
         }
       ]
     },
