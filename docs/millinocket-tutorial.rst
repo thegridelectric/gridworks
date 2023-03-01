@@ -478,21 +478,15 @@ following GNodes pre-loaded:
 
 (Go `here <core-g-node-role.html>`_ to read more about the Core GNode Roles)
 
-Check http://0.0.0.0:8000/base-g-nodes/ to confirm these 4 BaseGNodes are loaded
+**Check for success**  
 
-3. In the **gridworks-marketmaker** repo, start up the Keene Rd MarketMaker actor.
-
-.. code-block:: python
-    :caption: Start MarketMaker actor
-
-    python millinocket_mm.py
-
-Verify that it is working:  Look for a queue named **d1.isone.ver.keene-FXXX** at the rabbit
-broker admin pg http://0.0.0.0:15672/#/queues. This window will show time progressing in the
-simulation, as well as prices.
+  - Check http://0.0.0.0:8000/base-g-nodes/ to confirm these 4 BaseGNodes are loaded.
+  - Check http://0.0.0.0:15672/#/queues and look for a queue named d1-Fxxx to confirm a GNodeFactory queue showed up on  your local rabbit broker. If that queue is not showing up:
+     - do a `git pull` to update the default rabbit_url for GnfSettings in config to point to localhost
+     - If you have a `.env` file overriding default values in GnfSettings, look for a GNF_RABBIT__URL that is not pointing to localhost.
 
 
-4. Finally, in **gridworks-atn**, run the rest of the demo
+3. In **gridworks-atn**, run the smart contract demo
 
 .. code-block:: python
     :caption: Run the rest of the demo
