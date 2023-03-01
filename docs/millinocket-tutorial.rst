@@ -57,7 +57,7 @@ This takes a few minutes to initiate.
 The broker takes a few minutes to initiate. Check that it is up at the admin web page http://0.0.0.0:15672/#/,  password and username both `smqPublic`
 
 You can now either continue step by step through what is happening directly below, or skip forward to
-the end to `run the full demo <millinocket-tutorial.html#run-the-simulation>`_.
+the end to `run the full demo <millinocket-tutorial.html#running-the-demo>`_.
 
 TaValidator Certification
 --------------------------
@@ -455,10 +455,12 @@ in `this directory <https://github.com/thegridelectric/gridworks-atn/tree/dev/tu
 at the beginning of this section.
 
 
-Run the Simulation
--------------------
+Running the Demo
+-----------------
 
-1. Start with the instructions from `demo prep <millinocket-tutorial.html#demo-prep>`_ above.
+The demo requires a fair amount of preparation. We are working on simplifying this.
+
+1. Start with the instructions from `demo prep <millinocket-tutorial.html#running-the-demo>`_ above.
 
 2. In the **g-node-factory** repo, run:
 
@@ -478,31 +480,22 @@ following GNodes pre-loaded:
 
 Check http://0.0.0.0:8000/base-g-nodes/ to confirm these 4 BaseGNodes are loaded
 
-3. In the **gridworks-marketmaker** repo, start up the two halves of the Keene Rd MarketMaker. This will require
-opening two terminal windows.
-
+3. In the **gridworks-marketmaker** repo, start up the Keene Rd MarketMaker actor.
 
 .. code-block:: python
-    :caption: 3a) API half of the MarketMaker
-
-    ./millinocket_api.sh
-
-Verify that it is working:
-
-- http://localhost:7997/ shows market maker information
-- http://localhost:7997/get-time/ shows the current time of the simulation
-
-.. code-block:: python
-    :caption: 3b) Rabbit half of the MarketMaker
+    :caption: Start MarketMaker actor
 
     python millinocket_mm.py
 
-Verify that it is working:  Look for a queue named **d1.isone.ver.keene-FXXX** at the rabbit broker admin pg http://0.0.0.0:15672/#/queues
+Verify that it is working:  Look for a queue named **d1.isone.ver.keene-FXXX** at the rabbit
+broker admin pg http://0.0.0.0:15672/#/queues. This window will show time progressing in the
+simulation, as well as prices.
 
 
-4. The final step is done in the **gridworks-atn** repo.
+4. Finally, in **gridworks-atn**, run the rest of the demo
 
 .. code-block:: python
-    :caption: From top level of gridworks-atn repo
+    :caption: Run the rest of the demo
 
     python millinocket.py
+
