@@ -419,15 +419,27 @@ Establishing Communication
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 `This tutorial <https://youtu.be/lznot3klkUU>`_ discusses the graphics from the end of the  `Millinocket Demo <millnocket-demo.hmtl>`_ section,
 honing in on the relationship between two central actors in GridWorks: the `AtomicTNode <atomic-t-node.html>`_ and the `Scada <scada.html>`_.
-This relationship is *not* captured by the DispatchContract between them. Rather, the Dispatch Contract seeks to establish a common ground
-not only between these two pieces of code, but also common ground that can be shared by the dispirate human and business enities involved with
-the major collective challenges brought about by and faced by humanity as we tackle issues around renewable energy and the electric grid.
-In short, the purpose of the Dispatch Contract is to serve as a third-party objective umpire (at least for past states) about when
-these two actors are **Talking With** each other.
+In a nutshell, the AtomicTNode tells the SCADA when to flip relays to turn the power on and off for the underlying Transactive Device that
+is sensed and controlled by the SCADA. Saving money and making sure the Transactive Device is honoring its service level agreement (keeping
+people warm, in the case of an electric thermal storage heater) is the responsibility of the AtomicTNode. **Except**, of course, that the
+SCADA must take over responsibility for controlling the device if the Internet goes down.
 
-We are excited to use boxes as a near-real-time audit-role, not only for tracking the state of **TalkingWith** between the AtomicTNode and
-SCADA pairs, but also for auditing energy and power transactions. Note that by moving the responsibility of the Dispatch Contract from
-the present to historical, we remove the need for the Smart Contract to rely on blockchain time.
+What this means is that there are responsibility (money, comfort) that are *shared through time* between the AtomicTNode and the SCADA,
+where at any point in time the responsibility belongs to exactly one of the two. Determining which of these two is responsible at any
+point in time hinges on the state of communicating between these two actors.
+The primary purpose of the Dispatch Contract, therefore, is to serve as a third-party objective umpire about when
+these two actors are **Talking With** each other. The AtomicTNode and SCADA send heartbeats to each other as RabbitMQ messages. Each time one
+sends a heartbeat to its partner, it also sends a record of the heartbeat to their Dispatch Contract. The Dispatch Contract then stores that
+record in a box (BOX STORAGE IS STILL GETTING DEBUGGED)
+
+The Dispatch Contract is also (1) involved in the initial handshake between the SCADA and the AtomicTNode, and (2) will be used for auditing
+energy and power transactions.
+
+
+A note on time stamps. When the AtomicTNode or SCADA sends a record of a heartbeat they just sent, they include the timestamp of sending.
+Even though the Dispatch Contract is arbitrating the state of a variable (TalkingWith) through time, it  does not rely on blockchain time
+in any way. This is a requirement, since blockchain time can vary. It also works because the state of TalkingWith does not need to be
+determined in the present moment but instead is only required for auditing purposes. This means eventual consistency is good enough.
 
 Beaker and the Dispatch Contract
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -462,9 +474,12 @@ following GNodes pre-loaded:
    :alt: Initial Millinocket GNodes
    :align: center
 
+(Go `here <core-g-node-role.html>`_ to read more about the Core GNode Roles)
+
 Check http://0.0.0.0:8000/base-g-nodes/ to confirm these 4 BaseGNodes are loaded
 
-3. In the **gridworks-marketmaker** repo, start up the two halves of the Keene Rd MarketMaker.
+3. In the **gridworks-marketmaker** repo, start up the two halves of the Keene Rd MarketMaker. This will require
+opening two terminal windows.
 
 
 .. code-block:: python
@@ -485,7 +500,7 @@ Verify that it is working:
 Verify that it is working:  Look for a queue named **d1.isone.ver.keene-FXXX** at the rabbit broker admin pg http://0.0.0.0:15672/#/queues
 
 
-4. The final step is done in the **gridworks-atn** repo. 
+4. The final step is done in the **gridworks-atn** repo.
 
 .. code-block:: python
     :caption: From top level of gridworks-atn repo

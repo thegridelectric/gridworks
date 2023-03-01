@@ -10,7 +10,7 @@ The CoreGNodeRole are a pared-down version of `GNodeRole <g-node-role>`_, restri
 - `ConductorTopologyNode <conductor-topology-node.html>`_
 - `InterconnectionComponent <interconnection-component.html>`_
 
-These are the roles that perform crucial functions in establishing the grid topology and running the markets.
+and Other (to be used for all other GNodeRoles). These are the roles that perform crucial functions in establishing the grid topology and running the markets.
 In order to be assigned any of these roles, the GNodeFactory must authorize the assignment.
 
 For other roles, the GNodeFactory only needs to authorize the *creation* of the GNode (and assigns
