@@ -461,7 +461,7 @@ Running the Demo
 The demo requires a fair amount of preparation. We are working on simplifying this. Right now 
 this is the dispatch contract demo. Will be adding the full simulation.
 
-1. Start with the instructions from `demo prep <millinocket-tutorial.html#running-the-demo>`_ above.
+1. Start with the instructions from `demo prep <millinocket-tutorial.html#demo-prep>`_ above.
 
 2. In the **g-node-factory** repo, run:
 
