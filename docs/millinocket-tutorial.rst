@@ -51,8 +51,8 @@ This takes a few minutes to initiate.
 
 .. code-block:: python
 
-   ./x86.yml   # if you have an x86 chip
-   ./arm.yml # if you have an arm chip
+   ./x86.sh  # if you have an x86 chip
+   ./arm.sh # if you have an arm chip
 
 The broker takes a few minutes to initiate. Check that it is up at the admin web page http://0.0.0.0:15672/#/,  password and username both `smqPublic`
 

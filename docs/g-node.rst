@@ -60,3 +60,6 @@ this is done in the GNodeRegistry.
 This level of abstraction is implemented by creating BaseGNodes, which are the objects
 that the GNodeFactory authorizes and maintains, and creating GNodes, which are a small
 extension of BaseGNodes.
+
+
+`Back to Lexicon <lexicon.html>`_
