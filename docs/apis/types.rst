@@ -2,6 +2,10 @@
 Type API Specs
 ===============
 
+BaseGNodeGt
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. literalinclude:: json/base-g-node-gt.json
+
 GNodeGt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. literalinclude:: json/g-node-gt.json
@@ -18,18 +22,6 @@ HeartbeatA
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. literalinclude:: json/heartbeat-a.json
 
-InitialTadeedAlgoCreate
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. literalinclude:: json/initial-tadeed-algo-create.json
-
-InitialTadeedAlgoOptin
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. literalinclude:: json/initial-tadeed-algo-optin.json
-
-InitialTadeedAlgoTransfer
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. literalinclude:: json/initial-tadeed-algo-transfer.json
-
 Ready
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. literalinclude:: json/ready.json
@@ -45,11 +37,3 @@ SuperStarter
 SupervisorContainerGt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. literalinclude:: json/supervisor-container-gt.json
-
-TavalidatorcertAlgoCreate
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. literalinclude:: json/tavalidatorcert-algo-create.json
-
-TavalidatorcertAlgoTransfer
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. literalinclude:: json/tavalidatorcert-algo-transfer.json

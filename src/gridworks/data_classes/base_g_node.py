@@ -316,7 +316,7 @@ class BaseGNode:
         owner_addr = attributes["owner_addr"]
         daemon_addr = attributes["daemon_addr"]
         trading_rights_id = attributes["trading_rights_id"]
-        if ownership_deed_id:
+        if ownership_deed_nft_id:
             if not isinstance(ownership_deed_nft_id, int):
                 raise DcError("Schema Axiom 2: OwnershipDeedId must be an integer")
         if trading_rights_id:

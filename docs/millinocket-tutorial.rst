@@ -458,7 +458,7 @@ at the beginning of this section.
 Running the Demo
 -----------------
 
-The demo requires a fair amount of preparation. We are working on simplifying this. Right now 
+The demo requires a fair amount of preparation. We are working on simplifying this. Right now
 this is the dispatch contract demo. Will be adding the full simulation.
 
 1. Start with the instructions from `demo prep <millinocket-tutorial.html#demo-prep>`_ above.
@@ -479,7 +479,7 @@ following GNodes pre-loaded:
 
 (Go `here <core-g-node-role.html>`_ to read more about the Core GNode Roles)
 
-**Check for success**  
+**Check for success**
 
   - Check http://0.0.0.0:8000/base-g-nodes/ to confirm these 4 BaseGNodes are loaded.
   - Check http://0.0.0.0:15672/#/queues and look for a queue named d1-Fxxx to confirm a GNodeFactory queue showed up on  your local rabbit broker. If that queue is not showing up:
@@ -487,14 +487,14 @@ following GNodes pre-loaded:
      - If you have a `.env` file overriding default values in GnfSettings, look for a GNF_RABBIT__URL that is not pointing to localhost.
 
 
-3. In **gridworks-atn**, set up the TaValidator web page 
+3. In **gridworks-atn**, set up the TaValidator web page
 
 .. code-block:: python
     :caption: Set up the TA Validator API
 
     ./validator.sh
 
-**Check for success**  
+**Check for success**
    - Check http://localhost:8001/docs for Molly Metermaid's  (TA Validator) FastAPI
 
 4. Also in **gridworks-atn**, in another window, run the Dispatch Contract demo
@@ -511,10 +511,10 @@ Full Simulation
 **Flavor 1: 1 minute time steps**
 In the original milestone 2, there were no simulated SCADA actors. Obviously, to
 add the Dispatch Contracts between Atns and SCADA to the simulation, the SCADA must
-be added to the simulation. In addition,  the time steps must 
-be on the same order as the heartbeats back and forth between the Atn and the SCADA. 
+be added to the simulation. In addition,  the time steps must
+be on the same order as the heartbeats back and forth between the Atn and the SCADA.
 
-Both of these additions slow down the simulation significantly. This simulation is 
+Both of these additions slow down the simulation significantly. This simulation is
 useful in helping to evaluating the real life performance of the platform. However,
 to see what happens with the demand curves, the original flavor should be used
 
@@ -522,4 +522,3 @@ to see what happens with the demand curves, the original flavor should be used
 
 **Flavor 2: 1 hour time steps**
 (no SCADA actors, one hour time steps)
-

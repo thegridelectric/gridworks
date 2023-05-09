@@ -3,6 +3,7 @@ from typing import Dict
 from typing import List
 from typing import no_type_check
 
+from gridworks.types import BaseGNodeGt_Maker
 from gridworks.types import GNodeGt_Maker
 from gridworks.types import GNodeInstanceGt_Maker
 from gridworks.types import GwCertId_Maker
@@ -19,6 +20,7 @@ TypeMakerByName: Dict[str, HeartbeatA_Maker] = {}
 @no_type_check
 def type_makers() -> List[HeartbeatA_Maker]:
     return [
+        BaseGNodeGt_Maker,
         GNodeGt_Maker,
         GNodeInstanceGt_Maker,
         GwCertId_Maker,
@@ -41,6 +43,7 @@ def version_by_type_name() -> Dict[str, str]:
     """
 
     v: Dict[str, str] = {
+        "base.g.node.gt": "002",
         "g.node.gt": "002",
         "g.node.instance.gt": "000",
         "gw.cert.id": "000",
@@ -61,6 +64,7 @@ def status_by_versioned_type_name() -> Dict[str, str]:
     """
 
     v: Dict[str, str] = {
+        "base.g.node.gt.002": "Pending",
         "g.node.gt.002": "Pending",
         "g.node.instance.gt.000": "Pending",
         "gw.cert.id.000": "Active",
