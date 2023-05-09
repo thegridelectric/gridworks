@@ -807,11 +807,6 @@ class ActorBase(ABC):
            MessageCategory: the MessageCategory, as enum
         """
         routing_key_words = routing_key.split(".")
-        if len(routing_key_words) < 4:
-            self._latest_on_message_diagnostic = (
-                OnReceiveMessageDiagnostic.UNKNOWN_ROUTING_KEY_TYPE
-            )
-            raise SchemaError(f"Routing key {routing_key} must have at least 3 words!")
         msg_category_symbol_value = routing_key_words[0]
 
         try:
@@ -959,6 +954,13 @@ class ActorBase(ABC):
         else:
             correlation_id = str(uuid.uuid4())
 
+        properties = pika.BasicProperties(
+            reply_to=self.queue_name,
+            app_id=self.alias,
+            type=message_category,
+            correlation_id=correlation_id,
+        )
+        publish_exchange = self._publish_exchange
         if message_category is MessageCategory.RabbitJsonDirect:
             if not isinstance(to_role, GNodeRole):
                 raise Exception("Must include to_role for a direct message")
@@ -971,27 +973,15 @@ class ActorBase(ABC):
                 payload=payload,
                 to_g_node_alias=to_g_node_alias,
             )
-
-            properties = pika.BasicProperties(
-                reply_to=self.queue_name,
-                app_id=self.alias,
-                type=message_category.RabbitJsonDirect,
-                correlation_id=correlation_id,
-            )
         elif message_category is MessageCategory.RabbitJsonBroadcast:
             routing_key = self.broadcast_routing_key(
                 payload=payload, radio_channel=radio_channel
-            )
-            properties = pika.BasicProperties(
-                reply_to=self.queue_name,
-                app_id=self.alias,
-                type=message_category.RabbitJsonBroadcast,
-                correlation_id=correlation_id,
             )
         elif message_category is MessageCategory.MqttJsonBroadcast:
             routing_key = self.scada_routing_key(
                 payload=payload, to_g_node_alias=to_g_node_alias
             )
+            publish_exchange = "amq.topic"
         else:
             raise Exception(f"Does not handle MessageCategory {message_category}")
 
@@ -1011,7 +1001,7 @@ class ActorBase(ABC):
 
         try:
             self._consume_channel.basic_publish(
-                exchange=self._publish_exchange,
+                exchange=publish_exchange,
                 routing_key=routing_key,
                 body=payload.as_type(),
                 properties=properties,

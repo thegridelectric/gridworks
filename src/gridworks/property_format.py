@@ -14,18 +14,52 @@ from gridworks.enums import MarketTypeName
 
 
 def predicate_validator(
-    field_name: str, predicate: Callable[[Any], bool], error_format: str = ""
+    field_name: str, predicate: Callable[[Any], bool], error_format: str = "", **kwargs
 ) -> classmethod:  # type: ignore
+    """
+    Produce a pydantic validator from a function returning a bool.
+
+    Example:
+
+        from typing import Any
+        from pydantic import BaseModel, ValidationError
+        from gwproto.property_format import predicate_validator
+
+        def is_truthy(v: Any) -> bool:
+            return bool(v)
+
+        class Foo(BaseModel):
+            an_int: int
+
+            _validate_an_int = predicate_validator("an_int", is_truthy)
+
+        print(Foo(an_int=1))
+
+        try:
+            print(Foo(an_int=0))
+        except ValidationError as e:
+            print(e)
+
+    Args:
+        field_name: the name of the field to validate.
+        predicate: the validation function. A truthy return value indicates success.
+        error_format: Optional format string for use in exception raised by validation failure. Takes one parameter, 'v'.
+        **kwargs: Passed to pydantic.validator()
+
+    Returns:
+        The passed in object v.
+    """
+
     def _validator(v: Any) -> Any:
         if not predicate(v):
             if error_format:
                 err_str = error_format.format(value=v)
             else:
-                err_str = f"{field_name}: {predicate} fails for [{v}]"
+                err_str = f"Failure of predicate on [{v}] with predicate {predicate}"
             raise ValueError(err_str)
         return v
 
-    return pydantic.validator(field_name, allow_reuse=True)(_validator)
+    return pydantic.validator(field_name, allow_reuse=True, **kwargs)(_validator)
 
 
 def is_hex_char(v: str) -> bool:
@@ -480,7 +514,7 @@ def is_world_instance_name_format(candidate: str) -> bool:
     return True
 
 
-def check_is_market_type_name_lrd_format(v: str) -> None:
+def check_is_market_name(v: str) -> None:
     try:
         x = v.split(".")
     except AttributeError:
@@ -511,22 +545,20 @@ def check_is_market_slot_name_lrd_format(v: str) -> None:
     except AttributeError:
         raise ValueError(f"{v} failed to split on '.'")
     slot_start = x[-1]
-    if len(slot_start) != 10:
-        raise ValueError(f"slot start {slot_start} not of length 10")
     try:
         slot_start = int(slot_start)
     except ValueError:
         raise ValueError(f"slot start {slot_start} not an int")
+    check_is_reasonable_unix_time_s(slot_start)
     if slot_start % 300 != 0:
         raise ValueError(f"slot start {slot_start} not a multiple of 300")
 
-    market_type_name_lrd = ".".join(x[:-1])
+    market_name = ".".join(x[:-1])
     try:
-        check_is_market_type_name_lrd_format(market_type_name_lrd)
+        check_is_market_name(market_name)
     except ValueError as e:
         raise ValueError(f"e")
-
-    market_type = MarketType.by_id[market_type_name_lrd.split(".")[0]]
+    market_type = MarketType.by_id[MarketTypeName(x[0])]
     if not slot_start % (market_type.duration_minutes * 60) == 0:
         raise ValueError(
             f"market_slot_start_s mod {(market_type.duration_minutes * 60)} must be 0"
