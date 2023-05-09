@@ -16,16 +16,12 @@ forth between type instances and Python objects.
    :maxdepth: 1
    :caption: TYPE SDKS
 
+    BaseGNodeGt  <types/base-g-node-gt>
     GNodeGt  <types/g-node-gt>
     GNodeInstanceGt  <types/g-node-instance-gt>
     GwCertId  <types/gw-cert-id>
     HeartbeatA  <types/heartbeat-a>
-    InitialTadeedAlgoCreate  <types/initial-tadeed-algo-create>
-    InitialTadeedAlgoOptin  <types/initial-tadeed-algo-optin>
-    InitialTadeedAlgoTransfer  <types/initial-tadeed-algo-transfer>
     Ready  <types/ready>
     SimTimestep  <types/sim-timestep>
     SuperStarter  <types/super-starter>
     SupervisorContainerGt  <types/supervisor-container-gt>
-    TavalidatorcertAlgoCreate  <types/tavalidatorcert-algo-create>
-    TavalidatorcertAlgoTransfer  <types/tavalidatorcert-algo-transfer>
