@@ -98,8 +98,8 @@ def test_property_format():
     good_market_slot_name = "rt60gate5.d1.isone.ver.keene.1673539200"
     bad_market_slot_name_1 = bad_market_name_1 + ".1673539200"
     bad_slot_start_1 = "rt60gate5.d1.isone.ver.keene.not_unix_s"
-    bad_slot_start_1 = "rt60gate5.d1.isone.ver.keene.777"
-    bad_slot_start_2 = "rt60gate5.d1.isone.ver.keene.1673539205"
+    bad_slot_start_2 = "rt60gate5.d1.isone.ver.keene.777"
+    bad_slot_start_3 = "rt60gate5.d1.isone.ver.keene.1673539205"
 
     gridworks.property_format.check_is_market_slot_name_lrd_format(
         good_market_slot_name
@@ -110,14 +110,12 @@ def test_property_format():
         )
 
     with pytest.raises(ValueError):
-        gridworks.property_format.check_is_market_slot_name_lrd_format(
-            bad_market_name_2
-        )
+        gridworks.property_format.check_is_market_slot_name_lrd_format(bad_slot_start_1)
 
     with pytest.raises(ValueError):
-        gridworks.property_format.check_is_market_slot_name_lrd_format(bad_slot_start_1)
-    with pytest.raises(ValueError):
         gridworks.property_format.check_is_market_slot_name_lrd_format(bad_slot_start_2)
+    with pytest.raises(ValueError):
+        gridworks.property_format.check_is_market_slot_name_lrd_format(bad_slot_start_3)
 
 
 def test_predicate_validator():
