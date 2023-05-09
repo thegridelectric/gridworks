@@ -19,10 +19,10 @@ Blockchain Mechanics
 
 Gridworks runs markets between distributed actors acting as avatars for physical devices on the grid. It needs a
 foundation of trustless, secure, scalable validation and authentication. It heavily uses the Algorand blockchain. If
-you want to undestand more about how and why this is, go `here <blockchain.html>`_. 
+you want to undestand more about how and why this is, go `here <blockchain.html>`_.
 
 Despite the current negative view of crypto technology, blockchain is actually a valuable technology which we
-use for validating the location and metering accuracy of Transactive Devices, and for creating a scalable 
+use for validating the location and metering accuracy of Transactive Devices, and for creating a scalable
 mechanism for auditing energy transactions.
 
 GridWorks SDKs
@@ -31,7 +31,7 @@ GridWorks SDKs
  - **gridworks**: `package <https://pypi.org/project/gridworks/>`_ provides basic shared mechanics for  communication and GNode structure. It is used as a package in all of our other repos.
 
 
- - **gridworks-atn**:  `package <https://pypi.org/project/gridworks-atn/>`_ and associated `documentation <https://gridworks-atn.readthedocs.io/en/latest/>`_ for the GridWorks Python `AtomicTNodes <atomic-t-node.html>`_  SDK. AtomicTNodes  are the GridWorks actors that make electrical devices *transactive*. This SDK is a great place to learn about blockchain mechanics, as it introduces some of the simpler structures (NFTs, stateless contracts, and then some simple stateful smart contracts constructed using  `beaker <https://github.com/algorand-devrel/beaker>`_) required for establishing the link between physical reality on the electric grid and the actors that play their avatars in GridWorks.  
+ - **gridworks-atn**:  `package <https://pypi.org/project/gridworks-atn/>`_ and associated `documentation <https://gridworks-atn.readthedocs.io/en/latest/>`_ for the GridWorks Python `AtomicTNodes <atomic-t-node.html>`_  SDK. AtomicTNodes  are the GridWorks actors that make electrical devices *transactive*. This SDK is a great place to learn about blockchain mechanics, as it introduces some of the simpler structures (NFTs, stateless contracts, and then some simple stateful smart contracts constructed using  `beaker <https://github.com/algorand-devrel/beaker>`_) required for establishing the link between physical reality on the electric grid and the actors that play their avatars in GridWorks.
 
  - **gridworks-marketmaker**: `package  <https://pypi.org/project/gridworks-marketmaker/>`_ and associated `documentation <https://gridworks-marketmaker.readthedocs.io/en/latest/>`_ for our Python `MarketMaker <market-maker.html>`_ SDK.  GridWorks uses distributed actors to balance the electric grid, and MarketMakers are the actors brokering this grid balancing via the markets they run for energy and balancing services.
 

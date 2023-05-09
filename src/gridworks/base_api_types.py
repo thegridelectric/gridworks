@@ -3,19 +3,15 @@ from typing import Dict
 from typing import List
 from typing import no_type_check
 
+from gridworks.types import BaseGNodeGt_Maker
 from gridworks.types import GNodeGt_Maker
 from gridworks.types import GNodeInstanceGt_Maker
 from gridworks.types import GwCertId_Maker
 from gridworks.types import HeartbeatA_Maker
-from gridworks.types import InitialTadeedAlgoCreate_Maker
-from gridworks.types import InitialTadeedAlgoOptin_Maker
-from gridworks.types import InitialTadeedAlgoTransfer_Maker
 from gridworks.types import Ready_Maker
 from gridworks.types import SimTimestep_Maker
 from gridworks.types import SuperStarter_Maker
 from gridworks.types import SupervisorContainerGt_Maker
-from gridworks.types import TavalidatorcertAlgoCreate_Maker
-from gridworks.types import TavalidatorcertAlgoTransfer_Maker
 
 
 TypeMakerByName: Dict[str, HeartbeatA_Maker] = {}
@@ -24,19 +20,15 @@ TypeMakerByName: Dict[str, HeartbeatA_Maker] = {}
 @no_type_check
 def type_makers() -> List[HeartbeatA_Maker]:
     return [
+        BaseGNodeGt_Maker,
         GNodeGt_Maker,
         GNodeInstanceGt_Maker,
         GwCertId_Maker,
         HeartbeatA_Maker,
-        InitialTadeedAlgoCreate_Maker,
-        InitialTadeedAlgoOptin_Maker,
-        InitialTadeedAlgoTransfer_Maker,
         Ready_Maker,
         SimTimestep_Maker,
         SuperStarter_Maker,
         SupervisorContainerGt_Maker,
-        TavalidatorcertAlgoCreate_Maker,
-        TavalidatorcertAlgoTransfer_Maker,
     ]
 
 
@@ -51,19 +43,15 @@ def version_by_type_name() -> Dict[str, str]:
     """
 
     v: Dict[str, str] = {
+        "base.g.node.gt": "002",
         "g.node.gt": "002",
         "g.node.instance.gt": "000",
         "gw.cert.id": "000",
         "heartbeat.a": "100",
-        "initial.tadeed.algo.create": "000",
-        "initial.tadeed.algo.optin": "002",
-        "initial.tadeed.algo.transfer": "000",
         "ready": "001",
         "sim.timestep": "000",
         "super.starter": "000",
         "supervisor.container.gt": "000",
-        "tavalidatorcert.algo.create": "000",
-        "tavalidatorcert.algo.transfer": "000",
     }
 
     return v
@@ -76,19 +64,15 @@ def status_by_versioned_type_name() -> Dict[str, str]:
     """
 
     v: Dict[str, str] = {
-        "g.node.gt.002": "Pending",
-        "g.node.instance.gt.000": "Pending",
+        "base.g.node.gt.002": "Active",
+        "g.node.gt.002": "Active",
+        "g.node.instance.gt.000": "Active",
         "gw.cert.id.000": "Active",
-        "heartbeat.a.100": "Pending",
-        "initial.tadeed.algo.create.000": "Active",
-        "initial.tadeed.algo.optin.002": "Active",
-        "initial.tadeed.algo.transfer.000": "Active",
-        "ready.001": "Pending",
-        "sim.timestep.000": "Pending",
-        "super.starter.000": "Pending",
-        "supervisor.container.gt.000": "Pending",
-        "tavalidatorcert.algo.create.000": "Active",
-        "tavalidatorcert.algo.transfer.000": "Active",
+        "heartbeat.a.100": "Active",
+        "ready.001": "Active",
+        "sim.timestep.000": "Active",
+        "super.starter.000": "Active",
+        "supervisor.container.gt.000": "Active",
     }
 
     return v
