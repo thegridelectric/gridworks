@@ -9,4 +9,4 @@ in GridWorks:
 Note for most developers, `alias` usually means an ephemeral or temporary moniker. `GNodeAlias` is
 an exception to this rule.
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_

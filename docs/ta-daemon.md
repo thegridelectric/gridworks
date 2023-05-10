@@ -20,4 +20,4 @@ to an [AtomicTNode](atomic-t-node), and entering into a long-term financial agre
 involves both receiving and sending money in a triangle involving
 the AtomicTNode and its [MarketMaker](market-maker).
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_

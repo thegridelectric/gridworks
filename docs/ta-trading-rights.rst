@@ -9,7 +9,7 @@ blockchain object that provides an `AtomicTNode <atomic-t-node.html>`_ with the 
 
 
 TaTradingRights technical details
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 As with `TaDeeds <ta-deed.html>`_, TaTradingRights can either be  Algorand Standards Assets (ASAs), or
 Algorand Smart Contracts. In both cases, the
@@ -17,7 +17,7 @@ TaTradingRights makes publicly available the `GNodeAlias <g-node-alias.html>`_ o
 Algorand address of the `TaValidator <ta-validator.html>`_.
 
 ASA TaTradingRights specs
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 An ASA TaTradingRights certificate is an Algorand Standard Asset where:
  - `Creator (aka Sender) <https://developer.algorand.org/docs/get-details/transactions/transactions/#sender>`_ is `GnfAdminAddr <g-node-factory.html#gnfadminaddr>`_
@@ -28,6 +28,6 @@ An ASA TaTradingRights certificate is an Algorand Standard Asset where:
 
 
 SmartSignature TaDeed specs
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 *Back to `Lexicon <lexicon.html>`_*

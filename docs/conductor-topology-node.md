@@ -5,4 +5,4 @@ The interior nodes of the copper spanning tree are places where multiple lines c
 
 GNodes with this role are **copper GNodes**, and they typically are _passive_ - that is, they do not have actors, but instead serve the function of helping track the grid topology.
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_
