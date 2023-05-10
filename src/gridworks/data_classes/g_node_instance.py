@@ -1,4 +1,3 @@
-""" GNode DataClass Definition """
 import logging
 from typing import Dict
 from typing import List
