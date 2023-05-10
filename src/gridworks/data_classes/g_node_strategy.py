@@ -8,7 +8,7 @@ from gridworks.enums import StrategyName
 class GNodeStrategy:
     by_id: Dict[StrategyName, "GNodeStrategy"] = {}
 
-    def __new__(cls, name: MarketTypeName, *args, **kwargs) -> "GNodeStrategy":  # type: ignore
+    def __new__(cls, name: StrategyName, *args, **kwargs) -> "GNodeStrategy":  # type: ignore
         try:
             return cls.by_id[name]
         except KeyError:

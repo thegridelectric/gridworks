@@ -1,5 +1,3 @@
-""" GpsPoint Definition """
-
 from typing import Dict
 
 
