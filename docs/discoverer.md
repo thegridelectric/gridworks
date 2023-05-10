@@ -15,4 +15,4 @@ acknowledge their contribution to mapping out the grid.
 
 ![alt_text](images/bangor-1-line-street-overlay.png)
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_

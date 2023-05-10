@@ -12,4 +12,4 @@ the SCADA lets the AtomicTNode call all the shots on how the TerminalAsset uses 
 
 **AtomicTNode** is a fundamental [GNodeRole](g-node-role) and [CoreGNodeRole](core-g-node-role).
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_

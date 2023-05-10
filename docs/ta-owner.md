@@ -15,4 +15,4 @@ The TaOwner will often be a human. It is not appropriate, therefore, to expect a
 action from the TaOwner when the TaDeed changes. This is done by putting the
 TaDeed into the care of a [TaDaemon](ta-daemon) application.
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_

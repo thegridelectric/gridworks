@@ -12,4 +12,4 @@ Here is the GridWorks icon used to represent TerminalAssets
 
 ![alt_text](images/terminal-asset-icon.png)
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_

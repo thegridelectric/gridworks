@@ -18,4 +18,4 @@ Another reason to create an AggregatedTNode is if a MarketMaker has a minimum si
 participation. While the default MarketMakers provided by GridWorks will not have this restriction, the
 design of the system allows for it.
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_
