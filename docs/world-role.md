@@ -8,4 +8,4 @@ GNodeInstances and managing the disbursement of their secrets.
 
 For more details on these mechanics go [here](g-node-instance).
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_

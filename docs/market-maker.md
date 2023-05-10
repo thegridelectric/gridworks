@@ -2,7 +2,7 @@
 
 A **MarketMaker** is a Copper GNode that runs an electricity market. MarketMaker is an essential [GNodeRoles](g-node-role.rst) in GridWorks: a hierarchy of MarketMakers is responsible for coordinating Transactive Devices in a way that respects the
 copper constraints on the grid and turns these transactive devices into balancing resources. A simple open-source MarketMaker available on [github](https://github.com/thegridelectric/gridworks-marketmaker)
-is used in the [Millinocket tutorial](millinocket-tutorial.md).
+is used in the [Millinocket tutorial](millinocket-tutorial).
 
 ## How AtomicTNodes bid
 
@@ -39,4 +39,4 @@ Each MarketType has a maximum price PMax; `rt60gate30b` has a PMax of $10,000/MW
 
 This, therefore, is the bid that an electric heating system would submit to express that it will want to turn on full (15 kW) if the price is at or below $10/MWh, and otherwise it will turn off.
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_

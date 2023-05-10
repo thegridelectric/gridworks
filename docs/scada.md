@@ -16,4 +16,4 @@ The functions of the SCADA are pretty straightforward and obvious, given the goa
 Go [here](https://github.com/thegridelectric/gw-scada-spaceheat-python) to
 examine an example of SCADA software for a thermal storage heating system.
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_
