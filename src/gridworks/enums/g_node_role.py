@@ -12,14 +12,14 @@ class GNodeRole(StrEnum):
 
       * GNode: Default value
       * TerminalAsset: An avatar for a real-word Transactive Device. [More Info](https://gridworks.readthedocs.io/en/latest/transactive-device.html).
-      * AtomicTNode: Transacts in markets on behalf of, and controlling the power use of, a TerminalAsset
-      * MarketMaker: Runs energy markets at its Node in the GNodeTree
+      * AtomicTNode: Transacts in markets on behalf of, and controlling the power use of, a TerminalAsset. [More Info](https://gridworks.readthedocs.io/en/latest/atomic-t-node.html).
+      * MarketMaker: Runs energy markets at its Node in the GNodeTree. [More Info](https://gridworks.readthedocs.io/en/latest/market-maker.html).
       * AtomicMeteringNode: Role of a GNode that will become an AtomicTNode, prior to it owning TaTradingRights
       * ConductorTopologyNode: An avatar for a real-world electric grid node - e.g. a substation or transformer
       * InterconnectionComponent: An avatar for a cable or wire on the electric grid
-      * World: Adminstrative GNode responsible for managing and authorizing instances
+      * World: Adminstrative GNode responsible for managing and authorizing instances. [More Info](https://gridworks.readthedocs.io/en/latest/world-role.html).
       * TimeCoordinator: Responsible for managing time in simulations
-      * Supervisor: Responsible for GNode actors running in a container
+      * Supervisor: Responsible for GNode actors running in a container. [More Info](https://gridworks.readthedocs.io/en/latest/supervisor.html).
       * Scada: GNode associated to the device and code that directly monitors and actuates a Transactive Device
       * PriceService: Provides price forecasts for markets run by MarketMakers
       * WeatherService: Provides weather forecasts
