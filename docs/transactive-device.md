@@ -1,7 +1,7 @@
 # Transactive Device
 
 A **Transactive Device** is real-world electrical device that is consuming or producing energy [transactively](transactive).
-Consider the first [Maine demo](maine-demo) installation at the house of one of the demo team members.
+Consider the first [Maine demo](millinocket-demo) installation at the house of one of the demo team members.
 The space heating distribution system in their house is an underfloor
 heating system on the first floor, and a combination of radiant heat and air on the second. The
 distribution system can keep the house warm with water at 120F, even on the coldest day. Plumbed into this is 3
@@ -21,4 +21,4 @@ In summary, a **Transactive Device** is a tuple of 3 physical things:
 - **An electrical meter** that meters exactly the electrical device and has the accuracy characteristics required to meet existing and pending grid balancing challenges (that is, the challenge of keeping electric supply and electric demand in balance on various timescales as wind and solar electricity become more prevalent); and
 - **An electrical device** connected to the grid that can consume and/or produce electrical power;
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_

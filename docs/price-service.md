@@ -8,4 +8,4 @@ Given the importance of good forecasting for the financial performance of
 AtomicTNodes, there is very likely a business opportunity in providing
 high-quality, localized forecasting.
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_

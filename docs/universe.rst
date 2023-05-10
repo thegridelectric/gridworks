@@ -49,4 +49,4 @@ Production
 - Only allows production code to run a GNode Actor.
 - Production security.
 
-Back to `Lexicon <lexicon.md>`_
+Back to `Lexicon <lexicon>`_

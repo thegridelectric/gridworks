@@ -42,4 +42,4 @@ AtomicTNodes and/or SCADA systems for an entirely different class of Transactive
 collaborate with GridWorks Energy Consulting to expand the scope of the GridWorks
 GNodeRegistry, or design their own.
 
-_Back to [Lexicon](lexicon.md)_
+_Back to [Lexicon](lexicon)_
