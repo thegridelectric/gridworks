@@ -1,4 +1,4 @@
-"""Tests for schema enum strategy.name.000"""
+"""Tests for schema enum strategy.name.001"""
 from gridworks.enums import StrategyName
 
 
@@ -10,6 +10,7 @@ def test_strategy_name() -> None:
         "AtnHeatPumpWithBoostStore",
         "TcGlobalA",
         "MarketMakerA",
+        "AtnBrickStorageHeater",
     }
 
     assert StrategyName.default() == StrategyName.NoActor
