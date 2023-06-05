@@ -1,4 +1,4 @@
-# GNodeFactory Repo Code of Conduct
+# GridWorks Energy Consulting Code of Conduct
 
 ## Basic Truth
 
@@ -11,22 +11,31 @@ this repository to support its alignment to the above basic truth.
 
 ## Enforcement Responsibilities
 
-GridWorks Energy Consulting ([gridworks@gridworks-consulting.com](mailto:gridworks@gridworks-consulting.com) )
-is responsible for clarifying and enforcing this repo's standards of
-behavior. They have the right and responsibility to remove, edit, or reject
-comments, commits, code, wiki edits, issues, and other contributions that are
-not aligned to this Code of Conduct, and will communicate reasons for moderation
+[GridWorks Energy Consulting LLC](https://gridworks-consulting.com/) ([gridworks@gridworks-consulting.com](mailto:gridworks@gridworks-consulting.com) )
+owns and administers this repository, and is ultimately responsible for enforcement of standards of 
+behavior. They are responsible for merges to dev and main branches, and maintain the right and 
+responsibility to remove, edit, or reject  comments, commits, code, docuentation edits, issues, and other contributions
+that are  not aligned to this Code of Conduct, and will communicate reasons for moderation
 decisions when appropriate.
 
-If you read something in this repo that you want GridWorks Energy Consulting to consider moderating, please
-send an email to her at [gridworks@gridworks-consulting.com](mailto:gridworks@gridworks-consulting.com).
-All complaints will be reviewed and investigated, and GridWorks Energy Consulting will respect
+If you read something in this repo that you want GridWorks to consider moderating, please
+send an email to them at [gridworks@gridworks-consulting.com](mailto:gridworks@gridworks-consulting.com).
+All complaints will be reviewed and investigated, and GridWorks will respect
 the privacy and security of the reporter of any incident.
+
+## What not to add to this repo
+
+Ways to trigger GridWorks moderation enforcement:
+
+- Publish others' private information, such as a physical or email address,
+  without their explicit permission
+- Use of sexualized language or imagery, or make sexual advances
+- Troll
 
 ## Suggestions
 
-- Respect privacy
 - Empathize
+- Recognize you are worthy of contributing, and do so in the face of confusion and doubt; you can help clarify things for everyone
 - Be interested in differing opinions, viewpoints, and experiences
 - Give and accept constructive feedback
 - Accept responsibility for your mistakes and learn from them
@@ -37,11 +46,11 @@ the privacy and security of the reporter of any incident.
 
 ### 1. Correction
 
-A private, written request from Jessica to change or edit a comment, commit, or issue.
+A private, written request from GridWorks to change or edit a comment, commit, or issue.
 
 ### 2. Warning
 
-With a warning, Jessica may remove your comments, commits or issues. She may also
+With a warning, GridWorks may remove your comments, commits or issues. She may also
 freeze a conversation.
 
 ### 3. Temporary Ban
