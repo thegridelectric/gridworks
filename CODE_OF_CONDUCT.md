@@ -11,11 +11,11 @@ this repository to support its alignment to the above basic truth.
 
 ## Enforcement Responsibilities
 
-[GridWorks Energy Consulting LLC](https://gridworks-consulting.com/) ([gridworks@gridworks-consulting.com](mailto:gridworks@gridworks-consulting.com) )
-owns and administers this repository, and is ultimately responsible for enforcement of standards of 
-behavior. They are responsible for merges to dev and main branches, and maintain the right and 
-responsibility to remove, edit, or reject  comments, commits, code, docuentation edits, issues, and other contributions
-that are  not aligned to this Code of Conduct, and will communicate reasons for moderation
+[GridWorks Energy Consulting LLC](https://gridworks-consulting.com/) ([gridworks@gridworks-consulting.com](mailto:gridworks@gridworks-consulting.com))
+owns and administers this repository, and is ultimately responsible for enforcement of standards of
+behavior. They are responsible for merges to dev and main branches, and maintain the right and
+responsibility to remove, edit, or reject comments, commits, code, docuentation edits, issues, and other contributions
+that are not aligned to this Code of Conduct, and will communicate reasons for moderation
 decisions when appropriate.
 
 If you read something in this repo that you want GridWorks to consider moderating, please
@@ -50,7 +50,7 @@ A private, written request from GridWorks to change or edit a comment, commit, o
 
 ### 2. Warning
 
-With a warning, GridWorks may remove your comments, commits or issues. She may also
+With a warning, GridWorks may remove your comments, commits or issues. They may also
 freeze a conversation.
 
 ### 3. Temporary Ban
