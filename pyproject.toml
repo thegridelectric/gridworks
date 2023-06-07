@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gridworks"
-version = "0.2.5"
+version = "0.2.6"
 description = "Gridworks"
 authors = ["GridWorks <gridworks@gridworks-consulting.com>"]
 license = "MIT"
@@ -8,8 +8,12 @@ readme = "README.md"
 homepage = "https://github.com/thegridelectric/gridworks"
 repository = "https://github.com/thegridelectric/gridworks"
 documentation = "https://gridworks.readthedocs.io"
+packages = [
+    { include = "gridworks", from = "src" },
+    { include = "gridworks_test", from = "src" },
+]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 3 - Alpha",
 ]
 
 [tool.poetry.urls]
