@@ -15,6 +15,9 @@ from typing import no_type_check
 import pendulum
 import pika
 from fastapi_utils.enums import StrEnum
+from pika.channel import Channel as PikaChannel
+from pika.spec import Basic
+from pika.spec import BasicProperties
 
 import gridworks.base_api_types as base_api_types
 import gridworks.property_format as property_format
@@ -152,7 +155,7 @@ class ActorBase(ABC):
         self._publish_connection: Optional[
             pika.adapters.select_connection.SelectConnection
         ] = None
-        self._publish_channel: Optional[pika.channel.Channel] = None
+        self._publish_channel: Optional[PikaChannel] = None
         self._stopping: bool = False
         self._stopped: bool = True
         self._latest_on_message_diagnostic: Optional[OnReceiveMessageDiagnostic] = None
@@ -321,11 +324,15 @@ class ActorBase(ABC):
         self._consume_connection.channel(on_open_callback=self.on_consumer_channel_open)  # type: ignore
 
     @no_type_check
-    def on_consumer_channel_open(self, channel) -> None:
-        """This method is invoked by pika when the channel has been opened.
-        The channel object is passed in so we can make use of it.
-        Since the channel is now open, we'll declare the exchange to use.
-        :param pika.channel.Channel channel: The channel object
+    def on_consumer_channel_open(self, channel: PikaChannel) -> None:
+        """Invoked by pika when the channel has been successfully opened.
+
+        This callback is triggered when the channel is opened, and it provides
+        the channel object that can be used for further operations. In this case,
+        we'll proceed to declare the exchange to be used.
+
+        :param channel: The opened channel object.
+        :type channel: PikaChannel
         """
         LOGGER.info("Channel opened")
         self._consume_channel = channel
@@ -341,14 +348,20 @@ class ActorBase(ABC):
         self._consume_channel.add_on_close_callback(self.on_consumer_channel_closed)
 
     @no_type_check
-    def on_consumer_channel_closed(self, channel, reason) -> None:
-        """Invoked by pika when RabbitMQ unexpectedly closes the channel.
-        Channels are usually closed if you attempt to do something that
-        violates the protocol, such as re-declare an exchange or queue with
-        different parameters. In this case, we'll close the connection
-        to shutdown the object.
-        :param pika.channel.Channel: The closed channel
-        :param Exception reason: why the channel was closed
+    def on_consumer_channel_closed(
+        self, channel: PikaChannel, reason: Exception
+    ) -> None:
+        """Invoked by pika when the RabbitMQ channel is unexpectedly closed.
+
+        This callback is triggered when a channel is closed, usually due to
+        violating the protocol by attempting to re-declare an exchange or queue
+        with different parameters. In this case, the connection is closed to
+        gracefully shutdown the object.
+
+        :param channel: The closed channel object.
+        :type channel: PikaChannel
+        :param reason: why the channel was closed
+        :type reason: Exception
         """
         LOGGER.warning("Consume channel %i was closed: %s", channel, reason)
         self.close_consumer_connection()
@@ -634,11 +647,15 @@ class ActorBase(ABC):
         self._publish_connection.channel(on_open_callback=self.on_publish_channel_open)  # type: ignore
 
     @no_type_check
-    def on_publish_channel_open(self, channel) -> None:
-        """This method is invoked by pika when the channel has been opened.
-        The channel object is passed in so we can make use of it.
-        Since the channel is now open, we'll declare the exchange to use.
-        :param pika.channel.Channel channel: The channel object
+    def on_publish_channel_open(self, channel: PikaChannel) -> None:
+        """Invoked by pika when the channel has been successfully opened.
+
+        This callback is triggered when the channel is opened, and it provides
+        the channel object that can be used for further operations. In this case,
+        we'll proceed to declare the exchange to be used.
+
+        :param channel: The opened channel object.
+        :type channel: PikaChannel
         """
         LOGGER.info("Publish channel opened")
         self._publish_channel = channel
@@ -652,14 +669,20 @@ class ActorBase(ABC):
         self._publish_channel.add_on_close_callback(self.on_publish_channel_closed)  # type: ignore
 
     @no_type_check
-    def on_publish_channel_closed(self, channel, reason) -> None:
-        """Invoked by pika when RabbitMQ unexpectedly closes the channel.
-        Channels are usually closed if you attempt to do something that
-        violates the protocol, such as re-declare an exchange or queue with
-        different parameters. In this case, we'll close the connection
-        to shutdown the object.
-        :param pika.channel.Channel channel: The closed channel
-        :param Exception reason: why the channel was closed
+    def on_publish_channel_closed(
+        self, channel: PikaChannel, reason: Exception
+    ) -> None:
+        """Invoked by pika when the RabbitMQ channel is unexpectedly closed.
+
+        This callback is triggered when a channel is closed, usually due to
+        violating the protocol by attempting to re-declare an exchange or queue
+        with different parameters. In this case, the connection is closed to
+        gracefully shutdown the object.
+
+        :param channel: The closed channel object.
+        :type channel: PikaChannel
+        :param reason: The reason why the channel was closed.
+        :type reason: Exception
         """
         LOGGER.warning(f"Publish channel {channel} was closed: {reason}")
         self._publish_channel = None
@@ -1025,25 +1048,32 @@ class ActorBase(ABC):
     #################################################
 
     @no_type_check
-    def on_message(self, _unused_channel, basic_deliver, properties, body) -> None:
-        """Invoked by pika when a message is delivered from RabbitMQ. If a message
+    def on_message(
+        self,
+        _unused_channel: PikaChannel,
+        basic_deliver: Basic.Deliver,
+        properties: BasicProperties,
+        body: bytes,
+    ) -> None:
+        """
+        Invoked by pika when a message is delivered from RabbitMQ. If a message
         does not get here that you expect should get here, check the routing key
         of the outbound message and the rabbitmq bindings.
 
         Parses the TypeName of the message payload and the GNodeAlias of the sender.
-        If it recognizes the GNode and the TypeName then it sends the message on to
+        If it recognizes the GNode and the TypeName, then it sends the message on to
         the check_routing function, which will be defined in a child class (e.g., the
         GNodeFactoryActorBase if the actor is a GNodeFactory).
 
-        From RabbitMQ:  The
-        channel is passed for your convenience. The basic_deliver object that
-        is passed in carries the exchange, routing key, delivery tag and
-        a redelivered flag for the message. The properties passed in is an
-        instance of BasicProperties with the message properties and the body
-        is the message that was sent.
+        From RabbitMQ: The channel is passed for your convenience. The basic_deliver
+        object that is passed in carries the exchange, delivery tag, and a redelivered
+        flag for the message. The properties passed in is an instance of BasicProperties
+        with the message properties including the routing key. The body is the message
+        that was sent.
+
         :param pika.channel.Channel _unused_channel: The channel object
-        :param pika.Spec.Basic.Deliver: basic_deliver method
-        :param pika.Spec.BasicProperties: properties
+        :param pika.spec.Basic.Deliver basic_deliver: The basic.deliver method
+        :param pika.spec.BasicProperties properties: The message properties including the routing key
         :param bytes body: The message body
         """
         self.latest_routing_key = basic_deliver.routing_key

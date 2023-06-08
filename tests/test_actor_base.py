@@ -3,26 +3,26 @@ import time
 from gridworks.enums import GNodeRole
 from gridworks.gw_config import GNodeSettings
 from gridworks.types import HeartbeatA_Maker
-from tests.utils import GNodeStubRecorder
-from tests.utils import SupervisorStubRecorder
-from tests.utils import wait_for
+from gridworks_test import GNodeStubRecorder
+from gridworks_test import SupervisorStubRecorder
+from gridworks_test import load_rabbit_exchange_bindings
+from gridworks_test import wait_for
 
 
 def test_actor_base():
     settings = GNodeSettings()
 
     gn = GNodeStubRecorder(settings)
-    su = SupervisorStubRecorder(settings)
-
     gn.start()
+    su = SupervisorStubRecorder(settings)
+    su.start()
+
+    wait_for(lambda: su._consuming, 4, "supervisor is consuming")
     wait_for(lambda: gn._consuming, 4, "gnode is consuming")
 
-    gn.load_rabbit_exchange_bindings()
+    load_rabbit_exchange_bindings(gn._consume_channel)
 
-    su.start()
-    wait_for(lambda: su._consuming, 4, "supervisor is consuming")
-
-    payload = HeartbeatA_Maker(my_hex=0, your_last_hex=0).tuple
+    payload = HeartbeatA_Maker(my_hex="0", your_last_hex="0").tuple
     gn.send_message(
         payload=payload, to_role=GNodeRole.Supervisor, to_g_node_alias=su.alias
     )
