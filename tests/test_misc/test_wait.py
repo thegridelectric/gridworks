@@ -47,7 +47,6 @@ def async_delay(delay: Delay) -> AwaitablePredicate:
 
 @pytest.mark.asyncio
 async def test_await_for():
-
     delay_time = 0.01
     timeout = delay_time * 2
     retry_duration = delay_time / 4

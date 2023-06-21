@@ -1,0 +1,8 @@
+ARG REMOTE_BASE=arm64v8/rabbitmq:3.9.13-management
+####################################################################################################
+# docker-base - meant to be re-run only rarely
+####################################################################################################
+
+FROM $REMOTE_BASE AS image-base
+
+COPY rabbitconfig/rabbit_definitions_dev.json /tmp/rabbit_definitions.json

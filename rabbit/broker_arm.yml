@@ -1,0 +1,23 @@
+version: "3.5"
+
+services:
+  -hw1-1-broker:
+    container_name: rabbit
+    image: "arm64v8/rabbitmq:3.9.13-management"
+    ports:
+      - 1883:1883
+      - 4369:4369
+      - 5672:5672
+      - 15672:15672
+      - 15674:15674
+      - 25672:25672
+    ulimits:
+      nofile:
+        soft: 128000
+        hard: 128000
+    environment:
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbitmq_management load_definitions "/tmp/rabbit_definitions.json"
+    volumes:
+      - ./rabbitconfig/rabbit_definitions_hybrid.json:/tmp/rabbit_definitions.json:ro
+      - ./rabbitconfig/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./rabbitconfig/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro

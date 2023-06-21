@@ -1,10 +1,16 @@
 import time
+import uuid
+
+import pendulum
 
 from gridworks.enums import GNodeRole
+from gridworks.enums import MessageCategory
 from gridworks.gw_config import GNodeSettings
 from gridworks.types import HeartbeatA_Maker
+from gridworks.types import SimTimestep_Maker
 from gridworks_test import GNodeStubRecorder
 from gridworks_test import SupervisorStubRecorder
+from gridworks_test import TimeCoordinatorStubRecorder
 from gridworks_test import load_rabbit_exchange_bindings
 from gridworks_test import wait_for
 
@@ -14,12 +20,16 @@ def test_actor_base():
 
     gn = GNodeStubRecorder(settings)
     gn.start()
-    su = SupervisorStubRecorder(settings)
+    su = SupervisorStubRecorder(settings, subordinate_alias=settings.g_node_alias)
     su.start()
-
+    tc = TimeCoordinatorStubRecorder(settings)
+    tc.start()
     wait_for(lambda: su._consuming, 4, "supervisor is consuming")
     wait_for(lambda: gn._consuming, 4, "gnode is consuming")
+    wait_for(lambda: tc._consuming, 4, "timecoordinator is consuming")
 
+    # This is required for tests to pass in CI, as we haven't figured
+    # out how to pre-load the bindings and exchanges in github actions
     load_rabbit_exchange_bindings(gn._consume_channel)
 
     payload = HeartbeatA_Maker(my_hex="0", your_last_hex="0").tuple
@@ -31,10 +41,21 @@ def test_actor_base():
 
     assert su.messages_received == 1
     assert su.messages_routed_internally == 1
-    assert su.routing_to_super__heartbeat_a__worked
+    assert su.got_heartbeat_from_sub
+
+    d = pendulum.datetime(year=2020, month=1, day=1, hour=5)
+    t = d.int_timestamp
+    payload = SimTimestep_Maker(
+        from_g_node_alias="d1.time",
+        from_g_node_instance_id=str(uuid.uuid4()),
+        time_unix_s=t,
+        timestep_created_ms=1000 * int(time.time()),
+        message_id=str(uuid.uuid4()),
+    ).tuple
 
     gn.stop()
     su.stop()
+    tc.stop()
 
 
 #     gnf = GNodeFactoryRabbitStubRecorder(settings=GnfSettings())
