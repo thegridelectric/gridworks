@@ -1,0 +1,13 @@
+[Unit]
+Description=Docker Compose Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+WorkingDirectory=/home/ubuntu/gridworks/rabbit
+ExecStart=/usr/local/bin/docker-compose -f broker_arm.yml up -d
+ExecStop=/usr/local/bin/docker-compose -f broker_arm.yml down
+
+[Install]
+WantedBy=multi-user.target
