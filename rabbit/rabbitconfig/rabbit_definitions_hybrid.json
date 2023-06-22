@@ -1,23 +1,13 @@
 {
   "vhosts": [
     {
-      "name": "d1__1"
-    },
-    {
-      "name": "dev_registry"
+      "name": "hw1__1"
     }
   ],
   "permissions": [
     {
       "user": "smqPublic",
-      "vhost": "d1__1",
-      "configure": ".*",
-      "write": ".*",
-      "read": ".*"
-    },
-    {
-      "user": "smqPublic",
-      "vhost": "dev_registry",
+      "vhost": "hw1__1",
       "configure": ".*",
       "write": ".*",
       "read": ".*"
@@ -26,7 +16,7 @@
   "exchanges": [
     {
       "name": "atomictnodemic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -35,7 +25,7 @@
     },
     {
       "name": "atomictnode_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -44,7 +34,7 @@
     },
     {
       "name": "gnodemic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -53,7 +43,7 @@
     },
     {
       "name": "gnode_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -62,7 +52,7 @@
     },
     {
       "name": "marketmakermic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -71,7 +61,7 @@
     },
     {
       "name": "marketmaker_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -80,7 +70,7 @@
     },
     {
       "name": "supervisormic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -89,7 +79,7 @@
     },
     {
       "name": "supervisor_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -98,7 +88,7 @@
     },
     {
       "name": "timecoordinatormic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -107,7 +97,7 @@
     },
     {
       "name": "timecoordinator_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -116,7 +106,7 @@
     },
     {
       "name": "worldmic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -125,7 +115,7 @@
     },
     {
       "name": "world_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
@@ -134,129 +124,34 @@
     },
     {
       "name": "ear_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "type": "topic",
       "durable": true,
       "auto_delete": false,
       "internal": true,
-      "arguments": {}
-    },
-    {
-      "name": "gnfmic_tx",
-      "vhost": "dev_registry",
-      "type": "topic",
-      "durable": true,
-      "auto_delete": false,
-      "internal": false,
-      "arguments": {}
-    },
-    {
-      "name": "gnf_tx",
-      "vhost": "dev_registry",
-      "type": "topic",
-      "durable": true,
-      "auto_delete": false,
-      "internal": true,
-      "arguments": {}
-    },
-    {
-      "name": "gnrmic_tx",
-      "vhost": "dev_registry",
-      "type": "topic",
-      "durable": true,
-      "auto_delete": false,
-      "internal": false,
-      "arguments": {}
-    },
-    {
-      "name": "gnr_tx",
-      "vhost": "dev_registry",
-      "type": "topic",
-      "durable": true,
-      "auto_delete": false,
-      "internal": true,
-      "arguments": {}
-    },
-    {
-      "name": "worldmic_tx",
-      "vhost": "dev_registry",
-      "type": "topic",
-      "durable": true,
-      "auto_delete": false,
-      "internal": false,
-      "arguments": {}
-    },
-    {
-      "name": "world_tx",
-      "vhost": "dev_registry",
-      "type": "topic",
-      "durable": true,
-      "auto_delete": false,
-      "internal": true,
-      "arguments": {}
-    },
-    {
-      "name": "ear_tx",
-      "vhost": "dev_registry",
-      "type": "topic",
-      "durable": true,
-      "auto_delete": false,
-      "internal": true,
-      "arguments": {}
-    }
-  ],
-  "queues": [
-    {
-      "name": "dummy_ear_q",
-      "vhost": "d1__1",
-      "durable": true,
-      "auto_delete": false,
-      "arguments": {}
-    },
-    {
-      "name": "dummy_registry_ear_q",
-      "vhost": "dev_registry",
-      "durable": true,
-      "auto_delete": false,
       "arguments": {}
     }
   ],
   "bindings": [
     {
       "source": "amq.topic",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "destination": "ear_tx",
       "destination_type": "exchange",
       "routing_key": "#",
       "arguments": {}
     },
     {
-      "source": "ear_tx",
-      "vhost": "d1__1",
-      "destination": "dummy_ear_q",
-      "destination_type": "queue",
-      "routing_key": "#",
-      "arguments": {}
-    },
-    {
-      "source": "ear_tx",
-      "vhost": "dev_registry",
-      "destination": "dummy_registry_ear_q",
-      "destination_type": "queue",
-      "routing_key": "#",
-      "arguments": {}
-    },
-    {
       "source": "atomictnodemic_tx",
-      "vhost": "d1__1",
-      "destination": "timecoordinator_tx",
+      "vhost": "hw1__1",
+      "destination": "marketmaker_tx",
       "destination_type": "exchange",
-      "routing_key": "*.*.atomictnode.*.timecoordinator.*",
+      "routing_key": "*.*.atomictnode.*.marketmaker.*",
       "arguments": {}
     },
     {
       "source": "atomictnodemic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "destination": "supervisor_tx",
       "destination_type": "exchange",
       "routing_key": "*.*.atomictnode.*.supervisor.*",
@@ -264,23 +159,15 @@
     },
     {
       "source": "atomictnodemic_tx",
-      "vhost": "d1__1",
-      "destination": "ear_tx",
-      "destination_type": "exchange",
-      "routing_key": "#",
-      "arguments": {}
-    },
-    {
-      "source": "gnodemic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "destination": "timecoordinator_tx",
       "destination_type": "exchange",
-      "routing_key": "*.*.gnode.*.timecoordinator.*",
+      "routing_key": "*.*.atomictnode.*.timecoordinator.*",
       "arguments": {}
     },
     {
       "source": "gnodemic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "destination": "supervisor_tx",
       "destination_type": "exchange",
       "routing_key": "*.*.gnode.*.supervisor.*",
@@ -288,23 +175,15 @@
     },
     {
       "source": "gnodemic_tx",
-      "vhost": "d1__1",
-      "destination": "ear_tx",
-      "destination_type": "exchange",
-      "routing_key": "#",
-      "arguments": {}
-    },
-    {
-      "source": "marketmakermic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "destination": "timecoordinator_tx",
       "destination_type": "exchange",
-      "routing_key": "*.*.marketmaker.*.timecoordinator.*",
+      "routing_key": "*.*.gnode.*.timecoordinator.*",
       "arguments": {}
     },
     {
       "source": "marketmakermic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "destination": "supervisor_tx",
       "destination_type": "exchange",
       "routing_key": "*.*.marketmaker.*.supervisor.*",
@@ -312,15 +191,15 @@
     },
     {
       "source": "marketmakermic_tx",
-      "vhost": "d1__1",
-      "destination": "ear_tx",
+      "vhost": "hw1__1",
+      "destination": "timecoordinator_tx",
       "destination_type": "exchange",
-      "routing_key": "#",
+      "routing_key": "*.*.marketmaker.*.timecoordinator.*",
       "arguments": {}
     },
     {
       "source": "supervisormic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "destination": "atomictnode_tx",
       "destination_type": "exchange",
       "routing_key": "*.*.supervisor.*.atomictnode.*",
@@ -328,79 +207,103 @@
     },
     {
       "source": "supervisormic_tx",
-      "vhost": "d1__1",
-      "destination": "supervisor_tx",
+      "vhost": "hw1__1",
+      "destination": "gnode_tx",
       "destination_type": "exchange",
-      "routing_key": "*.*.supervisor.*.supervisor.*",
+      "routing_key": "*.*.supervisor.*.gnode.*",
       "arguments": {}
     },
     {
       "source": "supervisormic_tx",
-      "vhost": "d1__1",
-      "destination": "ear_tx",
+      "vhost": "hw1__1",
+      "destination": "marketmaker_tx",
       "destination_type": "exchange",
-      "routing_key": "#",
+      "routing_key": "*.*.supervisor.*.marketmaker.*",
+      "arguments": {}
+    },
+    {
+      "source": "supervisormic_tx",
+      "vhost": "hw1__1",
+      "destination": "timecoordinator_tx",
+      "destination_type": "exchange",
+      "routing_key": "*.*.supervisor.*.timecoordinator.*",
+      "arguments": {}
+    },
+    {
+      "source": "supervisormic_tx",
+      "vhost": "hw1__1",
+      "destination": "world_tx",
+      "destination_type": "exchange",
+      "routing_key": "*.*.supervisor.*.world.*",
       "arguments": {}
     },
     {
       "source": "timecoordinatormic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "destination": "supervisor_tx",
       "destination_type": "exchange",
       "routing_key": "*.*.timecoordinator.*.supervisor.*",
       "arguments": {}
     },
     {
-      "source": "timecoordinatormic_tx",
-      "vhost": "d1__1",
-      "destination": "ear_tx",
+      "source": "worldmic_tx",
+      "vhost": "hw1__1",
+      "destination": "supervisor_tx",
       "destination_type": "exchange",
-      "routing_key": "#",
+      "routing_key": "*.*.world.*.supervisor.*",
       "arguments": {}
     },
     {
       "source": "worldmic_tx",
-      "vhost": "d1__1",
+      "vhost": "hw1__1",
       "destination": "timecoordinator_tx",
       "destination_type": "exchange",
       "routing_key": "*.*.world.*.timecoordinator.*",
       "arguments": {}
     },
     {
+      "source": "atomictnodemic_tx",
+      "vhost": "hw1__1",
+      "destination": "ear_tx",
+      "destination_type": "exchange",
+      "routing_key": "#",
+      "arguments": {}
+    },
+    {
+      "source": "gnodemic_tx",
+      "vhost": "hw1__1",
+      "destination": "ear_tx",
+      "destination_type": "exchange",
+      "routing_key": "#",
+      "arguments": {}
+    },
+    {
+      "source": "marketmakermic_tx",
+      "vhost": "hw1__1",
+      "destination": "ear_tx",
+      "destination_type": "exchange",
+      "routing_key": "#",
+      "arguments": {}
+    },
+    {
+      "source": "supervisormic_tx",
+      "vhost": "hw1__1",
+      "destination": "ear_tx",
+      "destination_type": "exchange",
+      "routing_key": "#",
+      "arguments": {}
+    },
+    {
+      "source": "timecoordinatormic_tx",
+      "vhost": "hw1__1",
+      "destination": "ear_tx",
+      "destination_type": "exchange",
+      "routing_key": "#",
+      "arguments": {}
+    },
+    {
       "source": "worldmic_tx",
-      "vhost": "d1__1",
-      "destination": "ear_tx",
-      "destination_type": "exchange",
-      "routing_key": "#",
-      "arguments": {}
-    },
-    {
-      "source": "gnfmic_tx",
-      "vhost": "dev_registry",
-      "destination": "gnr_tx",
-      "destination_type": "exchange",
-      "routing_key": "*.*.gnf.*.gnr.*",
-      "arguments": {}
-    },
-    {
-      "source": "gnfmic_tx",
-      "vhost": "dev_registry",
-      "destination": "ear_tx",
-      "destination_type": "exchange",
-      "routing_key": "#",
-      "arguments": {}
-    },
-    {
-      "source": "gnrmic_tx",
-      "vhost": "dev_registry",
-      "destination": "world_tx",
-      "destination_type": "exchange",
-      "routing_key": "*.*.gnr.*.world.*",
-      "arguments": {}
-    },
-    {
-      "source": "gnrmic_tx",
-      "vhost": "dev_registry",
+      "vhost": "hw1__1",
       "destination": "ear_tx",
       "destination_type": "exchange",
       "routing_key": "#",

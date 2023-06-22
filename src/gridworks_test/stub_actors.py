@@ -1,3 +1,4 @@
+import copy
 import time
 from typing import List
 from typing import Optional
@@ -118,32 +119,16 @@ def load_rabbit_exchange_bindings(ch: PikaChannel) -> None:
 
 
 class GNodeStubRecorder(ActorBase):
-    def __init__(self, settings: GNodeSettings):
-        super().__init__(settings=settings)
-        self.settings: GNodeSettings = settings
-        self.payloads = []
-
-    def prepare_for_death(self) -> None:
-        self.actor_main_stopped = True
-
-
-class SupervisorStubRecorder(GNodeStubRecorder):
-    messages_received: int
-    messages_routed_internally: int
-    latest_from_role: Optional[str]
-    latest_from_alias: Optional[str]
-    latest_payload: Optional[HeartbeatA]
-    routing_to_super__heartbeat_a__worked: bool = False
+    messages_received: int = 0
+    messages_routed_internally: int = 0
+    latest_from_role: Optional[str] = None
+    latest_from_alias: Optional[str] = None
+    latest_payload: Optional[HeartbeatA] = None
+    got_heartbeat_from_super: bool = False
 
     def __init__(self, settings: GNodeSettings):
-        self.messages_received = 0
-        self.messages_routed_internally = 0
-        self.latest_from_role: Optional[str] = None
-        self.latest_from_alias: Optional[str] = None
-        self.latest_payload: Optional[HeartbeatA] = None
-        settings.g_node_alias = "d1.super"
-        settings.g_node_role_value = "Supervisor"
         super().__init__(settings=settings)
+        self.settings = settings
 
     def on_message(self, _unused_channel, basic_deliver, properties, body):
         self.messages_received += 1
@@ -155,20 +140,42 @@ class SupervisorStubRecorder(GNodeStubRecorder):
         if isinstance(payload, HeartbeatA):
             self.heartbeat_a_received(from_alias, from_role, payload)
 
-    def prepare_for_death(self):
-        self.actor_main_stopped = True
-
     def heartbeat_a_received(
         self, from_alias: str, from_role: GNodeRole, payload: HeartbeatA
     ):
-        self.routing_to_super__heartbeat_a__worked = True
+        if (
+            from_alias == self.settings.my_super_alias
+            and from_role == GNodeRole.Supervisor
+        ):
+            self.got_heartbeat_from_super = True
+
+    def prepare_for_death(self) -> None:
+        self.actor_main_stopped = True
 
     def summary_str(self):
         """Summarize results in a string"""
         return (
-            f"AbstractActor [{self.alias}] messages_received: {self.messages_received}  "
+            f"{self.g_node_role.value} [{self.alias}] messages_received: {self.messages_received}  "
             f"latest_payload: {self.latest_payload}"
         )
+
+
+class SupervisorStubRecorder(GNodeStubRecorder):
+    got_heartbeat_from_sub: bool = False
+
+    def __init__(self, settings: GNodeSettings, subordinate_alias: str):
+        my_settings = copy.deepcopy(settings)
+        my_settings.g_node_alias = "d1.super"
+        my_settings.g_node_role_value = "Supervisor"
+        super().__init__(settings=my_settings)
+        self.my_single_sub = subordinate_alias
+
+    def heartbeat_a_received(
+        self, from_alias: str, from_role: GNodeRole, payload: HeartbeatA
+    ):
+        """Used to test that a Supervisor gets a message from GNode"""
+        if from_alias == self.my_single_sub:
+            self.got_heartbeat_from_sub = True
 
 
 class TimeCoordinatorStubRecorder(GNodeStubRecorder):
@@ -178,9 +185,10 @@ class TimeCoordinatorStubRecorder(GNodeStubRecorder):
         self._time: int = pendulum.datetime(
             year=2020, month=1, day=1, hour=5
         ).int_timestamp
-        settings.g_node_alias = "d1.time"
-        settings.g_node_role_value = "TimeCoordinator"
-        super().__init__(settings=settings)
+        my_settings = copy.deepcopy(settings)
+        my_settings.g_node_alias = "d1.time"
+        my_settings.g_node_role_value = "TimeCoordinator"
+        super().__init__(settings=my_settings)
         self.my_actors: List[str] = [GNodeSettings().g_node_alias]
         self.ready: List[str] = []
 
