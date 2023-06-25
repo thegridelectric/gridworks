@@ -34,12 +34,6 @@ To learn how using and contributing to GridWorks can support a cost-effective an
 - Read the [Millinocket Story](https://gridworks.readthedocs.io/en/latest/millinocket-demo.html) to learn how to exploit the synergy between wind power and space heating;
 - Go through the partner [Millinocket Tutorial](https://gridworks.readthedocs.io/en/latest/millinocket-tutorial.html).
 
-## Blockchain Mechanics
-
-Gridworks runs markets between distributed actors acting as avatars for physical devices on the grid. It needs a
-foundation of trustless, secure, scalable validation and authentication. It heavily uses the Algorand blockchain. If
-you want to undestand more about how and why this is, go [here](blockchain.html).
-
 ## GridWorks SDKs
 
 - **gridworks**: [package](https://pypi.org/project/gridworks/) provides basic shared mechanics for communication and GNode structure. It is used as a package in all of our other repos.
@@ -58,6 +52,11 @@ is a distributed simulation, it needs a method of handling time. That's done by 
 ## Usage
 
 `pip install gridworks` to install the foundational package.
+
+## RabbitMQ Infrastructure
+
+GridWorks uses the  `rabbit` subfolder for maintaining dev rabbit brokers as well as their own live rabbit brokers. 
+
 
 ## Contributing
 

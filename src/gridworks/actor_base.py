@@ -1,6 +1,7 @@
 import enum
 import functools
 import logging
+import random
 import threading
 import time
 import uuid
@@ -15,6 +16,9 @@ from typing import no_type_check
 import pendulum
 import pika
 from fastapi_utils.enums import StrEnum
+from pika.channel import Channel as PikaChannel
+from pika.spec import Basic
+from pika.spec import BasicProperties
 
 import gridworks.base_api_types as base_api_types
 import gridworks.property_format as property_format
@@ -99,7 +103,9 @@ LOGGER.setLevel(logging.INFO)
 
 class ActorBase(ABC):
     "This is the base class for GNodes, used to communicate via RabbitMQ"
-    SHUTDOWN_INTERVAL = 0.1
+    _url: str
+
+    SHUTDOWN_INTERVAL: float = 0.1
 
     def __init__(
         self,
@@ -108,6 +114,7 @@ class ActorBase(ABC):
             str, HeartbeatA_Maker
         ] = base_api_types.TypeMakerByName,
     ):
+        self.settings: GNodeSettings = settings
         self.api_type_maker_by_name = api_type_maker_by_name
         self.latest_routing_key: Optional[str] = None
         self.shutting_down: bool = False
@@ -152,7 +159,7 @@ class ActorBase(ABC):
         self._publish_connection: Optional[
             pika.adapters.select_connection.SelectConnection
         ] = None
-        self._publish_channel: Optional[pika.channel.Channel] = None
+        self._publish_channel: Optional[PikaChannel] = None
         self._stopping: bool = False
         self._stopped: bool = True
         self._latest_on_message_diagnostic: Optional[OnReceiveMessageDiagnostic] = None
@@ -321,11 +328,15 @@ class ActorBase(ABC):
         self._consume_connection.channel(on_open_callback=self.on_consumer_channel_open)  # type: ignore
 
     @no_type_check
-    def on_consumer_channel_open(self, channel) -> None:
-        """This method is invoked by pika when the channel has been opened.
-        The channel object is passed in so we can make use of it.
-        Since the channel is now open, we'll declare the exchange to use.
-        :param pika.channel.Channel channel: The channel object
+    def on_consumer_channel_open(self, channel: PikaChannel) -> None:
+        """Invoked by pika when the channel has been successfully opened.
+
+        This callback is triggered when the channel is opened, and it provides
+        the channel object that can be used for further operations. In this case,
+        we'll proceed to declare the exchange to be used.
+
+        :param channel: The opened channel object.
+        :type channel: PikaChannel
         """
         LOGGER.info("Channel opened")
         self._consume_channel = channel
@@ -341,14 +352,20 @@ class ActorBase(ABC):
         self._consume_channel.add_on_close_callback(self.on_consumer_channel_closed)
 
     @no_type_check
-    def on_consumer_channel_closed(self, channel, reason) -> None:
-        """Invoked by pika when RabbitMQ unexpectedly closes the channel.
-        Channels are usually closed if you attempt to do something that
-        violates the protocol, such as re-declare an exchange or queue with
-        different parameters. In this case, we'll close the connection
-        to shutdown the object.
-        :param pika.channel.Channel: The closed channel
-        :param Exception reason: why the channel was closed
+    def on_consumer_channel_closed(
+        self, channel: PikaChannel, reason: Exception
+    ) -> None:
+        """Invoked by pika when the RabbitMQ channel is unexpectedly closed.
+
+        This callback is triggered when a channel is closed, usually due to
+        violating the protocol by attempting to re-declare an exchange or queue
+        with different parameters. In this case, the connection is closed to
+        gracefully shutdown the object.
+
+        :param channel: The closed channel object.
+        :type channel: PikaChannel
+        :param reason: why the channel was closed
+        :type reason: Exception
         """
         LOGGER.warning("Consume channel %i was closed: %s", channel, reason)
         self.close_consumer_connection()
@@ -634,11 +651,15 @@ class ActorBase(ABC):
         self._publish_connection.channel(on_open_callback=self.on_publish_channel_open)  # type: ignore
 
     @no_type_check
-    def on_publish_channel_open(self, channel) -> None:
-        """This method is invoked by pika when the channel has been opened.
-        The channel object is passed in so we can make use of it.
-        Since the channel is now open, we'll declare the exchange to use.
-        :param pika.channel.Channel channel: The channel object
+    def on_publish_channel_open(self, channel: PikaChannel) -> None:
+        """Invoked by pika when the channel has been successfully opened.
+
+        This callback is triggered when the channel is opened, and it provides
+        the channel object that can be used for further operations. In this case,
+        we'll proceed to declare the exchange to be used.
+
+        :param channel: The opened channel object.
+        :type channel: PikaChannel
         """
         LOGGER.info("Publish channel opened")
         self._publish_channel = channel
@@ -652,14 +673,20 @@ class ActorBase(ABC):
         self._publish_channel.add_on_close_callback(self.on_publish_channel_closed)  # type: ignore
 
     @no_type_check
-    def on_publish_channel_closed(self, channel, reason) -> None:
-        """Invoked by pika when RabbitMQ unexpectedly closes the channel.
-        Channels are usually closed if you attempt to do something that
-        violates the protocol, such as re-declare an exchange or queue with
-        different parameters. In this case, we'll close the connection
-        to shutdown the object.
-        :param pika.channel.Channel channel: The closed channel
-        :param Exception reason: why the channel was closed
+    def on_publish_channel_closed(
+        self, channel: PikaChannel, reason: Exception
+    ) -> None:
+        """Invoked by pika when the RabbitMQ channel is unexpectedly closed.
+
+        This callback is triggered when a channel is closed, usually due to
+        violating the protocol by attempting to re-declare an exchange or queue
+        with different parameters. In this case, the connection is closed to
+        gracefully shutdown the object.
+
+        :param channel: The closed channel object.
+        :type channel: PikaChannel
+        :param reason: The reason why the channel was closed.
+        :type reason: Exception
         """
         LOGGER.warning(f"Publish channel {channel} was closed: {reason}")
         self._publish_channel = None
@@ -1025,25 +1052,32 @@ class ActorBase(ABC):
     #################################################
 
     @no_type_check
-    def on_message(self, _unused_channel, basic_deliver, properties, body) -> None:
-        """Invoked by pika when a message is delivered from RabbitMQ. If a message
+    def on_message(
+        self,
+        _unused_channel: PikaChannel,
+        basic_deliver: Basic.Deliver,
+        properties: BasicProperties,
+        body: bytes,
+    ) -> None:
+        """
+        Invoked by pika when a message is delivered from RabbitMQ. If a message
         does not get here that you expect should get here, check the routing key
         of the outbound message and the rabbitmq bindings.
 
         Parses the TypeName of the message payload and the GNodeAlias of the sender.
-        If it recognizes the GNode and the TypeName then it sends the message on to
+        If it recognizes the GNode and the TypeName, then it sends the message on to
         the check_routing function, which will be defined in a child class (e.g., the
         GNodeFactoryActorBase if the actor is a GNodeFactory).
 
-        From RabbitMQ:  The
-        channel is passed for your convenience. The basic_deliver object that
-        is passed in carries the exchange, routing key, delivery tag and
-        a redelivered flag for the message. The properties passed in is an
-        instance of BasicProperties with the message properties and the body
-        is the message that was sent.
+        From RabbitMQ: The channel is passed for your convenience. The basic_deliver
+        object that is passed in carries the exchange, delivery tag, and a redelivered
+        flag for the message. The properties passed in is an instance of BasicProperties
+        with the message properties including the routing key. The body is the message
+        that was sent.
+
         :param pika.channel.Channel _unused_channel: The channel object
-        :param pika.Spec.Basic.Deliver: basic_deliver method
-        :param pika.Spec.BasicProperties: properties
+        :param pika.spec.Basic.Deliver basic_deliver: The basic.deliver method
+        :param pika.spec.BasicProperties properties: The message properties including the routing key
         :param bytes body: The message body
         """
         self.latest_routing_key = basic_deliver.routing_key
@@ -1116,17 +1150,90 @@ class ActorBase(ABC):
     def route_message(
         self, from_alias: str, from_role: GNodeRole, payload: SimTimestep
     ) -> None:
-        """This router should be overwritten by derived class based on the
-        messages received by that GNodeRole"""
-        if payload.TypeName == SimTimestep_Maker.type_name:
+        """
+        Base class for message routing in GNode Actors, handling interactions
+        with the Supervisor and TimeCoordinator.
+
+        Derived classes are expected to implement their own `route_message` method.
+        It is recommended to call `super().route_message(from_alias, from_role, payload)`
+        at the end of the method if the message has not been routed yet.
+        """
+
+        if payload.TypeName == HeartbeatA_Maker.type_name:
+            if from_role != GNodeRole.Supervisor:
+                LOGGER.info(
+                    f"Ignoring HeartbeatA from GNode {from_alias} with GNodeRole {from_role}; expects"
+                    f"Supervisor as the GNodeRole"
+                )
+                return
+            elif from_alias != self.settings.my_super_alias:
+                LOGGER.info(
+                    f"Ignoring HeartbeatA from supervisor {from_alias}; "
+                    f"my supervisor is {self.settings.my_super_alias}"
+                )
+                return
+
+            try:
+                self.heartbeat_from_super(from_alias, payload)
+            except:
+                LOGGER.exception("Error in heartbeat_received")
+        elif payload.TypeName == SimTimestep_Maker.type_name:
             try:
                 self.timestep_from_timecoordinator(payload)
             except:
                 LOGGER.exception("Error in timestep_from_timecoordinator")
 
     def route_mqtt_message(self, from_alias: str, payload: HeartbeatA) -> None:
-        """This router should be overwritten by derived class"""
+        """
+        Base class for message routing from SCADA actors, which use
+        MessageCategory.MqttJsonBroadcast
+
+        This is only intended to be used for AtomicTNodes and Ears.
+        """
         ...
+
+    def heartbeat_from_super(self, from_alias: str, ping: HeartbeatA) -> None:
+        """
+        Subordinate GNode responds to its supervisor's heartbeat with a "pong" message.
+
+        Both the received heartbeat (ping) and the response (pong) have the type HeartbeatA
+        (see: https://gridworks.readthedocs.io/en/latest/apis/types.html#heartbeata).
+
+        The subordinate GNode generates its own unique identifier (hex) and includes it
+        in the pong message along with the heartbeat it received from the supervisor.
+
+        Note that the subordinate GNode does not have the responsibility of verifying
+        the authenticity of the last heartbeat received from the supervisor - although typically,
+        the supervisor does send the last heartbeat from this GNode (except during the initial
+        heartbeat exchange).
+
+        Args:
+            from_alias (str): the alias of the GNode that sent the ping.
+            ping (HeartbeatA): the heartbeat sent.
+
+        Raises:
+        ValueError: If `from_alias` is not this GNode's Supervisor alias.
+
+        """
+        if from_alias != self.settings.my_super_alias:
+            raise ValueError(
+                f"from_alias {from_alias} does not match my supervisor"
+                f" {self.settings.my_super_alias}. This message should"
+                f"have been filtered out in the route_message method."
+            )
+        pong = HeartbeatA_Maker(
+            my_hex=str(random.choice("0123456789abcdef")), your_last_hex=ping.MyHex
+        ).tuple
+
+        self.send_message(
+            payload=pong,
+            to_role=GNodeRole.Supervisor,
+            to_g_node_alias=self.settings.my_super_alias,
+        )
+
+        LOGGER.debug(
+            f"[{self.alias}] Sent HB: SuHex {pong.YourLastHex}, AtnHex {pong.MyHex}"
+        )
 
     ########################
     ## Time related (simulated time)

@@ -28,6 +28,9 @@ CodeGenerationTools/GridworksCore/SassyMQ/
 .ssotme
 
 
+# environment file
+.env
+
 # Ignore coverage
 .coverage
 htmlcov
