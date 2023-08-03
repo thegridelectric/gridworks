@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gridworks"
-version = "0.2.7"
+version = "0.2.8"
 description = "Gridworks"
 authors = ["GridWorks <gridworks@gridworks-consulting.com>"]
 license = "MIT"
@@ -33,7 +33,6 @@ beaker-pyteal = "^0.4.0"
 fastapi-utils = "^0.2.1"
 uvicorn = {extras = ["standard"], version = "^0.19.0"}
 requests = "^2.28.1"
-rich = "^12.6.0"
 requests-async = "^0.6.2"
 types-requests = "^2.28.11.2"
 aiocache = {version = "^0.11.1", extras = ["redis,memcached"]}

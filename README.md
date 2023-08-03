@@ -55,8 +55,7 @@ is a distributed simulation, it needs a method of handling time. That's done by 
 
 ## RabbitMQ Infrastructure
 
-GridWorks uses the  `rabbit` subfolder for maintaining dev rabbit brokers as well as their own live rabbit brokers. 
-
+GridWorks uses the `rabbit` subfolder for maintaining dev rabbit brokers as well as their own live rabbit brokers.
 
 ## Contributing
 
