@@ -33,7 +33,6 @@ Type API Specs
 <xsl:sort select="TypeName" data-type="text"/>
 <xsl:variable name="schema-id" select="Type"/>
 <xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
-<xsl:variable name="local-alias" select="TypeNameRoot" />
 
 <xsl:call-template name="nt-case">
     <xsl:with-param name="mp-schema-text" select="TypeNameRoot" />

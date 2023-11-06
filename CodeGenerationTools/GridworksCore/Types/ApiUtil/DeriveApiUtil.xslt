@@ -114,7 +114,7 @@ def status_by_versioned_type_name() ->Dict[str, str]:
     <xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
 
     <xsl:text>"</xsl:text>
-    <xsl:value-of select="Alias"/>
+    <xsl:value-of select="TypeName"/>
     <xsl:text>": "</xsl:text>
     <xsl:value-of select="Status"/>
     <xsl:text>",

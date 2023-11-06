@@ -23,7 +23,7 @@
                 <xsl:variable name="schema-id" select="Type"/>
                 <xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
                 <xsl:variable name="type-name" select="TypeNameRoot"/>
-                <xsl:variable name="full-type-name" select="Alias"/>
+                <xsl:variable name="full-type-name" select="TypeName"/>
                 <xsl:variable name="class-name">
                     <xsl:call-template name="nt-case">
                         <xsl:with-param name="mp-schema-text" select="$type-name" />
