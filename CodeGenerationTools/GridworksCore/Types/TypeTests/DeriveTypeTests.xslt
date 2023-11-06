@@ -22,7 +22,7 @@
                 <xsl:for-each select="$airtable//ProtocolTypes/ProtocolType[(normalize-space(ProtocolName) ='gridworks')]">
                 <xsl:variable name="schema-id" select="Type"/>
                 <xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
-                <xsl:variable name="type-name" select="AliasRoot"/>
+                <xsl:variable name="type-name" select="TypeNameRoot"/>
                 <xsl:variable name="class-name">
                     <xsl:call-template name="nt-case">
                         <xsl:with-param name="mp-schema-text" select="$type-name" />
@@ -44,7 +44,7 @@
                     <OverwriteMode><xsl:value-of select="$overwrite-mode"/></OverwriteMode>
                     <xsl:element name="FileContents">
 
-<xsl:text>"""Tests </xsl:text><xsl:value-of select="AliasRoot"/><xsl:text> type, version </xsl:text>
+<xsl:text>"""Tests </xsl:text><xsl:value-of select="TypeNameRoot"/><xsl:text> type, version </xsl:text>
 <xsl:value-of select="SemanticEnd"/>
 <xsl:text>"""
 import json

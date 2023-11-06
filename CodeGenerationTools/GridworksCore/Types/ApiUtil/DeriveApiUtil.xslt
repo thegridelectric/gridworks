@@ -34,12 +34,11 @@ from typing import no_type_check
 <xsl:sort select="TypeName" data-type="text"/>
 <xsl:variable name="schema-id" select="Type"/>
 <xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
-<xsl:variable name="local-alias" select="AliasRoot" />
 
 <xsl:text>
 from gridworks.types import </xsl:text>
 <xsl:call-template name="nt-case">
-    <xsl:with-param name="mp-schema-text" select="AliasRoot" />
+    <xsl:with-param name="mp-schema-text" select="TypeNameRoot" />
 </xsl:call-template>
 <xsl:text>_Maker</xsl:text>
 </xsl:for-each>
@@ -58,9 +57,8 @@ def type_makers() -> List[HeartbeatA_Maker]:
 <xsl:sort select="TypeName" data-type="text"/>
 <xsl:variable name="schema-id" select="Type"/>
 <xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
-<xsl:variable name="local-alias" select="AliasRoot" />
 <xsl:call-template name="nt-case">
-    <xsl:with-param name="mp-schema-text" select="AliasRoot" />
+    <xsl:with-param name="mp-schema-text" select="TypeNameRoot" />
 </xsl:call-template>
 <xsl:text>_Maker,
     </xsl:text>
@@ -89,7 +87,7 @@ def version_by_type_name() -> Dict[str, str]:
     <xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
 
     <xsl:text>"</xsl:text>
-    <xsl:value-of select="AliasRoot"/>
+    <xsl:value-of select="TypeNameRoot"/>
     <xsl:text>": "</xsl:text>
     <xsl:value-of select="SemanticEnd"/>
     <xsl:text>",

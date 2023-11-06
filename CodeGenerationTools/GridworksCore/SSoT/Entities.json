@@ -204,30 +204,6 @@
       "ToName": "EnumSymbol"
     },
     {
-      "ProjectTableId": "recNaMvlTZictFWQ9",
-      "AirtableName": "ConvoMessages",
-      "CreatedAt": "2022-11-08T18:14:01",
-      "DisplayName": "ConvoMessages",
-      "Name": "ConvoMessage",
-      "PluralName": "ConvoMessages",
-      "Project": "recIuUqkLn41mZ8TS",
-      "ProjectVersion": "recYfeHO0N6fC3sxJ",
-      "RowKey": "1715. Scada-develop-v2022.05.16.323366. ConvoMessage",
-      "TableColumns": [
-        "recCjS64hj8jecCiE",
-        "rec6OCOaTuN8jzxIO",
-        "recQjLbtcHNGR8tVX",
-        "recOCHgD50agdgBzm",
-        "recNcbQcVdo8GnEOi",
-        "recE2sTtsAfE4MgeK",
-        "recFjBXAm8UBY9HZW",
-        "rec0fP2UkM541aPuP",
-        "recU9zq66A81zPbE1"
-      ],
-      "TableGroup": "General",
-      "ToName": "ConvoMessage"
-    },
-    {
       "ProjectTableId": "recO8F0MCngKPsXii",
       "AirtableName": "Schemas",
       "CreatedAt": "2022-08-18T13:37:16",
@@ -485,30 +461,6 @@
       "ToName": "Topic"
     },
     {
-      "ProjectTableId": "recpAEn8gSc0aIS4t",
-      "AirtableName": "ActorMessages",
-      "CreatedAt": "2022-08-12T13:38:29",
-      "DisplayName": "ActorMessages",
-      "Name": "ActorMessage",
-      "PluralName": "ActorMessages",
-      "Project": "recIuUqkLn41mZ8TS",
-      "ProjectVersion": "recYfeHO0N6fC3sxJ",
-      "RowKey": "1715. Scada-develop-v2022.05.16.323366. ActorMessage",
-      "TableColumns": [
-        "recICq9r8XUcbGlNZ",
-        "recdxKtD3QPBk6g5w",
-        "recd2LQ5Bhe698uPm",
-        "reccY0lfTyFjtbOvq",
-        "rec3DIuABaSzlfoI8",
-        "recYw450GWF2llQfY",
-        "recHzjiSOaHX4LtqA",
-        "recAigEs8lrECDCrQ",
-        "recGJDEA4ERd84hxw"
-      ],
-      "TableGroup": "General",
-      "ToName": "ActorMessage"
-    },
-    {
       "ProjectTableId": "recsUdQb47NmOPZi3",
       "AirtableName": "AppUsers",
       "CreatedAt": "2022-05-16T22:26:13",
@@ -528,30 +480,6 @@
       ],
       "TableGroup": "General",
       "ToName": "AppUser"
-    },
-    {
-      "ProjectTableId": "recsfe9UCbUuIjj82",
-      "AirtableName": "ConvoPairings",
-      "CreatedAt": "2022-11-08T18:14:01",
-      "DisplayName": "ConvoPairings",
-      "Name": "ConvoPairing",
-      "PluralName": "ConvoPairings",
-      "Project": "recIuUqkLn41mZ8TS",
-      "ProjectVersion": "recYfeHO0N6fC3sxJ",
-      "RowKey": "1715. Scada-develop-v2022.05.16.323366. ConvoPairing",
-      "TableColumns": [
-        "rec4CKEC8agT3wKqx",
-        "recOhIfWVZivn0ZWx",
-        "recdVChJDHdjPSn1M",
-        "recI4KwvTqeXDUjIQ",
-        "recusSKUXktRh2h26",
-        "recUnnw8xgZXdfYQx",
-        "rec4BPzVcKQYOtRuw",
-        "recyq8F1EQBEZtgm3",
-        "reci3sqMF8qewDNLR"
-      ],
-      "TableGroup": "General",
-      "ToName": "ConvoPairing"
     },
     {
       "ProjectTableId": "reczlSg0kpbDE3qIR",

@@ -25,6 +25,7 @@ cook*
 # Code generation airtable
 CodeGenerationTools/GridworksCore/SSoT/Airtable.xml
 CodeGenerationTools/GridworksCore/SassyMQ/
+CodeGenerationTools/GridworksCore/SMQL
 .ssotme
 
 

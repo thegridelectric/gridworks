@@ -47,12 +47,12 @@ forth between type instances and Python objects.
 <xsl:sort select="TypeName" data-type="text"/>
 <xsl:variable name="schema-id" select="Type"/>
 <xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
-<xsl:variable name="local-alias" select="AliasRoot" />
+<xsl:variable name="local-alias" select="TypeNameRoot" />
 <xsl:call-template name="nt-case">
-    <xsl:with-param name="mp-schema-text" select="AliasRoot" />
+    <xsl:with-param name="mp-schema-text" select="TypeNameRoot" />
 </xsl:call-template>
 <xsl:text>  &lt;types/</xsl:text>
-<xsl:value-of select="translate(AliasRoot,'.','-')"/>
+<xsl:value-of select="translate(TypeNameRoot,'.','-')"/>
 <xsl:text>&gt;
     </xsl:text>
 

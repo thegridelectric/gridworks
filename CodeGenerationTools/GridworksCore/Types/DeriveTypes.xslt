@@ -22,11 +22,11 @@
                 <xsl:for-each select="$airtable//ProtocolTypes/ProtocolType[(normalize-space(ProtocolName) ='gridworks')]">
                 <xsl:variable name="schema-id" select="Type"/>
                 <xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory= 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
-                <xsl:variable name="local-alias" select="AliasRoot" />
+                <xsl:variable name="local-name" select="TypeNameRoot" />
                 <xsl:variable name="full-type-name" select="Alias"/>
                     <xsl:variable name="class-name">
                         <xsl:call-template name="nt-case">
-                            <xsl:with-param name="mp-schema-text" select="$local-alias" />
+                            <xsl:with-param name="mp-schema-text" select="$local-name" />
                         </xsl:call-template>
                     </xsl:variable>
                     <xsl:variable name="python-data-class">
@@ -51,13 +51,13 @@
                     </xsl:variable>
                     <FileSetFile>
                                 <xsl:element name="RelativePath"><xsl:text>../../../src/gridworks/types/</xsl:text>
-                                <xsl:value-of select="translate($local-alias,'.','_')"/><xsl:text>.py</xsl:text></xsl:element>
+                                <xsl:value-of select="translate($local-name,'.','_')"/><xsl:text>.py</xsl:text></xsl:element>
 
                         <OverwriteMode><xsl:value-of select="$overwrite-mode"/></OverwriteMode>
                         <xsl:element name="FileContents">
 
 
-<xsl:text>"""Type </xsl:text><xsl:value-of select="AliasRoot"/><xsl:text>, version </xsl:text>
+<xsl:text>"""Type </xsl:text><xsl:value-of select="TypeNameRoot"/><xsl:text>, version </xsl:text>
 <xsl:value-of select="SemanticEnd"/><xsl:text>"""
 import json
 from typing import Any
@@ -707,7 +707,7 @@ class </xsl:text>
 </xsl:for-each>
 
 
-<xsl:text>TypeName: Literal["</xsl:text><xsl:value-of select="AliasRoot"/><xsl:text>"] = "</xsl:text><xsl:value-of select="AliasRoot"/><xsl:text>"
+<xsl:text>TypeName: Literal["</xsl:text><xsl:value-of select="TypeNameRoot"/><xsl:text>"] = "</xsl:text><xsl:value-of select="TypeNameRoot"/><xsl:text>"
     </xsl:text>
 <xsl:text>Version: str = "</xsl:text>
 <xsl:value-of select="SemanticEnd"/><xsl:text>"</xsl:text>
@@ -1368,7 +1368,7 @@ class </xsl:text>
 class </xsl:text>
 <xsl:value-of select="$class-name"/>
 <xsl:text>_Maker:
-    type_name = "</xsl:text><xsl:value-of select="AliasRoot"/><xsl:text>"
+    type_name = "</xsl:text><xsl:value-of select="TypeNameRoot"/><xsl:text>"
     version = "</xsl:text><xsl:value-of select="SemanticEnd"/><xsl:text>"
 
     def __init__(self</xsl:text>

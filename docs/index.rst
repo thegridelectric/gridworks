@@ -81,6 +81,7 @@ Installation
 
     Hello GridWorks <hello-gridworks>
     APIs, SDKs, ABIs <api-sdk-abi>
+    Code Generation <code-generation>
     Lexicon <lexicon>
 
 .. toctree::
