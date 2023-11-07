@@ -117,24 +117,24 @@ from gridworks.errors import SchemaError</xsl:text>
 <xsl:text>
 from gridworks.types.</xsl:text>
 <xsl:call-template name="python-case">
-    <xsl:with-param name="camel-case-text" select="translate(SubMessageFormatAliasRoot,'.','_')"  />
+    <xsl:with-param name="camel-case-text" select="translate(SubTypeNameRoot,'.','_')"  />
 </xsl:call-template>
 <xsl:text> import </xsl:text>
 <xsl:call-template name="nt-case">
-    <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+    <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
 </xsl:call-template>
 <xsl:text>
 from gridworks.types.</xsl:text>
 <xsl:call-template name="python-case">
-    <xsl:with-param name="camel-case-text" select="translate(SubMessageFormatAliasRoot,'.','_')"  />
+    <xsl:with-param name="camel-case-text" select="translate(SubTypeNameRoot,'.','_')"  />
 </xsl:call-template>
 <xsl:text> import </xsl:text>
 <xsl:call-template name="nt-case">
-    <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+    <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
 </xsl:call-template><xsl:text>_Maker</xsl:text>
 </xsl:if>
 </xsl:for-each>
-<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Alias) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
+<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
 <xsl:text>
 from gridworks.enums import </xsl:text>
 <xsl:call-template name="nt-case">
@@ -146,12 +146,11 @@ from gridworks.enums import </xsl:text>
 </xsl:if>
 </xsl:for-each>
 
-<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Alias) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
-<xsl:variable name="enum-alias" select="Alias" />
+<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
 <xsl:variable name="enum-name-style" select="PythonEnumNameStyle" />
 <xsl:variable name="enum-name">
     <xsl:call-template name="nt-case">
-        <xsl:with-param name="type-name-text" select="Alias" />
+        <xsl:with-param name="type-name-text" select="Name" />
     </xsl:call-template>
 </xsl:variable>
 <xsl:variable name="enum-local-name">
@@ -168,7 +167,7 @@ from gridworks.enums import </xsl:text>
 
 class </xsl:text><xsl:value-of select="$enum-name"/><xsl:text>SchemaEnum:
     enum_name: str = "</xsl:text>
-    <xsl:value-of select="Alias"/>
+    <xsl:value-of select="Name"/>
     <xsl:text>"
     symbols: List[str] = [
         </xsl:text>
@@ -633,7 +632,7 @@ class </xsl:text>
 <xsl:if test="(IsType = 'true') and  not (IsList = 'true')">
     <xsl:value-of select="Value"/><xsl:text>: </xsl:text>
     <xsl:call-template name="nt-case">
-        <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+        <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
     </xsl:call-template>
         <xsl:text> = </xsl:text>
 </xsl:if>
@@ -641,7 +640,7 @@ class </xsl:text>
 <xsl:if test="(IsType = 'true') and (IsList = 'true')">
     <xsl:value-of select="Value"/><xsl:text>: List[</xsl:text>
     <xsl:call-template name="nt-case">
-        <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+        <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
     </xsl:call-template>
     <xsl:text>] = </xsl:text>
  </xsl:if>
@@ -1088,14 +1087,14 @@ class </xsl:text>
         for elt in v:
             if not isinstance(elt, </xsl:text>
             <xsl:call-template name="nt-case">
-                <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+                <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
     </xsl:call-template>
         <xsl:text>):
                 raise ValueError(
                         f"elt {elt} of </xsl:text><xsl:value-of select="Value"/>
             <xsl:text> must have type </xsl:text>
                 <xsl:call-template name="nt-case">
-                        <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+                        <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
         </xsl:call-template>
                 <xsl:text>."
                     )</xsl:text>
@@ -1427,7 +1426,7 @@ class </xsl:text>
                 <xsl:with-param name="camel-case-text" select="Value"  />
             </xsl:call-template><xsl:text>: </xsl:text>
                 <xsl:call-template name="nt-case">
-                    <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+                    <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
                 </xsl:call-template>
         </xsl:if>
 
@@ -1438,7 +1437,7 @@ class </xsl:text>
             <xsl:with-param name="camel-case-text" select="Value"  />
             </xsl:call-template><xsl:text>: List[</xsl:text>
             <xsl:call-template name="nt-case">
-                <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+                <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
             </xsl:call-template>
                 <xsl:text>]</xsl:text>
         </xsl:if>
@@ -1532,7 +1531,7 @@ class </xsl:text>
             <xsl:text>'] {d2['</xsl:text><xsl:value-of select="Value"/>
             <xsl:text>']} must be a </xsl:text>
             <xsl:call-template name="nt-case">
-                <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+                <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
             </xsl:call-template>
             <xsl:text>!")
         </xsl:text>
@@ -1541,7 +1540,7 @@ class </xsl:text>
         </xsl:call-template>
         <xsl:text> = </xsl:text>
         <xsl:call-template name="nt-case">
-            <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+            <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
         </xsl:call-template>
         <xsl:text>_Maker.dict_to_tuple(d2["</xsl:text>
         <xsl:value-of select="Value"/>
@@ -1582,7 +1581,7 @@ class </xsl:text>
                     <xsl:text> must be "
                     "</xsl:text>
                     <xsl:call-template name="nt-case">
-                        <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+                        <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
                     </xsl:call-template>
                     <xsl:text> but not even a dict!"
                 )
@@ -1593,7 +1592,7 @@ class </xsl:text>
             <xsl:text>.append(
                 </xsl:text>
                 <xsl:call-template name="nt-case">
-                    <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+                    <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
                 </xsl:call-template>
                 <xsl:text>_Maker.dict_to_tuple(elt)
             )
@@ -1736,19 +1735,19 @@ class </xsl:text>
         <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
         <xsl:sort select="Idx" data-type="number"/>
 
-            <xsl:if test="(normalize-space(SubMessageFormatAliasRoot) !='')">
+            <xsl:if test="(normalize-space(SubTypeNameRoot) !='')">
                 <xsl:call-template name="python-case">
                     <xsl:with-param name="camel-case-text" select="Value"  />
                 </xsl:call-template><xsl:text>=</xsl:text>
                         <xsl:call-template name="nt-case">
-                            <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+                            <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
                         </xsl:call-template>
                 <xsl:text>_Maker.tuple_to_dc(t.</xsl:text>
         <xsl:value-of select="Value"/><xsl:text>),
             </xsl:text>
             </xsl:if>
 
-            <xsl:if test="(normalize-space(SubMessageFormatAliasRoot)='')">
+            <xsl:if test="(normalize-space(SubTypeNameRoot)='')">
                 <xsl:call-template name="python-case">
                     <xsl:with-param name="camel-case-text" select="Value"  />
                 </xsl:call-template><xsl:text>=t.</xsl:text>
@@ -1769,7 +1768,7 @@ class </xsl:text>
         <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
         <xsl:sort select="Idx" data-type="number"/>
 
-        <xsl:if test="(normalize-space(SubMessageFormatAliasRoot) ='')">
+        <xsl:if test="(normalize-space(SubTypeNameRoot) ='')">
         <xsl:call-template name="python-case">
             <xsl:with-param name="camel-case-text" select="Value"  />
         </xsl:call-template><xsl:text>=dc.</xsl:text>
@@ -1781,11 +1780,11 @@ class </xsl:text>
         </xsl:if>
 
 
-        <xsl:if test="(normalize-space(SubMessageFormatAliasRoot)!='')">
+        <xsl:if test="(normalize-space(SubTypeNameRoot)!='')">
         <xsl:call-template name="python-case">
             <xsl:with-param name="camel-case-text" select="Value"  />
         </xsl:call-template><xsl:text>=</xsl:text><xsl:call-template name="nt-case">
-                            <xsl:with-param name="type-name-text" select="SubMessageFormatAliasRoot" />
+                            <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
                         </xsl:call-template>
                 <xsl:text>_Maker.dc_to_tuple(dc.</xsl:text>
         <xsl:call-template name="python-case">

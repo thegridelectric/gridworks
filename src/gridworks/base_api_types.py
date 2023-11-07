@@ -65,7 +65,7 @@ def status_by_versioned_type_name() -> Dict[str, str]:
 
     v: Dict[str, str] = {
         "base.g.node.gt.002": "Active",
-        "g.node.gt.002": "Active",
+        "g.node.gt.002": "Pending",
         "g.node.instance.gt.000": "Active",
         "gw.cert.id.000": "Active",
         "heartbeat.a.100": "Active",

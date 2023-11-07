@@ -88,7 +88,7 @@
     <xsl:text>
     "enums": {</xsl:text>
 
-    <xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Alias) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
+    <xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
     <xsl:variable name="enum-id" select="GtEnumId"/>
     <xsl:text>
         "</xsl:text>
@@ -96,7 +96,7 @@
         <xsl:text>": {
             "type": "string",
             "name": "</xsl:text>
-            <xsl:value-of select="Alias"/><xsl:text>",
+            <xsl:value-of select="Name"/><xsl:text>",
             "description": "</xsl:text>
             <xsl:value-of select="normalize-space(Description)"/><xsl:text>",</xsl:text>
 
@@ -132,7 +132,7 @@
             ]
         }</xsl:text>
 
-      <xsl:if test="position() != count($airtable//GtEnums/GtEnum[(normalize-space(Alias) !='')  and (count(TypesThatUse[text()=$type-id])>0)])">
+      <xsl:if test="position() != count($airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)])">
          <xsl:text>,</xsl:text>
       </xsl:if>
     </xsl:for-each>
@@ -190,7 +190,7 @@
       <xsl:text>
         "TypeName": {
             "type": "string",
-            "value": "</xsl:text><xsl:value-of select="Alias"/><xsl:text>",
+            "value": "</xsl:text><xsl:value-of select="TypeName"/><xsl:text>",
             "title": "The type name"
         },
         "Version": {

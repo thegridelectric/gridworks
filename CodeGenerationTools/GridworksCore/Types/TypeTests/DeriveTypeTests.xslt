@@ -55,7 +55,7 @@ from pydantic import ValidationError
 from gridworks.errors import SchemaError
 from gridworks.types import </xsl:text>
 <xsl:value-of select="$class-name"/><xsl:text>_Maker as Maker</xsl:text>
-<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Alias) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
+<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
 <xsl:text>
 from gridworks.enums import </xsl:text>
 <xsl:call-template name="nt-case">
