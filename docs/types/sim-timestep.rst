@@ -1,6 +1,6 @@
 SimTimestep
 ==========================
-Python pydantic class corresponding to  json type ```sim.timestep```.
+Python class corresponding to the GridWorks type sim.timestep.000 (VersionedTypeName).
 
 .. autoclass:: gridworks.types.SimTimestep
     :members:

@@ -43,11 +43,13 @@
         {
           "const": "8021dcad",
           "title": "AtomicTNode",
+          "url": "https://gridworks.readthedocs.io/en/latest/atomic-t-node.html",
           "description": "Transacts in markets on behalf of, and controlling the power use of, a TerminalAsset"
         },
         {
           "const": "304890c5",
           "title": "MarketMaker",
+          "url": "https://gridworks.readthedocs.io/en/latest/market-maker.html",
           "description": "Runs energy markets at its Node in the GNodeTree"
         },
         {
@@ -68,6 +70,7 @@
         {
           "const": "3901c7d2",
           "title": "World",
+          "url": "https://gridworks.readthedocs.io/en/latest/world-role.html",
           "description": "Adminstrative GNode responsible for managing and authorizing instances"
         },
         {
@@ -78,6 +81,7 @@
         {
           "const": "88112a93",
           "title": "Supervisor",
+          "url": "https://gridworks.readthedocs.io/en/latest/supervisor.html",
           "description": "Responsible for GNode actors running in a container"
         },
         {
@@ -157,13 +161,13 @@
     },
     "Status": {
       "type": "string",
-      "format": "GNodeStatus100",
+      "format": "g.node.status.100",
       "title": "Lifecycle indicator",
       "required": true
     },
     "Role": {
       "type": "string",
-      "format": "GNodeRole000",
+      "format": "g.node.role.000",
       "title": "Role within Gridworks",
       "required": true
     },
@@ -248,7 +252,7 @@
     },
     "TypeName": {
       "type": "string",
-      "value": "g.node.gt.002",
+      "value": "g.node.gt",
       "title": "The type name"
     },
     "Version": {

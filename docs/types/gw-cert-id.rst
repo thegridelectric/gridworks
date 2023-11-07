@@ -1,6 +1,6 @@
 GwCertId
 ==========================
-Python pydantic class corresponding to  json type ```gw.cert.id```.
+Python class corresponding to the GridWorks type gw.cert.id.000 (VersionedTypeName).
 
 .. autoclass:: gridworks.types.GwCertId
     :members:

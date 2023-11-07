@@ -22,16 +22,10 @@
                 <xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gridworks')]">
                 <xsl:variable name="enum-id" select="Enum"/>
                 <xsl:for-each select="$airtable//GtEnums/GtEnum[GtEnumId=$enum-id]">
-                    <xsl:variable name="enum-alias" select="Alias" />
                     <xsl:variable name="enum-name-style" select="PythonEnumNameStyle" />
-                    <xsl:variable name="class-name">
-                        <xsl:call-template name="nt-case">
-                            <xsl:with-param name="mp-schema-text" select="Alias" />
-                        </xsl:call-template>
-                    </xsl:variable>
                     <xsl:variable name="local-class-name">
                         <xsl:call-template name="nt-case">
-                            <xsl:with-param name="mp-schema-text" select="LocalName" />
+                            <xsl:with-param name="type-name-text" select="LocalName" />
                         </xsl:call-template>
                     </xsl:variable>
                     <FileSetFile>
@@ -42,7 +36,7 @@
                         <xsl:element name="FileContents">
 
 
-<xsl:text>"""Tests for schema enum </xsl:text><xsl:value-of select="$enum-alias"/><xsl:text>"""
+<xsl:text>"""Tests for schema enum </xsl:text><xsl:value-of select="Name"/><xsl:text>"""
 from gridworks.enums import </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>
 
 

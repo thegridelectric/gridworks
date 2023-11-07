@@ -1,6 +1,6 @@
 SuperStarter
 ==========================
-Python pydantic class corresponding to  json type ```super.starter```.
+Python class corresponding to the GridWorks type super.starter.000 (VersionedTypeName).
 
 .. autoclass:: gridworks.types.SuperStarter
     :members:

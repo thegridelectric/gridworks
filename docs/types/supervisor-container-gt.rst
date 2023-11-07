@@ -1,6 +1,6 @@
 SupervisorContainerGt
 ==========================
-Python pydantic class corresponding to  json type ```supervisor.container.gt```.
+Python class corresponding to the GridWorks type supervisor.container.gt.000 (VersionedTypeName).
 
 .. autoclass:: gridworks.types.SupervisorContainerGt
     :members:
