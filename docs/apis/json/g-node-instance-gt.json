@@ -51,9 +51,9 @@
         }
       ]
     },
-    "StrategyName000": {
+    "StrategyName001": {
       "type": "string",
-      "name": "strategy.name.000",
+      "name": "strategy.name.001",
       "description": "Used to assign code to run a particular GNodeInstance",
       "oneOf": [
         {
@@ -64,27 +64,32 @@
         {
           "const": "642c83d3",
           "title": "WorldA",
-          "description": "Basic GridWorks world strategy"
+          "description": "Authority on GNodeInstances, and their private keys. Maintains a FastAPI used for relational information about backoffice information held locally and/or in the GNodeRegistry/GNodeFactory. [More Info](https://gridworks.readthedocs.io/en/latest/world-role.html)"
         },
         {
           "const": "4bb2cf7e",
           "title": "SupervisorA",
-          "description": "Supervisor A Strategy, in [gridworks-atn package](https://pypi.org/project/gridworks-atn/)"
+          "description": "A simple supervisor that monitors its supervised AtomicTNode GNode strategies via a heartbeat health check. [More Info](https://gridworks.readthedocs.io/en/latest/supervisor.html)"
         },
         {
           "const": "f5961401",
           "title": "AtnHeatPumpWithBoostStore",
-          "description": "GridWorks strategy for an AtomicTNode representing a type of heat pump storage heating system"
+          "description": "AtomicTNode for a heat pump thermal storage heating system with a boost element and a thermal \n heated by the boost element. [More on AtomicTNodes](https://gridworks.readthedocs.io/en/latest/atomic-t-node.html)"
         },
         {
           "const": "73fbe6ab",
           "title": "TcGlobalA",
-          "description": "Basic GridWorks TimeCoordinator strategy, in [gridworks-timecoordinator repo](https://github.com/thegridelectric/gridworks-timecoordinator)"
+          "description": "Used to manage the global time of the Gridworks system when run with\n in a fully simulated universe. \n [More on TimeCoordinators](https://gridworks.readthedocs.io/en/latest/time-coordinator.html)"
         },
         {
           "const": "5e18a52e",
           "title": "MarketMakerA",
-          "description": "Simple GridWorks MarketMaker strategy, in [gridworks-marketmaker repo](https://github.com/thegridelectric/gridworks-marketmaker)"
+          "description": "Runs a two-sided market associated to its GNode as part of the copper GNode sub-tree. [More on MarketMakers](https://gridworks.readthedocs.io/en/latest/market-maker.html)"
+        },
+        {
+          "const": "b2a125d6",
+          "title": "AtnBrickStorageHeater",
+          "description": "Publicly available Dijkstra-based AtomicTNode strategy for a brick storage heater. These heaters are rooom units that store heat in a brick core, are heated with resistive elements, and typically have a fan to blow air over the brick core. They are sometimes called Electric Thermal Storage (ETS) heaters, and in the UK are often called Economy 7 heaters or Night Storage Heaters. A strategy very similar to this was used by VCharge to manage an ETS fleet of several thousand heaters in Pennsylvania. This strategy is meant to serve as a template for other private strategies, and also allows for an end-to-end simulation of a realistic aggregated transactive load capable of generating a highly elastic bid curve [More Info](https://gridworks-atn.readthedocs.io/en/latest/brick-storage-heater.html)"
         }
       ]
     }
@@ -103,13 +108,13 @@
     },
     "Strategy": {
       "type": "string",
-      "format": "StrategyName000",
+      "format": "strategy.name.001",
       "title": "Used to determine the code running in a GNode actor application",
       "required": true
     },
     "Status": {
       "type": "string",
-      "format": "GniStatus000",
+      "format": "gni.status.000",
       "title": "Lifecycle Status for Gni",
       "required": true
     },

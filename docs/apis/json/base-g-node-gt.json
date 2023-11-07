@@ -119,13 +119,13 @@
     },
     "Status": {
       "type": "string",
-      "format": "GNodeStatus100",
+      "format": "g.node.status.100",
       "title": "",
       "required": true
     },
     "Role": {
       "type": "string",
-      "format": "CoreGNodeRole000",
+      "format": "core.g.node.role.000",
       "title": "",
       "required": true
     },
