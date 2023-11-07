@@ -75,7 +75,7 @@
     },
     "Status": {
       "type": "string",
-      "format": "SupervisorContainerStatus000",
+      "format": "supervisor.container.status.000",
       "title": "",
       "required": true
     },

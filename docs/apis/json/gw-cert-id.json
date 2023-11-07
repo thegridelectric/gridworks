@@ -33,7 +33,7 @@
   "properties": {
     "Type": {
       "type": "string",
-      "format": "AlgoCertType000",
+      "format": "algo.cert.type.000",
       "title": "",
       "required": true
     },
