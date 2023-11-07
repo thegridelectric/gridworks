@@ -71,8 +71,8 @@ def status_by_versioned_type_name() -> Dict[str, str]:
         "heartbeat.a.100": "Active",
         "ready.001": "Active",
         "sim.timestep.000": "Active",
-        "super.starter.000": "Pending",
-        "supervisor.container.gt.000": "Pending",
+        "super.starter.000": "Active",
+        "supervisor.container.gt.000": "Active",
     }
 
     return v
