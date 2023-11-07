@@ -20,16 +20,19 @@ transpilers available for the ssotme tool. For example, I added an odxml-to-enti
 
 ## More about types
 
-When working with the GridWorks ecosystem, a "type" means a set of validations for a serialized message
-getting passed between software agents/applications within the ecosystem. The authority for these validations is the Gridworks Type
-registry (not yet built). Typically these messages are JSON but the registry does allow for different serializations.
+When working with the GridWorks ecosystem, a "type" means a set of validations for a serialized
+message getting passed between software agents/applications within the ecosystem. The authority for
+these validations is the Gridworks Type registry (not yet built). Typically these messages are JSON
+but the registry does allow for different serializations.
 
 Some of these validations are simple and syntactical in nature -
-for example a JSON attribute "Description" may have type "string." Others capture embedded semantic meaning. This can involve axioms
-that involve multiple attributes within the type. It also involves the use of GridWorks enums across multiple types whose meanings
-are conveyed both in how they are used across multiple software actors and also in their corresponding documentation. One way
-to think about this is that Domain Driven Design requires a mechanism for maintaining evolution and clarity about the _meaning_ of
-messages, not just their syntax. The place where this starts is in a mechanism for managing enums.
+for example a JSON attribute "Description" may have type "string." Others capture embedded semantic
+meaning. This can involve axioms that involve multiple attributes within the type. It also involves
+the use of GridWorks enums across multiple types whose meanings are conveyed both in how they are
+used across multiple software actors and also in their corresponding documentation. One way to think
+about this is that Domain Driven Design requires a mechanism for maintaining evolution and clarity
+about the _meaning_ of messages, not just their syntax. The place where this starts is in a mechanism
+for managing enums.
 
 The GridWorks registry manages authority for three types of objects, in increasing order of complexity:
 
@@ -42,31 +45,47 @@ The GridWorks registry manages authority for three types of objects, in increasi
 ```
 
 ```
-GwVersion (defn): A three-character string, where each character is a numeric digit, and the first character must not be 0.
+GwVersion (defn): A three-character string, where each character is a numeric digit, and
+the first character must not be 0.
 ```
 
 - **Enums**
 
-  - Each enum is defined by a `LeftRightDot` formatted Name and a `GwVersion` formatted Version. The combination of these components is represented as VersionedName f"{name}.{version}".
-  - Once an element belongs to an Enum version, it must belong to all future versions. For example if the enum `rochambeau.throw.000` includes "Rock" then
+  - Each enum is defined by a `LeftRightDot` formatted Name and a `GwVersion` formatted Version. The
+    combination of these components is represented as VersionedName f"{name}.{version}".
+  - Once an element belongs to an Enum version, it must belong to all future versions. For example
+    if the enum `rochambeau.throw.000` includes "Rock" then
     "Rock" must belong to `rochambeau.throw.001` as well.
   - Each enum also has a default value. If an inbound message has an unrecognized
     enum value, the SDK will interpret that enum value as the default.
-  - An Enum's elements are represented as 8-digit hex strings, known as `EnumSymbols`, when transmitted as serial messages. In addition, each `EnumSymbol` is associated with a `LocalValue`, which is a human-readable string. The purpose of `LocalValues` is to convey the meaning of the enum element and is intended to be interpreted by software agents utilizing native enums. For instance, "Rock" might serve as the `LocalValue`, while its corresponding `EnumSymbol` could be "1ea112b9". For a more comprehensive explanation, please refer to the documentation provided below [TODO: ADD LINK]
+  - An Enum's elements are represented as 8-digit hex strings, known as `EnumSymbols`, when
+    transmitted as serial messages. In addition, each `EnumSymbol` is associated with a `LocalValue`,
+    which is a human-readable string. The purpose of `LocalValues` is to convey the meaning of the enum
+    element and is intended to be interpreted by software agents utilizing native enums. For instance,
+    "Rock" might serve as the `LocalValue`, while its corresponding `EnumSymbol` could be "1ea112b9". For
+    a more comprehensive explanation, please refer to the documentation provided below [TODO: ADD LINK]
 
 - **Types**
-  - As with enums, each type is defined by a `LeftRightDot` formatted TypeName and a `GwVersion` formatted Version. The combination of these components is represented as VersionedName f"{TypeName}.{Version}".
+  - As with enums, each type is defined by a `LeftRightDot` formatted TypeName and a `GwVersion`
+    formatted Version. The combination of these components is represented as VersionedName
+    f"{TypeName}.{Version}".
 
 This registry will eventually have an open-source tool command line tool (like ssotme itself)
-which will take the place of the xslt tools in `CodeGenerationTools/GridworksCore that can be accessed by any repository using GridWorks Types in
-order to build or start using the GridWorks types. But until that happens there is near-replication in the CodeGenerationTools/GridworksCore
-folders.
+which will take the place of the xslt tools in `CodeGenerationTools/GridworksCore that can be
+accessed by any repository using GridWorks Types in order to build or start using the GridWorks
+types. But until that happens there is near-replication in the
+CodeGenerationTools/GridworksCore folders.
 
-All instances of GridWorks types must include a TypeName which is recognized by the GridWorks Type Registry. The format of the TypeName is LeftRightDot
+All instances of GridWorks types must include a TypeName which is recognized by the GridWorks Type
+Registry. The format of the TypeName is LeftRightDot
 
-Every type comes in versions. These versions are strings of three numerals and increment in numerical order. Starting with "000", then "001" etc.
+Every type comes in versions. These versions are strings of three numerals and increment in
+numerical order. Starting with "000", then "001" etc.
 
-If you ask query the Gridworks Type Registry for information about a TypeName, it will either tell you there is no such TypeName or it will return information about how to evaluate whether a serial message is an example of that type (message validation). . This is specifically intended for situations where bandwidth is limited and the messages have pretty minimal content.
+If you ask query the Gridworks Type Registry for information about a TypeName, it will either tell
+you there is no such TypeName or it will return information about how to evaluate whether a serial
+message is an example of that type (message validation). . This is specifically intended for
+situations where bandwidth is limited and the messages have pretty minimal content.
 
 The message validation includes:
 
@@ -75,18 +94,44 @@ The message validation includes:
    1b. format (various simple formats like left-right-dot format, or a GridWorks Enum)
    1c. additional simple pydantic checks (greater than 0)
 
-2. more complex validations called axioms that are expected to be hand-coded. Some of these involve multiple attributes.
+2. more complex validations called axioms that are expected to be hand-coded. Some of these involve
+   multiple attributes.
 
 ## New type built from airtable
 
 ## New type built from scratch
 
 This is instructions for if you want to build a type with minimal interaction with the
-code derivation machinery.
+code derivation machinery. It assumes you are adding a new type with TypeName `your.type.name` to the `gridworks-protocol` repository
 
-- In the airtable [TypeRoots](https://airtable.com/appgibWM6WZW20bBx/tblqEaRL8i0IiFfqF/viwra3fA7SUpxNhiz?blocks=hide) table:
-  - Put TypeName in
+1. In the airtable [Types](https://airtable.com/appgibWM6WZW20bBx/tblqEaRL8i0IiFfqF/viwra3fA7SUpxNhiz?blocks=hide) table add a new row:
+
+| TypeName       | CurrentVersion | Status | ProtocolCategory |
+| :------------- | :------------- | :----- | :--------------- |
+| your.type.name | 000            | Active | Json             |
+
     [ProtocolTypes](https://airtable.com/appgibWM6WZW20bBx/tblnyHLmbF5ihZoM1/viwyweGPAEhKuNpBB?blocks=hide)
--
+
+2. In the [VersionedTypes](https://airtable.com/appgibWM6WZW20bBx/tbl2EAWY6sNFfBagK/viw83NhGD7XjtECCZ?blocks=hide) table add:
+
+| TypeName       | Version | PreStatus |
+| :------------- | :------ | :-------- |
+| your.type.name | 000     | Active    |
+
+3. In the [ProtocolTypes](https://airtable.com/appgibWM6WZW20bBx/tblnyHLmbF5ihZoM1/viwyweGPAEhKuNpBB?blocks=hide) table add:
+
+| Protocol | VersionedType      |
+| :------- | :----------------- |
+| gwproto  | your.type.name.000 |
+
+4. From the cli in `gridworks-protocol/CodeGenerationTools/GridworksCore`:
+
+```
+aic -build
+```
+
+Note: aic and ssotme are both aliases for the aicapture command
+
+5. From `gridworks-protocol`, in poetry, run `nox -s pre-commit` a few times.
 
 ## Why make the EnumSymbols unreadable?

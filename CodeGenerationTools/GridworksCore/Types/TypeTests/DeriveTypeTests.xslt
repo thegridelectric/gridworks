@@ -20,9 +20,9 @@
         <FileSet>
             <FileSetFiles>
                 <xsl:for-each select="$airtable//ProtocolTypes/ProtocolType[(normalize-space(ProtocolName) ='gridworks')]">
-                <xsl:variable name="type-id" select="Type"/>
-                <xsl:for-each select="$airtable//Types/Type[(TypeId = $type-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
-                <xsl:variable name="type-name" select="TypeNameRoot"/>
+                <xsl:variable name="versioned-type-id" select="VersionedType"/>
+                <xsl:for-each select="$airtable//VersionedTypes/VersionedType[(VersionedTypeId = $versioned-type-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
+                <xsl:variable name="type-name" select="TypeName"/>
                 <xsl:variable name="class-name">
                     <xsl:call-template name="nt-case">
                         <xsl:with-param name="type-name-text" select="$type-name" />
@@ -44,7 +44,7 @@
                     <OverwriteMode><xsl:value-of select="$overwrite-mode"/></OverwriteMode>
                     <xsl:element name="FileContents">
 
-<xsl:text>"""Tests </xsl:text><xsl:value-of select="TypeNameRoot"/><xsl:text> type, version </xsl:text>
+<xsl:text>"""Tests </xsl:text><xsl:value-of select="TypeName"/><xsl:text> type, version </xsl:text>
 <xsl:value-of select="Version"/>
 <xsl:text>"""
 import json
@@ -55,7 +55,7 @@ from pydantic import ValidationError
 from gridworks.errors import SchemaError
 from gridworks.types import </xsl:text>
 <xsl:value-of select="$class-name"/><xsl:text>_Maker as Maker</xsl:text>
-<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
+<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$versioned-type-id])>0)]">
 <xsl:text>
 from gridworks.enums import </xsl:text>
 <xsl:call-template name="nt-case">
@@ -70,7 +70,7 @@ def test_</xsl:text><xsl:value-of select="translate($type-name,'.','_')"/>
 
 
     d = {</xsl:text>
-        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
         <xsl:sort select="Idx" data-type="number"/>
         <xsl:if test="(not (IsEnum = 'true'))  or (IsList = 'true')">
         <xsl:text>
@@ -111,7 +111,7 @@ def test_</xsl:text><xsl:value-of select="translate($type-name,'.','_')"/>
     # test Maker init
     t = Maker(
         </xsl:text>
-        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
         <xsl:sort select="Idx" data-type="number"/>
         <xsl:call-template name="python-case">
             <xsl:with-param name="camel-case-text" select="Value"  />
@@ -147,7 +147,7 @@ def test_</xsl:text><xsl:value-of select="translate($type-name,'.','_')"/>
         Maker.dict_to_tuple(d2)
 
     </xsl:text>
-    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id) and (IsRequired='true') ]">
+    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id) and (IsRequired='true') ]">
     <xsl:sort select="Idx" data-type="number"/>
 
 
@@ -176,13 +176,13 @@ def test_</xsl:text><xsl:value-of select="translate($type-name,'.','_')"/>
 
     </xsl:for-each>
 
-    <xsl:if test="count($airtable//TypeAttributes/TypeAttribute[(Type = $type-id) and not (IsRequired='true')]) > 0">
+    <xsl:if test="count($airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id) and not (IsRequired='true')]) > 0">
     <xsl:text>######################################
     # Optional attributes can be removed from type
     ######################################
 
     </xsl:text>
-    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id) and not (IsRequired='true')]">
+    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id) and not (IsRequired='true')]">
     <xsl:sort select="Idx" data-type="number"/>
 
     <xsl:if test= "(normalize-space(SubTypeDataClass) != '')">
@@ -211,7 +211,7 @@ def test_</xsl:text><xsl:value-of select="translate($type-name,'.','_')"/>
     <xsl:text>######################################
     # Behavior on incorrect types
     ######################################</xsl:text>
-    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
     <xsl:sort select="Idx" data-type="number"/>
     <xsl:variable name="attribute"><xsl:value-of select="Value"/></xsl:variable>
 
@@ -294,14 +294,14 @@ def test_</xsl:text><xsl:value-of select="translate($type-name,'.','_')"/>
     with pytest.raises(ValidationError):
         Maker.dict_to_tuple(d2)
 </xsl:text>
-    <xsl:if test="count($airtable//TypeAttributes/TypeAttribute[(Type = $type-id) and (normalize-space(PrimitiveFormatFail1) != '')]) > 0">
+    <xsl:if test="count($airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id) and (normalize-space(PrimitiveFormatFail1) != '')]) > 0">
 
 <xsl:text>
     ######################################
     # SchemaError raised if primitive attributes do not have appropriate property_format
     ######################################</xsl:text>
 
-    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id) and (normalize-space(PrimitiveFormatFail1) != '')]">
+    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id) and (normalize-space(PrimitiveFormatFail1) != '')]">
     <xsl:sort select="Idx" data-type="number"/>
 
     <xsl:if test="not (IsList='true')">

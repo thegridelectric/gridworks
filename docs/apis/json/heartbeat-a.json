@@ -27,7 +27,7 @@
     },
     "TypeName": {
       "type": "string",
-      "value": "heartbeat.a.100",
+      "value": "heartbeat.a",
       "title": "The type name"
     },
     "Version": {

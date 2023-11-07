@@ -113,11 +113,11 @@
       "AirtableName": "TypeAxioms"
     },
     {
-      "Name": "TypeRoot",
-      "DisplayName": "TypeRoot",
+      "Name": "VersionedType",
+      "DisplayName": "VersionedType",
       "Description": "",
-      "PluralName": "TypeRoots",
-      "AirtableName": "TypeRoots"
+      "PluralName": "VersionedTypes",
+      "AirtableName": "VersionedTypes"
     }
   ]
 }

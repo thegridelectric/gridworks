@@ -51,7 +51,7 @@
     },
     "TypeName": {
       "type": "string",
-      "value": "gw.cert.id.000",
+      "value": "gw.cert.id",
       "title": "The type name"
     },
     "Version": {
@@ -59,12 +59,6 @@
       "title": "The type version",
       "default": "000",
       "required": true
-    }
-  },
-  "axioms": {
-    "Axiom1": {
-      "title": "Cert type consistency",
-      "description": "If Type is ASA, then Id exists and Addr does not. Otherwise, Addr exists and Id does not."
     }
   },
   "example": {

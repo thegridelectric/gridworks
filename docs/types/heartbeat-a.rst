@@ -1,6 +1,6 @@
 HeartbeatA
 ==========================
-Python pydantic class corresponding to  json type ```heartbeat.a```.
+Python class corresponding to the GridWorks type heartbeat.a.100 (VersionedTypeName).
 
 .. autoclass:: gridworks.types.HeartbeatA
     :members:

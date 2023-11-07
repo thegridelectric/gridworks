@@ -35,7 +35,7 @@
     },
     "TypeName": {
       "type": "string",
-      "value": "super.starter.000",
+      "value": "super.starter",
       "title": "The type name"
     },
     "Version": {

@@ -20,10 +20,9 @@
         <FileSet>
             <FileSetFiles>
                 <xsl:for-each select="$airtable//ProtocolTypes/ProtocolType[(normalize-space(ProtocolName) ='gridworks')]">
-                <xsl:variable name="type-id" select="Type"/>
-                <xsl:for-each select="$airtable//Types/Type[(TypeId = $type-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory= 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
-                <xsl:variable name="local-name" select="TypeNameRoot" />
-                <xsl:variable name="full-type-name" select="TypeName"/>
+                <xsl:variable name="versioned-type-id" select="VersionedType"/>
+                <xsl:for-each select="$airtable//VersionedTypes/VersionedType[(VersionedTypeId = $versioned-type-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory= 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
+                <xsl:variable name="local-name" select="TypeName" />
                     <xsl:variable name="class-name">
                         <xsl:call-template name="nt-case">
                             <xsl:with-param name="type-name-text" select="$local-name" />
@@ -57,36 +56,36 @@
                         <xsl:element name="FileContents">
 
 
-<xsl:text>"""Type </xsl:text><xsl:value-of select="TypeNameRoot"/><xsl:text>, version </xsl:text>
+<xsl:text>"""Type </xsl:text><xsl:value-of select="TypeName"/><xsl:text>, version </xsl:text>
 <xsl:value-of select="Version"/><xsl:text>"""
 import json
 from typing import Any
 from typing import Dict</xsl:text>
-<xsl:if test="count($airtable//TypeAttributes/TypeAttribute[(Type = $type-id) and ((IsEnum = 'true') or (IsList = 'true'))])>0">
+<xsl:if test="count($airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id) and ((IsEnum = 'true') or (IsList = 'true'))])>0">
 <xsl:text>
 from typing import List</xsl:text>
 </xsl:if>
 <xsl:text>
 from typing import Literal</xsl:text>
 
-<xsl:if test="count($airtable//TypeAttributes/TypeAttribute[(Type = $type-id) and not (IsRequired = 'true')]) > 0">
+<xsl:if test="count($airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id) and not (IsRequired = 'true')]) > 0">
 <xsl:text>
 from typing import Optional</xsl:text>
 </xsl:if>
 <xsl:text>
 from pydantic import BaseModel
 from pydantic import Field</xsl:text>
-<xsl:if test="count($airtable//TypeAttributes/TypeAttribute[Type = $type-id and (IsOptional='true') or (IsEnum='true' or (IsList='true' and (IsType = 'true' or (IsPrimitive='true'  and normalize-space(PrimitiveFormat) != '') )))]) > 0">
+<xsl:if test="count($airtable//TypeAttributes/TypeAttribute[VersionedType = $versioned-type-id and (IsOptional='true') or (IsEnum='true' or (IsList='true' and (IsType = 'true' or (IsPrimitive='true'  and normalize-space(PrimitiveFormat) != '') )))]) > 0">
 <xsl:text>
 from pydantic import validator</xsl:text>
 </xsl:if>
-<xsl:if test="count($airtable//TypeAxioms/TypeAxiom[MultiPropertyAxiom=$type-id]) > 0">
+<xsl:if test="count($airtable//TypeAxioms/TypeAxiom[MultiPropertyAxiom=$versioned-type-id]) > 0">
 <xsl:text>
 from pydantic import root_validator</xsl:text>
 </xsl:if>
 
 
-<xsl:if test="count($airtable//TypeAttributes/TypeAttribute[(Type = $type-id) and (IsEnum = 'true')]) > 0">
+<xsl:if test="count($airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id) and (IsEnum = 'true')]) > 0">
 <xsl:text>
 from gridworks.message import as_enum
 from enum import auto
@@ -110,31 +109,31 @@ from gridworks.data_classes.</xsl:text>
 <xsl:text>
 from gridworks.errors import SchemaError</xsl:text>
 
-<xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+<xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
 
 
 <xsl:if test="(IsType = 'true')">
 <xsl:text>
 from gridworks.types.</xsl:text>
 <xsl:call-template name="python-case">
-    <xsl:with-param name="camel-case-text" select="translate(SubTypeNameRoot,'.','_')"  />
+    <xsl:with-param name="camel-case-text" select="translate(SubTypeName,'.','_')"  />
 </xsl:call-template>
 <xsl:text> import </xsl:text>
 <xsl:call-template name="nt-case">
-    <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+    <xsl:with-param name="type-name-text" select="SubTypeName" />
 </xsl:call-template>
 <xsl:text>
 from gridworks.types.</xsl:text>
 <xsl:call-template name="python-case">
-    <xsl:with-param name="camel-case-text" select="translate(SubTypeNameRoot,'.','_')"  />
+    <xsl:with-param name="camel-case-text" select="translate(SubTypeName,'.','_')"  />
 </xsl:call-template>
 <xsl:text> import </xsl:text>
 <xsl:call-template name="nt-case">
-    <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+    <xsl:with-param name="type-name-text" select="SubTypeName" />
 </xsl:call-template><xsl:text>_Maker</xsl:text>
 </xsl:if>
 </xsl:for-each>
-<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
+<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$versioned-type-id])>0)]">
 <xsl:text>
 from gridworks.enums import </xsl:text>
 <xsl:call-template name="nt-case">
@@ -146,7 +145,7 @@ from gridworks.enums import </xsl:text>
 </xsl:if>
 </xsl:for-each>
 
-<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
+<xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$versioned-type-id])>0)]">
 <xsl:variable name="enum-name-style" select="PythonEnumNameStyle" />
 <xsl:variable name="enum-name">
     <xsl:call-template name="nt-case">
@@ -293,7 +292,7 @@ class </xsl:text><xsl:value-of select="$enum-local-name"/><xsl:text>Map:
 </xsl:for-each>
 
 <xsl:if test="count(PropertyFormatsUsed)>0">
-<xsl:for-each select="$airtable//PropertyFormats/PropertyFormat[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
+<xsl:for-each select="$airtable//PropertyFormats/PropertyFormat[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$versioned-type-id])>0)]">
 
     <xsl:if test="Name='IsoFormat'">
     <xsl:text>
@@ -594,7 +593,7 @@ class </xsl:text>
     <xsl:text>
     """
     </xsl:text>
-<xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+<xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
 <xsl:sort select="Idx" data-type="number"/>
 
 
@@ -632,7 +631,7 @@ class </xsl:text>
 <xsl:if test="(IsType = 'true') and  not (IsList = 'true')">
     <xsl:value-of select="Value"/><xsl:text>: </xsl:text>
     <xsl:call-template name="nt-case">
-        <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+        <xsl:with-param name="type-name-text" select="SubTypeName" />
     </xsl:call-template>
         <xsl:text> = </xsl:text>
 </xsl:if>
@@ -640,7 +639,7 @@ class </xsl:text>
 <xsl:if test="(IsType = 'true') and (IsList = 'true')">
     <xsl:value-of select="Value"/><xsl:text>: List[</xsl:text>
     <xsl:call-template name="nt-case">
-        <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+        <xsl:with-param name="type-name-text" select="SubTypeName" />
     </xsl:call-template>
     <xsl:text>] = </xsl:text>
  </xsl:if>
@@ -706,11 +705,11 @@ class </xsl:text>
 </xsl:for-each>
 
 
-<xsl:text>TypeName: Literal["</xsl:text><xsl:value-of select="TypeNameRoot"/><xsl:text>"] = "</xsl:text><xsl:value-of select="TypeNameRoot"/><xsl:text>"
+<xsl:text>TypeName: Literal["</xsl:text><xsl:value-of select="TypeName"/><xsl:text>"] = "</xsl:text><xsl:value-of select="TypeName"/><xsl:text>"
     </xsl:text>
 <xsl:text>Version: str = "</xsl:text>
 <xsl:value-of select="Version"/><xsl:text>"</xsl:text>
-    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
     <xsl:sort select="Idx" data-type="number"/>
     <xsl:variable name="property-id" select="TypeAttributeId" />
     <xsl:if test="(IsRequired='true') and not (IsList='true') and (IsPrimitive='true') and ((normalize-space(PrimitiveFormat) != '') or (Axiom != ''))">
@@ -1087,14 +1086,14 @@ class </xsl:text>
         for elt in v:
             if not isinstance(elt, </xsl:text>
             <xsl:call-template name="nt-case">
-                <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+                <xsl:with-param name="type-name-text" select="SubTypeName" />
     </xsl:call-template>
         <xsl:text>):
                 raise ValueError(
                         f"elt {elt} of </xsl:text><xsl:value-of select="Value"/>
             <xsl:text> must have type </xsl:text>
                 <xsl:call-template name="nt-case">
-                        <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+                        <xsl:with-param name="type-name-text" select="SubTypeName" />
         </xsl:call-template>
                 <xsl:text>."
                     )</xsl:text>
@@ -1225,8 +1224,8 @@ class </xsl:text>
         </xsl:for-each>
 
 
-    <xsl:if test="count($airtable//TypeAxioms/TypeAxiom[MultiPropertyAxiom=$type-id]) > 0">
-    <xsl:for-each select="$airtable//TypeAxioms/TypeAxiom[MultiPropertyAxiom=$type-id]">
+    <xsl:if test="count($airtable//TypeAxioms/TypeAxiom[MultiPropertyAxiom=$versioned-type-id]) > 0">
+    <xsl:for-each select="$airtable//TypeAxioms/TypeAxiom[MultiPropertyAxiom=$versioned-type-id]">
     <xsl:sort select="AxiomNumber" data-type="number"/>
     <xsl:text>
 
@@ -1259,7 +1258,7 @@ class </xsl:text>
     def as_dict(self) -> Dict[str, Any]:
         d = self.dict()</xsl:text>
 
-        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
         <xsl:sort select="Idx" data-type="number"/>
 
         <xsl:if test="(IsType = 'true') and not (IsList = 'true')">
@@ -1367,11 +1366,11 @@ class </xsl:text>
 class </xsl:text>
 <xsl:value-of select="$class-name"/>
 <xsl:text>_Maker:
-    type_name = "</xsl:text><xsl:value-of select="TypeNameRoot"/><xsl:text>"
+    type_name = "</xsl:text><xsl:value-of select="TypeName"/><xsl:text>"
     version = "</xsl:text><xsl:value-of select="Version"/><xsl:text>"
 
     def __init__(self</xsl:text>
-    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+    <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
     <xsl:sort select="Idx" data-type="number"/>
 
         <xsl:if test="(IsRequired='true') and (IsPrimitive = 'true') and not (IsList = 'true')">
@@ -1426,7 +1425,7 @@ class </xsl:text>
                 <xsl:with-param name="camel-case-text" select="Value"  />
             </xsl:call-template><xsl:text>: </xsl:text>
                 <xsl:call-template name="nt-case">
-                    <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+                    <xsl:with-param name="type-name-text" select="SubTypeName" />
                 </xsl:call-template>
         </xsl:if>
 
@@ -1437,7 +1436,7 @@ class </xsl:text>
             <xsl:with-param name="camel-case-text" select="Value"  />
             </xsl:call-template><xsl:text>: List[</xsl:text>
             <xsl:call-template name="nt-case">
-                <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+                <xsl:with-param name="type-name-text" select="SubTypeName" />
             </xsl:call-template>
                 <xsl:text>]</xsl:text>
         </xsl:if>
@@ -1467,7 +1466,7 @@ class </xsl:text>
         self.tuple = </xsl:text><xsl:value-of select="$class-name"/>
         <xsl:text>(
             </xsl:text>
-        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
         <xsl:sort select="Idx" data-type="number"/>
         <xsl:value-of select="Value"/><xsl:text>=</xsl:text>
         <xsl:call-template name="python-case">
@@ -1505,7 +1504,7 @@ class </xsl:text>
     def dict_to_tuple(cls, d: dict[str, Any]) -> </xsl:text><xsl:value-of select="$class-name"/>
 <xsl:text>:
         d2 = dict(d)</xsl:text>
-<xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+<xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
 <xsl:sort select="Idx" data-type="number"/>
 
 <xsl:if test = "(IsRequired = 'true') and (IsPrimitive='true')">
@@ -1531,7 +1530,7 @@ class </xsl:text>
             <xsl:text>'] {d2['</xsl:text><xsl:value-of select="Value"/>
             <xsl:text>']} must be a </xsl:text>
             <xsl:call-template name="nt-case">
-                <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+                <xsl:with-param name="type-name-text" select="SubTypeName" />
             </xsl:call-template>
             <xsl:text>!")
         </xsl:text>
@@ -1540,7 +1539,7 @@ class </xsl:text>
         </xsl:call-template>
         <xsl:text> = </xsl:text>
         <xsl:call-template name="nt-case">
-            <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+            <xsl:with-param name="type-name-text" select="SubTypeName" />
         </xsl:call-template>
         <xsl:text>_Maker.dict_to_tuple(d2["</xsl:text>
         <xsl:value-of select="Value"/>
@@ -1581,7 +1580,7 @@ class </xsl:text>
                     <xsl:text> must be "
                     "</xsl:text>
                     <xsl:call-template name="nt-case">
-                        <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+                        <xsl:with-param name="type-name-text" select="SubTypeName" />
                     </xsl:call-template>
                     <xsl:text> but not even a dict!"
                 )
@@ -1592,7 +1591,7 @@ class </xsl:text>
             <xsl:text>.append(
                 </xsl:text>
                 <xsl:call-template name="nt-case">
-                    <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+                    <xsl:with-param name="type-name-text" select="SubTypeName" />
                 </xsl:call-template>
                 <xsl:text>_Maker.dict_to_tuple(elt)
             )
@@ -1710,7 +1709,7 @@ class </xsl:text>
 
         return </xsl:text><xsl:value-of select="$class-name"/><xsl:text>(
             </xsl:text>
-        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
         <xsl:sort select="Idx" data-type="number"/>
         <xsl:value-of select="Value"/><xsl:text>=d2["</xsl:text>
         <xsl:value-of select="Value"/><xsl:text>"],
@@ -1732,22 +1731,22 @@ class </xsl:text>
         else:
             dc = </xsl:text><xsl:value-of select="DataClass"/><xsl:text>(
             </xsl:text>
-        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
         <xsl:sort select="Idx" data-type="number"/>
 
-            <xsl:if test="(normalize-space(SubTypeNameRoot) !='')">
+            <xsl:if test="(normalize-space(SubTypeName) !='')">
                 <xsl:call-template name="python-case">
                     <xsl:with-param name="camel-case-text" select="Value"  />
                 </xsl:call-template><xsl:text>=</xsl:text>
                         <xsl:call-template name="nt-case">
-                            <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+                            <xsl:with-param name="type-name-text" select="SubTypeName" />
                         </xsl:call-template>
                 <xsl:text>_Maker.tuple_to_dc(t.</xsl:text>
         <xsl:value-of select="Value"/><xsl:text>),
             </xsl:text>
             </xsl:if>
 
-            <xsl:if test="(normalize-space(SubTypeNameRoot)='')">
+            <xsl:if test="(normalize-space(SubTypeName)='')">
                 <xsl:call-template name="python-case">
                     <xsl:with-param name="camel-case-text" select="Value"  />
                 </xsl:call-template><xsl:text>=t.</xsl:text>
@@ -1765,10 +1764,10 @@ class </xsl:text>
     def dc_to_tuple(cls, dc: </xsl:text><xsl:value-of select="DataClass"/><xsl:text>) -> </xsl:text><xsl:value-of select="$class-name"/><xsl:text>:
         t = </xsl:text><xsl:value-of select="$class-name"/><xsl:text>_Maker(
             </xsl:text>
-        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+        <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
         <xsl:sort select="Idx" data-type="number"/>
 
-        <xsl:if test="(normalize-space(SubTypeNameRoot) ='')">
+        <xsl:if test="(normalize-space(SubTypeName) ='')">
         <xsl:call-template name="python-case">
             <xsl:with-param name="camel-case-text" select="Value"  />
         </xsl:call-template><xsl:text>=dc.</xsl:text>
@@ -1780,11 +1779,11 @@ class </xsl:text>
         </xsl:if>
 
 
-        <xsl:if test="(normalize-space(SubTypeNameRoot)!='')">
+        <xsl:if test="(normalize-space(SubTypeName)!='')">
         <xsl:call-template name="python-case">
             <xsl:with-param name="camel-case-text" select="Value"  />
         </xsl:call-template><xsl:text>=</xsl:text><xsl:call-template name="nt-case">
-                            <xsl:with-param name="type-name-text" select="SubTypeNameRoot" />
+                            <xsl:with-param name="type-name-text" select="SubTypeName" />
                         </xsl:call-template>
                 <xsl:text>_Maker.dc_to_tuple(dc.</xsl:text>
         <xsl:call-template name="python-case">

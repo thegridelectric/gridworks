@@ -100,7 +100,7 @@
     },
     "TypeName": {
       "type": "string",
-      "value": "supervisor.container.gt.000",
+      "value": "supervisor.container.gt",
       "title": "The type name"
     },
     "Version": {

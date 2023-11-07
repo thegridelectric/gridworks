@@ -38,7 +38,7 @@
     },
     "TypeName": {
       "type": "string",
-      "value": "ready.001",
+      "value": "ready",
       "title": "The type name"
     },
     "Version": {

@@ -145,7 +145,7 @@
     },
     "TypeName": {
       "type": "string",
-      "value": "g.node.instance.gt.000",
+      "value": "g.node.instance.gt",
       "title": "The type name"
     },
     "Version": {

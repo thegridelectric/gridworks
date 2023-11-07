@@ -20,10 +20,10 @@
         <FileSet>
             <FileSetFiles>
                 <xsl:for-each select="$airtable//ProtocolTypes/ProtocolType[(normalize-space(ProtocolName) ='gridworks')]">
-                <xsl:variable name="type-id" select="Type"/>
-                <xsl:for-each select="$airtable//Types/Type[(TypeId = $type-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
-                <xsl:variable name="type-name" select="TypeNameRoot"/>
-                <xsl:variable name="full-type-name" select="TypeName"/>
+                <xsl:variable name="versioned-type-id" select="VersionedType"/>
+                <xsl:for-each select="$airtable//VersionedTypes/VersionedType[(VersionedTypeId = $versioned-type-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
+                <xsl:variable name="type-name" select="TypeName"/>
+                <xsl:variable name="versioned-type-name" select="VersionedTypeName"/>
                 <xsl:variable name="class-name">
                     <xsl:call-template name="nt-case">
                         <xsl:with-param name="type-name-text" select="$type-name" />
@@ -66,7 +66,7 @@
     <xsl:if test="count(PropertyFormatsUsed)>0">
     <xsl:text>
     "formats": {</xsl:text>
-    <xsl:for-each select="$airtable//PropertyFormats/PropertyFormat[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
+    <xsl:for-each select="$airtable//PropertyFormats/PropertyFormat[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$versioned-type-id])>0)]">
     <xsl:text>
         "</xsl:text><xsl:value-of select="Name"/><xsl:text>": {
             "type": "string",
@@ -77,7 +77,7 @@
             <xsl:value-of select="Example"/>
             <xsl:text>"
         }</xsl:text>
-        <xsl:if test="position() != count($airtable//PropertyFormats/PropertyFormat[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)])">
+        <xsl:if test="position() != count($airtable//PropertyFormats/PropertyFormat[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$versioned-type-id])>0)])">
         <xsl:text>,</xsl:text>
         </xsl:if>
     </xsl:for-each>
@@ -88,7 +88,7 @@
     <xsl:text>
     "enums": {</xsl:text>
 
-    <xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
+    <xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$versioned-type-id])>0)]">
     <xsl:variable name="enum-id" select="GtEnumId"/>
     <xsl:text>
         "</xsl:text>
@@ -132,7 +132,7 @@
             ]
         }</xsl:text>
 
-      <xsl:if test="position() != count($airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)])">
+      <xsl:if test="position() != count($airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$versioned-type-id])>0)])">
          <xsl:text>,</xsl:text>
       </xsl:if>
     </xsl:for-each>
@@ -142,7 +142,7 @@
     <xsl:text>
     "properties": {</xsl:text>
 
-      <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
+      <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
       <xsl:sort select="Idx" data-type="number"/>
       <xsl:text>
         "</xsl:text><xsl:value-of select="Value"/><xsl:text>": {
@@ -201,10 +201,10 @@
         }
     }</xsl:text>
 
-    <xsl:if test="count($airtable//TypeAxioms/TypeAxiom[(normalize-space(Type)=$full-type-name)]) > 0">
+    <xsl:if test="count($airtable//TypeAxioms/TypeAxiom[(normalize-space(Type)=$versioned-type-name)]) > 0">
     <xsl:text>,
     "axioms": {</xsl:text>
-    <xsl:for-each select="$airtable//TypeAxioms/TypeAxiom[(normalize-space(Type)=$full-type-name)]">
+    <xsl:for-each select="$airtable//TypeAxioms/TypeAxiom[(normalize-space(Type)=$versioned-type-name)]">
     <xsl:sort select="AxiomNumber" data-type="number"/>
     <xsl:text>
         "Axiom</xsl:text><xsl:value-of select="AxiomNumber"/><xsl:text>": {
@@ -219,7 +219,7 @@
             <xsl:text>
         }</xsl:text>
 
-    <xsl:if test="position() != count($airtable//TypeAxioms/TypeAxiom[(normalize-space(Type)=$full-type-name)])">
+    <xsl:if test="position() != count($airtable//TypeAxioms/TypeAxiom[(normalize-space(Type)=$versioned-type-name)])">
     <xsl:text>,</xsl:text>
     </xsl:if>
     </xsl:for-each>

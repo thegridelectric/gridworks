@@ -252,7 +252,7 @@
     },
     "TypeName": {
       "type": "string",
-      "value": "g.node.gt.002",
+      "value": "g.node.gt",
       "title": "The type name"
     },
     "Version": {

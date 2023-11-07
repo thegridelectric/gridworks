@@ -1,6 +1,6 @@
 GNodeInstanceGt
 ==========================
-Python pydantic class corresponding to  json type ```g.node.instance.gt```.
+Python class corresponding to the GridWorks type g.node.instance.gt.000 (VersionedTypeName).
 
 .. autoclass:: gridworks.types.GNodeInstanceGt
     :members:
