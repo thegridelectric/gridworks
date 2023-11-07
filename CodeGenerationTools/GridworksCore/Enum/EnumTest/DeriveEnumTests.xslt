@@ -26,12 +26,12 @@
                     <xsl:variable name="enum-name-style" select="PythonEnumNameStyle" />
                     <xsl:variable name="class-name">
                         <xsl:call-template name="nt-case">
-                            <xsl:with-param name="mp-schema-text" select="Alias" />
+                            <xsl:with-param name="type-name-text" select="Alias" />
                         </xsl:call-template>
                     </xsl:variable>
                     <xsl:variable name="local-class-name">
                         <xsl:call-template name="nt-case">
-                            <xsl:with-param name="mp-schema-text" select="LocalName" />
+                            <xsl:with-param name="type-name-text" select="LocalName" />
                         </xsl:call-template>
                     </xsl:variable>
                     <FileSetFile>

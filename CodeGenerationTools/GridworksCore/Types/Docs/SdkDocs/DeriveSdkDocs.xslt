@@ -20,12 +20,12 @@
         <FileSet>
             <FileSetFiles>
                 <xsl:for-each select="$airtable//ProtocolTypes/ProtocolType[(normalize-space(ProtocolName) ='gridworks')]">
-                <xsl:variable name="schema-id" select="Type"/>
-                <xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
+                <xsl:variable name="type-id" select="Type"/>
+                <xsl:for-each select="$airtable//Types/Type[(TypeId = $type-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
                 <xsl:variable name="type-name" select="TypeNameRoot"/>
                 <xsl:variable name="class-name">
                     <xsl:call-template name="nt-case">
-                        <xsl:with-param name="mp-schema-text" select="$type-name" />
+                        <xsl:with-param name="type-name-text" select="$type-name" />
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:variable name="overwrite-mode">
@@ -51,7 +51,7 @@ Python pydantic class corresponding to  json type ```</xsl:text>
 
 .. autoclass:: gridworks.types.</xsl:text><xsl:value-of select="$class-name"/><xsl:text>
     :members:</xsl:text>
-<xsl:for-each select="$airtable//SchemaAttributes/SchemaAttribute[(Schema = $schema-id)]">
+<xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(Type = $type-id)]">
  <xsl:sort select="Idx" data-type="number"/>
 <xsl:text>
 
@@ -69,7 +69,7 @@ Python pydantic class corresponding to  json type ```</xsl:text>
      </xsl:if>
 </xsl:for-each>
 
-<xsl:for-each select="$airtable//PropertyFormats/PropertyFormat[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$schema-id])>0)]">
+<xsl:for-each select="$airtable//PropertyFormats/PropertyFormat[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$type-id])>0)]">
 
 <xsl:text>
 

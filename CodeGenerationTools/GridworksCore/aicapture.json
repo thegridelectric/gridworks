@@ -36,6 +36,17 @@
     },
     {
       "MatchedTranspiler": {
+        "TranspilerId": "60828d2c-5a02-4740-95cc-0b33646b584c",
+        "Name": "ODXMLToEntitiesJson",
+        "Description": "ODXML to Entities Json"
+      },
+      "ProjectTranspilerId": "5514d463-ff05-4b27-b630-580f47c69ce0",
+      "Name": "ODXMLToEntitiesJson",
+      "RelativePath": "/SSoT",
+      "CommandLine": "odxml-to-entities-json -i ../ODXML/DataSchema.odxml -o Entities.json"
+    },
+    {
+      "MatchedTranspiler": {
         "TranspilerId": "19d8142a-2f4d-46ac-9de6-77441f233192",
         "Name": "AirtableToXml",
         "Description": "Extracts the contents of an airtable base as a single Xml file."

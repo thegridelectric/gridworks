@@ -34,7 +34,7 @@ from gridworks.enums.</xsl:text>
 <xsl:value-of select="translate(LocalName,'.','_')"/>
 <xsl:text> import </xsl:text>
 <xsl:call-template name="nt-case">
-    <xsl:with-param name="mp-schema-text" select="LocalName" />
+    <xsl:with-param name="type-name-text" select="LocalName" />
 </xsl:call-template>
 
 </xsl:for-each>
@@ -51,7 +51,7 @@ __all__ = [</xsl:text>
 <xsl:text>
     "</xsl:text>
     <xsl:call-template name="nt-case">
-        <xsl:with-param name="mp-schema-text" select="LocalName" />
+        <xsl:with-param name="type-name-text" select="LocalName" />
     </xsl:call-template>
     <xsl:text>",</xsl:text>
 </xsl:for-each>

@@ -29,8 +29,8 @@
 </xsl:text>
 <xsl:for-each select="$airtable//ProtocolTypes/ProtocolType[(normalize-space(ProtocolName) ='gridworks')]">
 <xsl:sort select="TypeName" data-type="text"/>
-<xsl:variable name="schema-id" select="Type"/>
-<xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
+<xsl:variable name="type-id" select="Type"/>
+<xsl:for-each select="$airtable//Types/Type[(TypeId = $type-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
 
 
 <xsl:text>
@@ -38,14 +38,14 @@ from gridworks.types.</xsl:text>
 <xsl:value-of select="translate(TypeNameRoot,'.','_')"/>
 <xsl:text> import </xsl:text>
 <xsl:call-template name="nt-case">
-    <xsl:with-param name="mp-schema-text" select="TypeNameRoot" />
+    <xsl:with-param name="type-name-text" select="TypeNameRoot" />
 </xsl:call-template>
 <xsl:text>
 from gridworks.types.</xsl:text>
 <xsl:value-of select="translate(TypeNameRoot,'.','_')"/>
 <xsl:text> import </xsl:text>
 <xsl:call-template name="nt-case">
-    <xsl:with-param name="mp-schema-text" select="TypeNameRoot" />
+    <xsl:with-param name="type-name-text" select="TypeNameRoot" />
 </xsl:call-template>
 <xsl:text>_Maker</xsl:text>
 </xsl:for-each>
@@ -56,18 +56,18 @@ from gridworks.types.</xsl:text>
 __all__ = [</xsl:text>
 <xsl:for-each select="$airtable//ProtocolTypes/ProtocolType[(normalize-space(ProtocolName) ='gridworks')]">
 <xsl:sort select="TypeName" data-type="text"/>
-<xsl:variable name="schema-id" select="Type"/>
-<xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
+<xsl:variable name="type-id" select="Type"/>
+<xsl:for-each select="$airtable//Types/Type[(TypeId = $type-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
 <xsl:text>
     "</xsl:text>
     <xsl:call-template name="nt-case">
-        <xsl:with-param name="mp-schema-text" select="TypeNameRoot" />
+        <xsl:with-param name="type-name-text" select="TypeNameRoot" />
     </xsl:call-template>
     <xsl:text>",</xsl:text>
 <xsl:text>
     "</xsl:text>
     <xsl:call-template name="nt-case">
-        <xsl:with-param name="mp-schema-text" select="TypeNameRoot" />
+        <xsl:with-param name="type-name-text" select="TypeNameRoot" />
     </xsl:call-template>
     <xsl:text>_Maker",</xsl:text>
 </xsl:for-each>

@@ -45,10 +45,10 @@ forth between type instances and Python objects.
     </xsl:text>
 <xsl:for-each select="$airtable//ProtocolTypes/ProtocolType[(normalize-space(ProtocolName) ='gridworks')]">
 <xsl:sort select="TypeName" data-type="text"/>
-<xsl:variable name="schema-id" select="Type"/>
-<xsl:for-each select="$airtable//Schemas/Schema[(SchemaId = $schema-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
+<xsl:variable name="type-id" select="Type"/>
+<xsl:for-each select="$airtable//Types/Type[(TypeId = $type-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
 <xsl:call-template name="nt-case">
-    <xsl:with-param name="mp-schema-text" select="TypeNameRoot" />
+    <xsl:with-param name="type-name-text" select="TypeNameRoot" />
 </xsl:call-template>
 <xsl:text>  &lt;types/</xsl:text>
 <xsl:value-of select="translate(TypeNameRoot,'.','-')"/>
