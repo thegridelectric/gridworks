@@ -1,6 +1,6 @@
 Ready
 ==========================
-Python pydantic class corresponding to  json type ```ready```.
+Python class corresponding to the GridWorks type ready.001 (VersionedTypeName).
 
 .. autoclass:: gridworks.types.Ready
     :members:

@@ -54,26 +54,26 @@
 
 
 <xsl:template name="message-case">
-    <xsl:param name="mp-schema-text" select="''"></xsl:param>
+    <xsl:param name="type-name-text" select="''"></xsl:param>
     <xsl:param name="is_first" select="'true'"></xsl:param>
-    <xsl:variable name="next-char" select="substring($mp-schema-text, 1, 1)" />
+    <xsl:variable name="next-char" select="substring($type-name-text, 1, 1)" />
     <xsl:if test="(normalize-space($is_first) = 'true')">
         <xsl:value-of select="translate($next-char, $lcletters, $ucletters)"/>
     </xsl:if>
      <xsl:if test="(normalize-space($next-char) = '.')">
         <xsl:text>_</xsl:text>
-         <xsl:if test="string-length($mp-schema-text) >= 2">
+         <xsl:if test="string-length($type-name-text) >= 2">
              <xsl:call-template name="message-case">
-                <xsl:with-param name="mp-schema-text" select="substring($mp-schema-text, 2, string-length($mp-schema-text))" />
+                <xsl:with-param name="type-name-text" select="substring($type-name-text, 2, string-length($type-name-text))" />
                 <xsl:with-param name="is_first" select="'true'" />
              </xsl:call-template>
          </xsl:if>
     </xsl:if>
     <xsl:if test="(normalize-space($next-char) != '.')">
         <xsl:if test="(normalize-space($is_first) != 'true')"> <xsl:value-of select="$next-char"/></xsl:if>
-            <xsl:if test="string-length($mp-schema-text) >= 2">
+            <xsl:if test="string-length($type-name-text) >= 2">
                  <xsl:call-template name="message-case">
-                    <xsl:with-param name="mp-schema-text" select="substring($mp-schema-text, 2, string-length($mp-schema-text))" />
+                    <xsl:with-param name="type-name-text" select="substring($type-name-text, 2, string-length($type-name-text))" />
                     <xsl:with-param name="is_first" select="'false'" />
                 </xsl:call-template>
             </xsl:if>
@@ -81,10 +81,10 @@
 </xsl:template>
 
 <xsl:template name="payload-case">
-    <xsl:param name="mp-schema-text"/>
+    <xsl:param name="type-name-text"/>
     <xsl:variable name="msg-case">
         <xsl:call-template name="message-case">
-            <xsl:with-param name="mp-schema-text" select="$mp-schema-text"/>
+            <xsl:with-param name="type-name-text" select="$type-name-text"/>
         </xsl:call-template>
     </xsl:variable>
     <xsl:value-of select="translate($msg-case,'_','')"/>
@@ -124,10 +124,10 @@
 </xsl:template>
 
 <xsl:template name="nt-case">
-    <xsl:param name="mp-schema-text" select="''"></xsl:param>
+    <xsl:param name="type-name-text" select="''"></xsl:param>
     <xsl:variable name="as-class-name">
         <xsl:call-template name="message-case">
-            <xsl:with-param name="mp-schema-text" select="$mp-schema-text" />
+            <xsl:with-param name="type-name-text" select="$type-name-text" />
         </xsl:call-template>
     </xsl:variable>
     <xsl:value-of select="translate($as-class-name,'_','')"/>

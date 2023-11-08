@@ -82,8 +82,8 @@ class GniStatusMap:
     }
 
 
-class StrategyName000SchemaEnum:
-    enum_name: str = "strategy.name.000"
+class StrategyName001SchemaEnum:
+    enum_name: str = "strategy.name.001"
     symbols: List[str] = [
         "00000000",
         "642c83d3",
@@ -91,6 +91,7 @@ class StrategyName000SchemaEnum:
         "f5961401",
         "73fbe6ab",
         "5e18a52e",
+        "b2a125d6",
     ]
 
     @classmethod
@@ -100,16 +101,17 @@ class StrategyName000SchemaEnum:
         return False
 
 
-class StrategyName000(StrEnum):
+class StrategyName001(StrEnum):
     NoActor = auto()
     WorldA = auto()
     SupervisorA = auto()
     AtnHeatPumpWithBoostStore = auto()
     TcGlobalA = auto()
     MarketMakerA = auto()
+    AtnBrickStorageHeater = auto()
 
     @classmethod
-    def default(cls) -> "StrategyName000":
+    def default(cls) -> "StrategyName001":
         return cls.NoActor
 
     @classmethod
@@ -120,8 +122,8 @@ class StrategyName000(StrEnum):
 class StrategyNameMap:
     @classmethod
     def type_to_local(cls, symbol: str) -> StrategyName:
-        if not StrategyName000SchemaEnum.is_symbol(symbol):
-            raise SchemaError(f"{symbol} must belong to StrategyName000 symbols")
+        if not StrategyName001SchemaEnum.is_symbol(symbol):
+            raise SchemaError(f"{symbol} must belong to StrategyName001 symbols")
         versioned_enum = cls.type_to_versioned_enum_dict[symbol]
         return as_enum(versioned_enum, StrategyName, StrategyName.default())
 
@@ -130,26 +132,28 @@ class StrategyNameMap:
         if not isinstance(strategy_name, StrategyName):
             raise SchemaError(f"{strategy_name} must be of type {StrategyName}")
         versioned_enum = as_enum(
-            strategy_name, StrategyName000, StrategyName000.default()
+            strategy_name, StrategyName001, StrategyName001.default()
         )
         return cls.versioned_enum_to_type_dict[versioned_enum]
 
-    type_to_versioned_enum_dict: Dict[str, StrategyName000] = {
-        "00000000": StrategyName000.NoActor,
-        "642c83d3": StrategyName000.WorldA,
-        "4bb2cf7e": StrategyName000.SupervisorA,
-        "f5961401": StrategyName000.AtnHeatPumpWithBoostStore,
-        "73fbe6ab": StrategyName000.TcGlobalA,
-        "5e18a52e": StrategyName000.MarketMakerA,
+    type_to_versioned_enum_dict: Dict[str, StrategyName001] = {
+        "00000000": StrategyName001.NoActor,
+        "642c83d3": StrategyName001.WorldA,
+        "4bb2cf7e": StrategyName001.SupervisorA,
+        "f5961401": StrategyName001.AtnHeatPumpWithBoostStore,
+        "73fbe6ab": StrategyName001.TcGlobalA,
+        "5e18a52e": StrategyName001.MarketMakerA,
+        "b2a125d6": StrategyName001.AtnBrickStorageHeater,
     }
 
-    versioned_enum_to_type_dict: Dict[StrategyName000, str] = {
-        StrategyName000.NoActor: "00000000",
-        StrategyName000.WorldA: "642c83d3",
-        StrategyName000.SupervisorA: "4bb2cf7e",
-        StrategyName000.AtnHeatPumpWithBoostStore: "f5961401",
-        StrategyName000.TcGlobalA: "73fbe6ab",
-        StrategyName000.MarketMakerA: "5e18a52e",
+    versioned_enum_to_type_dict: Dict[StrategyName001, str] = {
+        StrategyName001.NoActor: "00000000",
+        StrategyName001.WorldA: "642c83d3",
+        StrategyName001.SupervisorA: "4bb2cf7e",
+        StrategyName001.AtnHeatPumpWithBoostStore: "f5961401",
+        StrategyName001.TcGlobalA: "73fbe6ab",
+        StrategyName001.MarketMakerA: "5e18a52e",
+        StrategyName001.AtnBrickStorageHeater: "b2a125d6",
     }
 
 
@@ -383,7 +387,7 @@ class GNodeInstanceGt_Maker:
         d2["GNode"] = g_node
         if "StrategyGtEnumSymbol" not in d2.keys():
             raise SchemaError(f"dict {d2} missing StrategyGtEnumSymbol")
-        if d2["StrategyGtEnumSymbol"] in StrategyName000SchemaEnum.symbols:
+        if d2["StrategyGtEnumSymbol"] in StrategyName001SchemaEnum.symbols:
             d2["Strategy"] = StrategyNameMap.type_to_local(d2["StrategyGtEnumSymbol"])
         else:
             d2["Strategy"] = StrategyName.default()

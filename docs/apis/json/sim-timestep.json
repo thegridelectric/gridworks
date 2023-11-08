@@ -60,7 +60,7 @@
     },
     "TypeName": {
       "type": "string",
-      "value": "sim.timestep.000",
+      "value": "sim.timestep",
       "title": "The type name"
     },
     "Version": {
