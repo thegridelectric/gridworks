@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gridworks"
-version = "0.2.9"
+version = "0.2.10"
 description = "Gridworks"
 authors = ["GridWorks <gridworks@gridworks-consulting.com>"]
 license = "MIT"
@@ -41,7 +41,6 @@ sphinx-rtd-theme = "^1.1.1" # move to dev dependencies. Look to cookie cutter on
 
 
 [tool.poetry.dev-dependencies]
-ipython = ">=8.7.0"
 pytest-asyncio = "^0.20.3"
 Pygments = ">=2.10.0"
 black = ">=21.10b0"
@@ -70,9 +69,6 @@ myst-parser = {version = ">=0.16.1"}
 
 [tool.poetry.scripts]
 gridworks = "gridworks.__main__:main"
-
-[tool.poetry.group.dev.dependencies]
-ipykernel = "^6.19.4"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
