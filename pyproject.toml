@@ -23,7 +23,7 @@ Changelog = "https://github.com/thegridelectric/gridworks/releases"
 python = ">=3.10, <4.0"
 pydantic = "^1.10.2"
 python-dotenv = "^1.0.0"
-pendulum = "^2.1.2"
+pendulum = "^3"
 pytz = "^2022.7"
 fastapi = "^0.88.0" # figure out what is needed for auto enum
 
