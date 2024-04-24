@@ -29,6 +29,18 @@ jobs:
       PRE_COMMIT_COLOR: "always"
 
     steps:
+      ###############################
+      # Work around pipx issue #1331 with absolute path to constraint.txt
+      # https://github.com/pypa/pipx/issues/1331#issuecomment-2043163012
+      - name: Set PIP_ARGS on Windows
+        run: echo "PIP_ARGS=--constraint=$env:GITHUB_WORKSPACE/.github/workflows/constraints.txt" | Out-File -FilePath $env:GITHUB_ENV -Append
+        if: runner.os == 'Windows'
+
+      - name: Set PIP_ARGS on not-Windows
+        run: echo "PIP_ARGS=--constraint=$GITHUB_WORKSPACE/.github/workflows/constraints.txt" >> "$GITHUB_ENV"
+        if: runner.os != 'Windows'
+      ###############################
+
       - name: Check out the repository
         uses: actions/checkout@v4
 
@@ -47,7 +59,7 @@ jobs:
 
       - name: Upgrade pip
         run: |
-          pip install --constraint=.github/workflows/constraints.txt pip
+          pip install ${{ env.PIP_ARGS }} pip
           pip --version
 
       - name: Upgrade pip in virtual environments
@@ -61,13 +73,13 @@ jobs:
 
       - name: Install Poetry
         run: |
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt poetry
+          pipx install --pip-args=${{ env.PIP_ARGS }} poetry
           poetry --version
 
       - name: Install Nox
         run: |
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
-          pipx inject --pip-args=--constraint=.github/workflows/constraints.txt nox nox-poetry
+          pipx install --pip-args=${{ env.PIP_ARGS }} nox
+          pipx inject --pip-args=${{ env.PIP_ARGS }} nox nox-poetry
           nox --version
 
       - name: Compute pre-commit cache key
@@ -126,18 +138,18 @@ jobs:
 
       - name: Upgrade pip
         run: |
-          pip install --constraint=.github/workflows/constraints.txt pip
+          pip install ${{ env.PIP_ARGS }} pip
           pip --version
 
       - name: Install Poetry
         run: |
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt poetry
+          pipx install --pip-args=${{ env.PIP_ARGS }} poetry
           poetry --version
 
       - name: Install Nox
         run: |
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
-          pipx inject --pip-args=--constraint=.github/workflows/constraints.txt nox nox-poetry
+          pipx install --pip-args=${{ env.PIP_ARGS }} nox
+          pipx inject --pip-args=${{ env.PIP_ARGS }} nox nox-poetry
           nox --version
 
       - name: Download coverage data
