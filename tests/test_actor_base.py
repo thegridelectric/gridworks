@@ -1,7 +1,7 @@
 import time
 import uuid
 
-import pendulum
+import datetime
 
 from gridworks.enums import GNodeRole
 from gridworks.enums import MessageCategory
@@ -43,8 +43,8 @@ def test_actor_base():
     assert su.messages_routed_internally == 1
     assert su.got_heartbeat_from_sub
 
-    d = pendulum.datetime(year=2020, month=1, day=1, hour=5)
-    t = d.int_timestamp
+    d = datetime.datetime(year=2020, month=1, day=1, hour=5)
+    t = int(d.timestamp())
     payload = SimTimestep_Maker(
         from_g_node_alias="d1.time",
         from_g_node_instance_id=str(uuid.uuid4()),

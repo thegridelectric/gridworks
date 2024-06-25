@@ -13,9 +13,9 @@ from typing import List
 from typing import Optional
 from typing import no_type_check
 
-import pendulum
+import datetime
 import pika
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 from pika.channel import Channel as PikaChannel
 from pika.spec import Basic
 from pika.spec import BasicProperties
@@ -35,7 +35,7 @@ from gridworks.types import SimTimestep
 from gridworks.types import SimTimestep_Maker
 
 
-class RabbitRole(StrEnum):
+class RabbitRole(GwStrEnum):
     atomictnode = auto()
     gnode = auto()
     marketmaker = auto()
@@ -1260,7 +1260,10 @@ class ActorBase(ABC):
             return time.time()
 
     def time_str(self) -> str:
-        return pendulum.from_timestamp(self.time()).strftime("%m/%d/%Y, %H:%M")
+        timestamp = self.time()
+        dt = datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)
+        return dt.strftime("%m/%d/%Y, %H:%M")
+
 
     ###############################
     # Other GNode-related methods

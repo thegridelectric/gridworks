@@ -7,7 +7,7 @@ from typing import List
 from typing import Literal
 from typing import Optional
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import validator
@@ -37,7 +37,7 @@ class GniStatus000SchemaEnum:
         return False
 
 
-class GniStatus000(StrEnum):
+class GniStatus000(GwStrEnum):
     Unknown = auto()
     Pending = auto()
     Active = auto()
@@ -101,7 +101,7 @@ class StrategyName001SchemaEnum:
         return False
 
 
-class StrategyName001(StrEnum):
+class StrategyName001(GwStrEnum):
     NoActor = auto()
     WorldA = auto()
     SupervisorA = auto()
@@ -164,11 +164,16 @@ def check_is_reasonable_unix_time_s(v: int) -> None:
     Raises:
         ValueError: if not ReasonableUnixTimeS format
     """
-    import pendulum
+    from datetime import datetime, timezone
+    start_date = datetime(2000, 1, 1, tzinfo=timezone.utc)
+    end_date = datetime(3000, 1, 1, tzinfo=timezone.utc)
 
-    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp > v:  # type: ignore[attr-defined]
+    start_timestamp = int(start_date.timestamp())
+    end_timestamp = int(end_date.timestamp())
+
+    if v < start_timestamp:
         raise ValueError(f"{v} must be after Jan 1 2000")
-    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp < v:  # type: ignore[attr-defined]
+    if v > end_timestamp:
         raise ValueError(f"{v} must be before Jan 1 3000")
 
 

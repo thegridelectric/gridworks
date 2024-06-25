@@ -1,10 +1,10 @@
 from enum import auto
 from typing import List
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 
 
-class UniverseType(StrEnum):
+class UniverseType(GwStrEnum):
     """
     Allows for multiple GridWorks, in particular for development and shared simulations. [More Info](https://gridworks.readthedocs.io/en/latest/universe.html).
 

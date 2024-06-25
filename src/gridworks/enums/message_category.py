@@ -1,10 +1,10 @@
 from enum import auto
 from typing import List
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 
 
-class MessageCategory(StrEnum):
+class MessageCategory(GwStrEnum):
     """
     Categorizes how GridWorks messages are sent and decoded/encoded
 

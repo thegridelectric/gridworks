@@ -7,7 +7,7 @@ from typing import List
 from typing import Literal
 from typing import Optional
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import root_validator
@@ -32,7 +32,7 @@ class AlgoCertType000SchemaEnum:
         return False
 
 
-class AlgoCertType000(StrEnum):
+class AlgoCertType000(GwStrEnum):
     ASA = auto()
     SmartSig = auto()
 

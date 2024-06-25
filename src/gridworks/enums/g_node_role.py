@@ -1,10 +1,10 @@
 from enum import auto
 from typing import List
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 
 
-class GNodeRole(StrEnum):
+class GNodeRole(GwStrEnum):
     """
     Categorizes GNodes by their function within GridWorks. [More Info](https://gridworks.readthedocs.io/en/latest/g-node-role.html).
 

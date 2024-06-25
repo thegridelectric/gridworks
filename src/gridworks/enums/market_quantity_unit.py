@@ -1,10 +1,10 @@
 from enum import auto
 from typing import List
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 
 
-class MarketQuantityUnit(StrEnum):
+class MarketQuantityUnit(GwStrEnum):
     """
     Quantity unit assigned to MarketMaker MarketType
 

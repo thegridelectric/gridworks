@@ -5,7 +5,7 @@ from typing import Any
 from typing import Optional
 from typing import no_type_check
 
-import pendulum
+import datetime
 from pydantic import BaseModel
 
 import gridworks.property_format as property_format
@@ -133,7 +133,7 @@ class MessageSummary:
         topic: str,
         payload_object: Any = None,
         broker_flag=" ",
-        timestamp: Optional[pendulum.datetime] = None,
+        timestamp: Optional[datetime.datetime] = None,
     ) -> str:
         """
         Formats a single line summary of message receipt/publication.
@@ -144,14 +144,14 @@ class MessageSummary:
             topic: The destination or source topic.
             payload_object: The payload of the message.
             broker_flag: "*" for the "gw" broker.
-            timestamp: "pendulum.now("UTC") by default.
+            timestamp: datetime.datetime.now(datetime.timezone.utc) by default.
 
         Returns:
             Formatted string.
         """
         try:
             if timestamp is None:
-                timestamp = pendulum.now("UTC")
+                timestamp = datetime.datetime.now(datetime.timezone.utc)
             direction = direction[:3].strip().upper()
             if direction in ["OUT", "SND"]:
                 arrow = "->"

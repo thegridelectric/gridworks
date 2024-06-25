@@ -1,5 +1,3 @@
-version: "3.5"
-
 networks:
   dev:
 
@@ -9,7 +7,7 @@ services:
       - "dev"
     hostname: rabbit
     container_name: gw-dev-rabbit
-    image: "jessmillar/dev-world-rabbit-arm:chaos__e58daf6__20230115"
+    image: "jessmillar/dev-rabbit-arm:chaos__53ea3a0__20230622"
     ports:
       - 1885:1885
       - 4369:4369
@@ -25,4 +23,4 @@ services:
       - RABBITMQ_PLUGINS=rabbitmq_management,rabbitmq_stomp,rabbitmq_web_stomp,rabbitmq_mqtt
     volumes:
       - ./for_docker/dev_rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-      - ./rabbitconfig/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+

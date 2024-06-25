@@ -1,10 +1,10 @@
 from enum import auto
 from typing import List
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 
 
-class MessageCategorySymbol(StrEnum):
+class MessageCategorySymbol(GwStrEnum):
     """
     Shorthand symbols for MessageCategory000 Enum, used in meta-data like routing keys
 
