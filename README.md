@@ -21,18 +21,16 @@
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [black]: https://github.com/psf/black
 
-GridWorks uses distributed actors to balance the electric grid. What does this mean? In today's world, more
-power comes from highly variable power sources such as wind and solar. And yet, the number
-of electrons going into the grid must match the number coming out. This is where GridWorks comes in.
-GridWorks technology enables electrical devices with some embedded storage or with flexibility to provide grid
-balancing. Furthermore, GridWorks allows these appliances to be more thrifty, using electricity when
-it is cheap and green.
+These days, more and more electrical power is coming from highly variable power sources such as wind and solar. And yet, the number of electrons going into the grid must match the number coming out: at every timescale, and at every geographic scale. Since the days of Tesla and Edison, this balancing job has been accomplished with central control and dispatch over hydrocarbon-burning generators. 
 
-To learn how using and contributing to GridWorks can support a cost-effective and rapid transition to a sustainable future:
 
-- Try some simple [Hello World](https://gridworks.readthedocs.io/en/latest/hello-gridworks.html) examples;
-- Read the [Millinocket Story](https://gridworks.readthedocs.io/en/latest/millinocket-demo.html) to learn how to exploit the synergy between wind power and space heating;
-- Go through the partner [Millinocket Tutorial](https://gridworks.readthedocs.io/en/latest/millinocket-tutorial.html).
+GridWorks is a technology ecosystem inspired by the idea of a new role for electric loads on the grid.  Why not design our appliances so they are alert to grid conditions, consume lots of energy when it is abundant, and can support grid balancing?  This shift in the framework of how loads interact with the grid helps people receive a very specific sort of abundance: low-cost, low-carbon electricity that would otherwise go to waste.
+
+Places to start:
+
+- Most GridWorks information exchange is asynchronous message passing, brokered by RabbitMQ. The first step in learning and developing is to set up a dev rabbit broker with the correct plumbing. Do this by downloading the [GridWorks repository](https://github.com/thegridelectric/gridworks) and follow the instructions below on [RabbitMQ](#rabbitmq-infrastructure).
+- Read the [Millinocket Story](https://gridworks.readthedocs.io/en/latest/millinocket-demo.html) to understand the natural match between wind power and space heating.
+- Go through the partner [Millinocket Tutorial](https://gridworks.readthedocs.io/en/latest/millinocket-tutorial.html) to start understanding how GridWorks open-source technology can be used to build economics and physics tools allowing self-organized groups of people -- at many scales -- to connect the gift of low-carbon, low-cost electricity with the need of keeping people warm in the winter.
 
 ## GridWorks SDKs
 
@@ -49,17 +47,30 @@ The [GNodeFactory](https://github.com/thegridelectric/g-node-factory) currently 
 and does most of the heavy lifting in terms of identity management and authentication in GridWorks. Finally, since the demo
 is a distributed simulation, it needs a method of handling time. That's done by a [TimeCoordinator](https://github.com/thegridelectric/gridworks-timecoordinator) GNode.
 
-## Usage
-
-`pip install gridworks` to install the foundational package.
 
 ## RabbitMQ Infrastructure
 
-GridWorks uses the `rabbit` subfolder for maintaining dev rabbit brokers as well as their own live rabbit brokers.
+All GridWorks repos require a running rabbitMQ dev broker running to pass tests or run dev simulations.  Instructions for setting it up:
+
+  - Make sure you have [docker](https://www.docker.com/products/docker-desktop/) installed
+  - Know whether your computer architecture is x86 or arm
+  - Start the dev broker in a docker container:
+    - **x86 architecture**: `./x86.sh`
+    - **arm architecture**: `./arm.sh`
+  - Tests for success:
+    1) go to http://0.0.0.0:15672/ - it should look like this:
+
+![alt_text](docs/images/dev-broker-login.png)
+    2) pytest tests should all passs
+
+Username/password for the dev rabbit broker: `smqPublic/smqPublic`
+
+The [Gridworks broker](docs/gridworks-broker) page has more information on the GridWorks brokers and how to use them for troubleshooting, 
+
 
 ## Contributing
 
-Contributions are very welcome.
+Contributions are very welcome. 
 To learn more, see the [Contributor Guide].
 
 ## License

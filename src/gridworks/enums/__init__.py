@@ -1,4 +1,5 @@
 """ GwSchema Enums used in gridworks """
+from gridworks.enums.gw_str_enum import GwStrEnum
 from gridworks.enums.algo_cert_type import AlgoCertType
 from gridworks.enums.core_g_node_role import CoreGNodeRole
 from gridworks.enums.g_node_role import GNodeRole
@@ -16,6 +17,7 @@ from gridworks.enums.universe_type import UniverseType
 
 
 __all__ = [
+    "GwStrEnum",
     "AlgoCertType",
     "CoreGNodeRole",
     "GNodeRole",

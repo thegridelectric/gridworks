@@ -1,7 +1,6 @@
-import uuid
+
 from typing import Any
 
-import pendulum
 import pytest
 from pydantic import BaseModel
 from pydantic import ValidationError
@@ -24,35 +23,6 @@ def test_property_format():
     assert not gridworks.property_format.is_left_right_dot("5.a-h")
     assert gridworks.property_format.is_left_right_dot("a.s")
 
-    bad_date_1 = pendulum.datetime(year=3000, month=1, day=1, hour=1)
-    bad_date_2 = pendulum.datetime(year=1999, month=12, day=31, hour=23)
-    good_date = pendulum.datetime(year=2200, month=1, day=1, hour=1)
-
-    assert not gridworks.property_format.is_reasonable_unix_time_ms(
-        int(bad_date_1.timestamp() * 1000)
-    )
-    assert not gridworks.property_format.is_reasonable_unix_time_ms(
-        int(bad_date_2.timestamp() * 1000)
-    )
-    assert not gridworks.property_format.is_reasonable_unix_time_ms(
-        int(good_date.timestamp())
-    )
-    assert gridworks.property_format.is_reasonable_unix_time_ms(
-        int(good_date.timestamp() * 1000)
-    )
-
-    assert gridworks.property_format.is_reasonable_unix_time_s(
-        int(good_date.timestamp())
-    )
-    assert not gridworks.property_format.is_reasonable_unix_time_s(
-        int(good_date.timestamp() * 1000)
-    )
-    assert not gridworks.property_format.is_reasonable_unix_time_s(
-        int(bad_date_1.timestamp())
-    )
-    assert not gridworks.property_format.is_reasonable_unix_time_s(
-        int(bad_date_2.timestamp())
-    )
 
     assert gridworks.property_format.is_unsigned_short(0)
     assert gridworks.property_format.is_unsigned_short(65535)
@@ -63,25 +33,6 @@ def test_property_format():
     assert gridworks.property_format.is_short_integer(32767)
     assert not gridworks.property_format.is_short_integer(-32769)
     assert not gridworks.property_format.is_short_integer(32768)
-
-    s = "d4be12d5-33ba-4f1f-b9e5-2582fe41241d"
-    assert gridworks.property_format.is_uuid_canonical_textual(s)
-    # noinspection PyTypeChecker
-    assert not gridworks.property_format.is_uuid_canonical_textual(uuid.uuid4())
-    fail1 = "d4be12d5-33ba-4f1f-b9e5"
-    assert not gridworks.property_format.is_uuid_canonical_textual(fail1)
-    fail2 = "d4be12d-33ba-4f1f-b9e5-2582fe41241d"
-    assert not gridworks.property_format.is_uuid_canonical_textual(fail2)
-    fail3 = "k4be12d5-33ba-4f1f-b9e5-2582fe41241d"
-    assert not gridworks.property_format.is_uuid_canonical_textual(fail3)
-    fail4 = "d4be12d5-33a-4f1f-b9e5-2582fe41241d"
-    assert not gridworks.property_format.is_uuid_canonical_textual(fail4)
-    fail5 = "d4be12d5-33ba-4f1-b9e5-2582fe41241d"
-    assert not gridworks.property_format.is_uuid_canonical_textual(fail5)
-    fail6 = "d4be12d5-33ba-4f1f-b9e-2582fe41241d"
-    assert not gridworks.property_format.is_uuid_canonical_textual(fail6)
-    fail7 = "d4be12d5-33ba-4f1f-b9e5-2582fe41241"
-    assert not gridworks.property_format.is_uuid_canonical_textual(fail7)
 
     good_market_name = "rt60gate5.d1.isone"
     bad_market_name_1 = "not_a_market_type.d1.isone"

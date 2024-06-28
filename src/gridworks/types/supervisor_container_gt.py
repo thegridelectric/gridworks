@@ -6,7 +6,7 @@ from typing import Dict
 from typing import List
 from typing import Literal
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import validator
@@ -35,7 +35,7 @@ class SupervisorContainerStatus000SchemaEnum:
         return False
 
 
-class SupervisorContainerStatus000(StrEnum):
+class SupervisorContainerStatus000(GwStrEnum):
     Unknown = auto()
     Authorized = auto()
     Launching = auto()

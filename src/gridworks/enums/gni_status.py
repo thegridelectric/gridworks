@@ -1,10 +1,10 @@
 from enum import auto
 from typing import List
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 
 
-class GniStatus(StrEnum):
+class GniStatus(GwStrEnum):
     """
     Enum for managing GNodeInstance lifecycle. [More Info](https://gridworks.readthedocs.io/en/latest/g-node-instance.html).
 

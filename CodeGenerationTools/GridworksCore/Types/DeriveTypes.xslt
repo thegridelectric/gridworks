@@ -89,7 +89,7 @@ from pydantic import root_validator</xsl:text>
 <xsl:text>
 from gridworks.message import as_enum
 from enum import auto
-from fastapi_utils.enums import StrEnum</xsl:text>
+from gridworks.enums import GwStrEnum</xsl:text>
 </xsl:if>
 
 
@@ -186,7 +186,7 @@ class </xsl:text><xsl:value-of select="$enum-name"/><xsl:text>SchemaEnum:
 
 
 class </xsl:text><xsl:value-of select="$enum-name"/>
-<xsl:text>(StrEnum):
+<xsl:text>(GwStrEnum):
     </xsl:text>
 
 <xsl:for-each select="$airtable//EnumSymbols/EnumSymbol[(Enum = $enum-id)]">
@@ -470,10 +470,16 @@ def check_is_reasonable_unix_time_s(v: int) -> None:
     Raises:
         ValueError: if not ReasonableUnixTimeS format
     """
-    import pendulum
-    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp > v:  # type: ignore[attr-defined]
+    from datetime import datetime, timezone
+    start_date = datetime(2000, 1, 1, tzinfo=timezone.utc)
+    end_date = datetime(3000, 1, 1, tzinfo=timezone.utc)
+
+    start_timestamp = int(start_date.timestamp())
+    end_timestamp = int(end_date.timestamp())
+
+    if v &lt; start_timestamp:
         raise ValueError(f"{v} must be after Jan 1 2000")
-    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp &lt; v:  # type: ignore[attr-defined]
+    if v > end_timestamp:
         raise ValueError(f"{v} must be before Jan 1 3000")</xsl:text>
 
     </xsl:if>
@@ -489,10 +495,16 @@ def check_is_reasonable_unix_time_ms(v: str) -> None:
     Raises:
         ValueError: if not ReasonableUnixTimeMs format
     """
-    import pendulum
-    if pendulum.parse('2000-01-01T00:00:00Z').int_timestamp * 1000 > v:  # type: ignore[attr-defined]
+    from datetime import datetime, timezone
+    start_date = datetime(2000, 1, 1, tzinfo=timezone.utc)
+    end_date = datetime(3000, 1, 1, tzinfo=timezone.utc)
+
+    start_timestamp = int(start_date.timestamp())
+    end_timestamp = int(end_date.timestamp())
+
+    if v &lt; start_timestamp * 1000:
         raise ValueError(f"{v} must be after Jan 1 2000")
-    if pendulum.parse('3000-01-01T00:00:00Z').int_timestamp * 1000 &lt; v:  # type: ignore[attr-defined]
+    if v > end_timestamp * 1000:
         raise ValueError(f"{v} must be before Jan 1 3000")</xsl:text>
 
 

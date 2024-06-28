@@ -1,10 +1,10 @@
 from enum import auto
 from typing import List
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 
 
-class SupervisorContainerStatus(StrEnum):
+class SupervisorContainerStatus(GwStrEnum):
     """
     Manages lifecycle of the docker containers where GridWorks actors run
 
