@@ -1,10 +1,10 @@
 from enum import auto
 from typing import List
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 
 
-class StrategyName(StrEnum):
+class StrategyName(GwStrEnum):
     """
     Used to assign code to run a particular GNodeInstance
 

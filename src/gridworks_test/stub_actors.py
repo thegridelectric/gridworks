@@ -3,7 +3,7 @@ import time
 from typing import List
 from typing import Optional
 
-import pendulum
+import datetime
 from pika.channel import Channel as PikaChannel
 from pydantic import BaseModel
 
@@ -182,9 +182,9 @@ class TimeCoordinatorStubRecorder(GNodeStubRecorder):
     """This stub timecoordinator is intended to be used"""
 
     def __init__(self, settings: GNodeSettings):
-        self._time: int = pendulum.datetime(
-            year=2020, month=1, day=1, hour=5
-        ).int_timestamp
+        self._time: int = int(datetime.datetime(
+            year=2020, month=1, day=1, hour=5, tzinfo=datetime.timezone.utc
+        ).timestamp())
         my_settings = copy.deepcopy(settings)
         my_settings.g_node_alias = "d1.time"
         my_settings.g_node_role_value = "TimeCoordinator"

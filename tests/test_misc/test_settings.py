@@ -1,4 +1,4 @@
-import pendulum
+import datetime
 import pytest
 from pydantic import SecretStr
 
@@ -28,9 +28,9 @@ def test_g_node_settings_defaults():
         universe_type_value="Dev",
         my_super_alias="d1.super1",
         my_time_coordinator_alias="d1.time",
-        initial_time_unix_s=pendulum.datetime(
-            year=2020, month=1, day=1, hour=4, minute=20
-        ).int_timestamp,
+        initial_time_unix_s=int(datetime.datetime(
+            year=2020, month=1, day=1, hour=4, minute=20, tzinfo=datetime.timezone.utc
+        ).timestamp()),
         log_level="INFO",
         minute_cron_file="cron_last_minute.txt",
         hour_cron_file="cron_last_hour.txt",

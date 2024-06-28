@@ -7,7 +7,7 @@ from typing import List
 from typing import Literal
 from typing import Optional
 
-from fastapi_utils.enums import StrEnum
+from gridworks.enums import GwStrEnum
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import validator
@@ -39,7 +39,7 @@ class CoreGNodeRole000SchemaEnum:
         return False
 
 
-class CoreGNodeRole000(StrEnum):
+class CoreGNodeRole000(GwStrEnum):
     Other = auto()
     TerminalAsset = auto()
     AtomicTNode = auto()
@@ -115,7 +115,7 @@ class GNodeStatus100SchemaEnum:
         return False
 
 
-class GNodeStatus100(StrEnum):
+class GNodeStatus100(GwStrEnum):
     Unknown = auto()
     Pending = auto()
     Active = auto()

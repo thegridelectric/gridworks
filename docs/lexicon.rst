@@ -6,6 +6,7 @@ GridWorks lexicon
    :maxdepth: 1
 
     AggregatedTNode <aggregated-t-node>
+    Application Shared Languages <asls>
     AtomicMeteringNode <atomic-metering-node>
     AtomicTNode <atomic-t-node>
     ConductorTopologyNode <conductor-topology-node>
@@ -19,6 +20,8 @@ GridWorks lexicon
     GNodeRegistry <g-node-registry>
     GNodeRole <g-node-role>
     GNodeStatus <g-node-status>
+    GridWorks Broker <gridworks-broker>
+    GridworksTypes <gridworks-types>
     InterconnectionComponent <interconnection-component>
     MarketBid <market-bid>
     MarketMaker <market-maker>

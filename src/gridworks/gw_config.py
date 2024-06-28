@@ -1,6 +1,6 @@
 """Settings for the GNodeFactory, readable from environment and/or from env files."""
 
-import pendulum
+import datetime
 from algosdk import account
 from pydantic import BaseModel
 from pydantic import BaseSettings
@@ -58,13 +58,17 @@ def check_is_reasonable_unix_time_s(v: int) -> None:
     Raises:
         ValueError: if not ReasonableUnixTimeS format
     """
-    import pendulum
+    from datetime import datetime, timezone
+    start_date = datetime(2000, 1, 1, tzinfo=timezone.utc)
+    end_date = datetime(3000, 1, 1, tzinfo=timezone.utc)
 
-    if pendulum.parse("2000-01-01T00:00:00Z").int_timestamp > v:  # type: ignore[attr-defined]
+    start_timestamp = int(start_date.timestamp())
+    end_timestamp = int(end_date.timestamp())
+
+    if v < start_timestamp:
         raise ValueError(f"{v} must be after Jan 1 2000")
-    if pendulum.parse("3000-01-01T00:00:00Z").int_timestamp < v:  # type: ignore[attr-defined]
+    if v > end_timestamp:
         raise ValueError(f"{v} must be before Jan 1 3000")
-
 
 def check_g_node_alias(alias: str, universe_type: UniverseType) -> None:
     check_is_left_right_dot(alias)
@@ -170,9 +174,8 @@ class GNodeSettings(BaseSettings):
     universe_type_value: str = "Dev"
     my_super_alias: str = "d1.super1"
     my_time_coordinator_alias: str = "d1.time"
-    initial_time_unix_s: int = pendulum.datetime(
-        year=2020, month=1, day=1, hour=4, minute=20
-    ).int_timestamp
+    initial_time_unix_s = int(datetime.datetime(2020, 1, 1, 4, 20, tzinfo=datetime.timezone.utc).timestamp())
+
     log_level: str = "INFO"
     minute_cron_file: str = "cron_last_minute.txt"
     hour_cron_file: str = "cron_last_hour.txt"
