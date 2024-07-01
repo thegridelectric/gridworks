@@ -34,14 +34,14 @@
 
 
 <xsl:text>
-from gridworks.types.</xsl:text>
+from gw.types.</xsl:text>
 <xsl:value-of select="translate(TypeName,'.','_')"/>
 <xsl:text> import </xsl:text>
 <xsl:call-template name="nt-case">
     <xsl:with-param name="type-name-text" select="TypeName" />
 </xsl:call-template>
 <xsl:text>
-from gridworks.types.</xsl:text>
+from gw.types.</xsl:text>
 <xsl:value-of select="translate(TypeName,'.','_')"/>
 <xsl:text> import </xsl:text>
 <xsl:call-template name="nt-case">

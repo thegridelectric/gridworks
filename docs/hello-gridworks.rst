@@ -50,9 +50,9 @@ which can be called in the dev environment to fund an account from one of the sa
 .. code-block:: python
    :caption: Create and fund a dev account
 
-   import gridworks.algo_utils as algo_utils
-   from gridworks.algo_utils import BasicAccount
-   import gridworks.dev_utils.algo_setup as algo_setup
+   import gw.algo_utils as algo_utils
+   from gw.algo_utils import BasicAccount
+   import gw.dev_utils.algo_setup as algo_setup
 
    acct = BasicAccount()
    assert algo_utils.algos(acct.addr) == 0
@@ -83,9 +83,9 @@ Gridworks has a  `MultiAccount <algo-utils.html#gridworks.algo_utils.MultisigAcc
 .. code-block:: python
    :caption: Creating a 2-sig MultiAccount[GnfAdminAddr, ValidatorAddr]
 
-   from gridworks.gw_config import Public
-   from gridworks.algo_utils import BasicAccount
-   from gridworks.algo_utils import MultisigAccount
+   from gw.gw_config import Public
+   from gw.algo_utils import BasicAccount
+   from gw.algo_utils import MultisigAccount
 
    validator_acct = BasicAccount()
    gnf_admin_addr = Public().gnf_admin_addr

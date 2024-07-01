@@ -87,16 +87,16 @@ from pydantic import root_validator</xsl:text>
 
 <xsl:if test="count($airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id) and (IsEnum = 'true')]) > 0">
 <xsl:text>
-from gridworks.message import as_enum
+from gw.message import as_enum
 from enum import auto
-from gridworks.enums import GwStrEnum</xsl:text>
+from gw.enums import GwStrEnum</xsl:text>
 </xsl:if>
 
 
 <xsl:if test="MakeDataClass='true'">
 <xsl:if test="not(IsComponent = 'true') and not(IsCac = 'true')">
 <xsl:text>
-from gridworks.data_classes.</xsl:text>
+from gw.data_classes.</xsl:text>
 <xsl:call-template name="python-case">
     <xsl:with-param name="camel-case-text" select="translate(DataClass,'.','_')"  />
 </xsl:call-template>
@@ -107,14 +107,14 @@ from gridworks.data_classes.</xsl:text>
 
 
 <xsl:text>
-from gridworks.errors import SchemaError</xsl:text>
+from gw.errors import SchemaError</xsl:text>
 
 <xsl:for-each select="$airtable//TypeAttributes/TypeAttribute[(VersionedType = $versioned-type-id)]">
 
 
 <xsl:if test="(IsType = 'true')">
 <xsl:text>
-from gridworks.types.</xsl:text>
+from gw.types.</xsl:text>
 <xsl:call-template name="python-case">
     <xsl:with-param name="camel-case-text" select="translate(SubTypeName,'.','_')"  />
 </xsl:call-template>
@@ -123,7 +123,7 @@ from gridworks.types.</xsl:text>
     <xsl:with-param name="type-name-text" select="SubTypeName" />
 </xsl:call-template>
 <xsl:text>
-from gridworks.types.</xsl:text>
+from gw.types.</xsl:text>
 <xsl:call-template name="python-case">
     <xsl:with-param name="camel-case-text" select="translate(SubTypeName,'.','_')"  />
 </xsl:call-template>
@@ -135,7 +135,7 @@ from gridworks.types.</xsl:text>
 </xsl:for-each>
 <xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$versioned-type-id])>0)]">
 <xsl:text>
-from gridworks.enums import </xsl:text>
+from gw.enums import </xsl:text>
 <xsl:call-template name="nt-case">
     <xsl:with-param name="type-name-text" select="LocalName" />
 </xsl:call-template>
@@ -312,7 +312,7 @@ def check_is_iso_format(v: str) -> None:
 
 
 def check_is_market_type_name_lrd_format(v: str) -> None:
-    from gridworks.enums import MarketTypeName
+    from gw.enums import MarketTypeName
     try:
         x = v.split(".")
     except AttributeError:
@@ -338,7 +338,7 @@ def check_is_market_slot_name_lrd_format(v: str) -> None:
     Example: rt60gate5.d1.isone.ver.keene.1673539200
 
     """
-    from gridworks.data_classes.market_type import MarketType
+    from gw.data_classes.market_type import MarketType
     try:
         x = v.split(".")
     except AttributeError:

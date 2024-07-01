@@ -37,7 +37,7 @@
 
 
 <xsl:text>"""Tests for schema enum </xsl:text><xsl:value-of select="Name"/><xsl:text>"""
-from gridworks.enums import </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>
+from gw.enums import </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>
 
 
 def test_</xsl:text> <xsl:value-of select="translate(LocalName,'.','_')"/>

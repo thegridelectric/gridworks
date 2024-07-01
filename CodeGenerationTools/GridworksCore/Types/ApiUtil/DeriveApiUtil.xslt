@@ -36,7 +36,7 @@ from typing import no_type_check
 <xsl:for-each select="$airtable//VersionedTypes/VersionedType[(VersionedTypeId = $versioned-type-id)  and (Status = 'Active' or Status = 'Pending') and (ProtocolCategory = 'Json' or ProtocolCategory = 'GwAlgoSerial')]">
 
 <xsl:text>
-from gridworks.types import </xsl:text>
+from gw.types import </xsl:text>
 <xsl:call-template name="nt-case">
     <xsl:with-param name="type-name-text" select="TypeName" />
 </xsl:call-template>

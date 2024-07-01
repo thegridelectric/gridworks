@@ -1,5 +1,6 @@
 """Tests for schema enum message.category.000"""
-from gridworks.enums import MessageCategory
+
+from gw.enums import MessageCategory
 
 
 def test_message_category() -> None:

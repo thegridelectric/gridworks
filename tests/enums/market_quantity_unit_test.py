@@ -1,5 +1,6 @@
 """Tests for schema enum market.quantity.unit.000"""
-from gridworks.enums import MarketQuantityUnit
+
+from gw.enums import MarketQuantityUnit
 
 
 def test_market_quantity_unit() -> None:

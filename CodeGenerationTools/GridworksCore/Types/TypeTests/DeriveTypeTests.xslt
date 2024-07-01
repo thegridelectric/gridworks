@@ -52,12 +52,12 @@ import json
 import pytest
 from pydantic import ValidationError
 
-from gridworks.errors import SchemaError
-from gridworks.types import </xsl:text>
+from gw.errors import SchemaError
+from gw.types import </xsl:text>
 <xsl:value-of select="$class-name"/><xsl:text>_Maker as Maker</xsl:text>
 <xsl:for-each select="$airtable//GtEnums/GtEnum[(normalize-space(Name) !='')  and (count(TypesThatUse[text()=$versioned-type-id])>0)]">
 <xsl:text>
-from gridworks.enums import </xsl:text>
+from gw.enums import </xsl:text>
 <xsl:call-template name="nt-case">
     <xsl:with-param name="type-name-text" select="LocalName" />
 </xsl:call-template>

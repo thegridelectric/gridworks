@@ -50,7 +50,7 @@ numerous validation checks for GridWorks types.  It is available as an environme
 .. code-block:: python
    :caption: Inspect the dev universe GnfAdminAddr
 
-   from gridworks.gw_config import Public
+   from gw.gw_config import Public
 
    gnf_admin_addr = Public().gnf_admin_addr
    assert gnf_admin_addr ==  "RNMHG32VTIHTC7W3LZOEPTDGREL5IQGK46HKD3KBLZHYQUCAKLMT4G5ALI"
@@ -72,7 +72,7 @@ In the `Dev Universe <universe.html>`_, this is set to 100 Algos.
 .. code-block:: python
    :caption: Inspect dev TaValidatorFundingThesholdAlgos
 
-   from gridworks.gw_config import Public
+   from gw.gw_config import Public
 
    threshold = Public().ta_validator_funding_threshold_algos
    assert threshold ==  100
@@ -92,7 +92,7 @@ In the `Dev Universe <universe.html>`_, the TaDeedConsiderationAlgos is set to 5
 .. code-block:: python
    :caption: Inspect dev TaValidatorFundingThesholdAlgos
 
-   from gridworks.gw_config import Public
+   from gw.gw_config import Public
 
    threshold = Public().ta_deed_consideration_algos
    assert threshold ==  50

@@ -1,50 +1,48 @@
-
 from typing import Any
 
 import pytest
 from pydantic import BaseModel
 from pydantic import ValidationError
 
-import gridworks
-from gridworks.property_format import predicate_validator
+import gw
+from gw.property_format import predicate_validator
 
 
 def test_property_format():
-    assert gridworks.property_format.is_bit(0)
-    assert gridworks.property_format.is_bit(1)
-    assert not gridworks.property_format.is_bit(2)
+    assert gw.property_format.is_bit(0)
+    assert gw.property_format.is_bit(1)
+    assert not gw.property_format.is_bit(2)
 
-    assert gridworks.property_format.is_64_bit_hex("12345abc")
-    assert not gridworks.property_format.is_64_bit_hex("12345abcd")
-    assert not gridworks.property_format.is_64_bit_hex("1234567g")
+    assert gw.property_format.is_64_bit_hex("12345abc")
+    assert not gw.property_format.is_64_bit_hex("12345abcd")
+    assert not gw.property_format.is_64_bit_hex("1234567g")
 
     # noinspection PyTypeChecker
-    assert not gridworks.property_format.is_left_right_dot(5)
-    assert not gridworks.property_format.is_left_right_dot("5.a-h")
-    assert gridworks.property_format.is_left_right_dot("a.s")
+    assert not gw.property_format.is_left_right_dot(5)
+    assert not gw.property_format.is_left_right_dot("5.a-h")
+    assert gw.property_format.is_left_right_dot("a.s")
 
+    assert gw.property_format.is_unsigned_short(0)
+    assert gw.property_format.is_unsigned_short(65535)
+    assert not gw.property_format.is_unsigned_short(65536)
+    assert not gw.property_format.is_unsigned_short(-1)
 
-    assert gridworks.property_format.is_unsigned_short(0)
-    assert gridworks.property_format.is_unsigned_short(65535)
-    assert not gridworks.property_format.is_unsigned_short(65536)
-    assert not gridworks.property_format.is_unsigned_short(-1)
-
-    assert gridworks.property_format.is_short_integer(-32768)
-    assert gridworks.property_format.is_short_integer(32767)
-    assert not gridworks.property_format.is_short_integer(-32769)
-    assert not gridworks.property_format.is_short_integer(32768)
+    assert gw.property_format.is_short_integer(-32768)
+    assert gw.property_format.is_short_integer(32767)
+    assert not gw.property_format.is_short_integer(-32769)
+    assert not gw.property_format.is_short_integer(32768)
 
     good_market_name = "rt60gate5.d1.isone"
     bad_market_name_1 = "not_a_market_type.d1.isone"
     bad_market_name_2 = "rt60gate5.d1.not-lrd"
 
-    gridworks.property_format.check_is_market_name(good_market_name)
+    gw.property_format.check_is_market_name(good_market_name)
 
     with pytest.raises(ValueError):
-        gridworks.property_format.check_is_market_name(bad_market_name_1)
+        gw.property_format.check_is_market_name(bad_market_name_1)
 
     with pytest.raises(ValueError):
-        gridworks.property_format.check_is_market_name(bad_market_name_2)
+        gw.property_format.check_is_market_name(bad_market_name_2)
 
     good_market_slot_name = "rt60gate5.d1.isone.ver.keene.1673539200"
     bad_market_slot_name_1 = bad_market_name_1 + ".1673539200"
@@ -52,21 +50,17 @@ def test_property_format():
     bad_slot_start_2 = "rt60gate5.d1.isone.ver.keene.777"
     bad_slot_start_3 = "rt60gate5.d1.isone.ver.keene.1673539205"
 
-    gridworks.property_format.check_is_market_slot_name_lrd_format(
-        good_market_slot_name
-    )
+    gw.property_format.check_is_market_slot_name_lrd_format(good_market_slot_name)
     with pytest.raises(ValueError):
-        gridworks.property_format.check_is_market_slot_name_lrd_format(
-            bad_market_slot_name_1
-        )
+        gw.property_format.check_is_market_slot_name_lrd_format(bad_market_slot_name_1)
 
     with pytest.raises(ValueError):
-        gridworks.property_format.check_is_market_slot_name_lrd_format(bad_slot_start_1)
+        gw.property_format.check_is_market_slot_name_lrd_format(bad_slot_start_1)
 
     with pytest.raises(ValueError):
-        gridworks.property_format.check_is_market_slot_name_lrd_format(bad_slot_start_2)
+        gw.property_format.check_is_market_slot_name_lrd_format(bad_slot_start_2)
     with pytest.raises(ValueError):
-        gridworks.property_format.check_is_market_slot_name_lrd_format(bad_slot_start_3)
+        gw.property_format.check_is_market_slot_name_lrd_format(bad_slot_start_3)
 
 
 def test_predicate_validator():

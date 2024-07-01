@@ -39,7 +39,7 @@
 <xsl:text>
 from typing import List
 from enum import auto
-from gridworks.enums import GwStrEnum
+from gw.enums import GwStrEnum
 
 
 class </xsl:text><xsl:value-of select="$local-class-name"/>
