@@ -30,7 +30,7 @@
 <xsl:variable name="enum-id" select="Enum"/>
 <xsl:for-each select="$airtable//GtEnums/GtEnum[GtEnumId=$enum-id]">
 <xsl:text>
-from gridworks.enums.</xsl:text>
+from gw.enums.</xsl:text>
 <xsl:value-of select="translate(LocalName,'.','_')"/>
 <xsl:text> import </xsl:text>
 <xsl:call-template name="nt-case">

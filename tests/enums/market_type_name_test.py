@@ -1,5 +1,6 @@
 """Tests for schema enum market.type.name.000"""
-from gridworks.enums import MarketTypeName
+
+from gw.enums import MarketTypeName
 
 
 def test_market_type_name() -> None:

@@ -5,6 +5,8 @@ import gw.message as message
 import gw.property_format as property_format
 
 
-
-
-__all__ = ["errors", "property_format", "message", ]
+__all__ = [
+    "errors",
+    "property_format",
+    "message",
+]

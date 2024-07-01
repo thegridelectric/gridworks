@@ -1,5 +1,6 @@
 """Tests for schema enum recognized.currency.unit.000"""
-from gridworks.enums import RecognizedCurrencyUnit
+
+from gw.enums import RecognizedCurrencyUnit
 
 
 def test_recognized_currency_unit() -> None:

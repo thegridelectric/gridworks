@@ -1,8 +1,0 @@
-ARG REMOTE_BASE=bitnami/rabbitmq:3.9.13
-####################################################################################################
-# docker-base - meant to be re-run only rarely
-####################################################################################################
-
-FROM $REMOTE_BASE AS image-base
-
-COPY rabbitconfig/rabbit_definitions_dev.json /tmp/rabbit_definitions.json

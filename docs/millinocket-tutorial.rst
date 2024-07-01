@@ -97,7 +97,7 @@ ValidatorSettings (for the dev TaValidator MollyMetermaid) can be found in
 .. code-block:: python
     :caption: (cont from above)
 
-    import gridworks.algo_utils as algo_utils
+    import gw.algo_utils as algo_utils
     import gwatn.config as config
     from gwatn.dev_utils import DevValidator
 
@@ -152,8 +152,8 @@ the corresponding Python class `TaValidatorcertAlgoCreate <types/tavalidatorcert
 .. code-block:: python
     :caption: Make a tavalidatorcert.algo.create JSON object
 
-    import gridworks.algo_utils as algo_utils
-    import gridworks.api_utils as api_utils
+    import gw.algo_utils as algo_utils
+    import gw.api_utils as api_utils
     from algosdk import encoding
     from algosdk.future import transaction
 

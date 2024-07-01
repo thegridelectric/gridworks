@@ -33,10 +33,10 @@ For more information on Algorand ABIs:
 GridWorks APIs
 ^^^^^^^^^^^^^^^
 
-In order to explore how GridWorks APIs work, please start up a version of the ```gridworks``` package API:
+In order to explore how GridWorks APIs work, please start up a version of the ```gwbase``` package API:
 
 ```
-uvicorn gridworks.rest_api:app --reload  --port 8000
+uvicorn gwbase.rest_api:app --reload  --port 8000
 ```
 
 navigate to
