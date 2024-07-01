@@ -111,15 +111,15 @@ jobs:
           nox --python=${{ matrix.python }}
 
       - name: Upload coverage data
-        if: matrix.session == 'tests' && matrix.python == '3.11' && matrix.os == 'ubuntu-latest'
-        uses: "actions/upload-artifact@v3"
+        if: matrix.session == 'tests' && matrix.python == '3.12' && matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-data
           path: ".coverage.*"
 
       - name: Upload documentation
         if: matrix.session == 'docs-build'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docs
           path: docs/_build
