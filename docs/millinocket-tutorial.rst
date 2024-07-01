@@ -13,7 +13,7 @@ The tutorial is mostly sequential - you must implement earlier steps to complete
 
 Demo Prep
 ---------
-1. You will need Python 3.10 or higher, and `docker <https://docs.docker.com/get-docker/>`_.
+1. You will need Python 3.11 or higher, and `docker <https://docs.docker.com/get-docker/>`_.
 
 2. Make a demo folder and clone these 4 repositories inside it:
   - `gridworks-atn <https://github.com/thegridelectric/gridworks-atn>`_
