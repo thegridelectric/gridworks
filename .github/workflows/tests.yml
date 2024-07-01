@@ -44,14 +44,6 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
 
-      - name: Start World Broker
-        uses: namoshek/rabbitmq-github-action@v1
-        with:
-          version: "3.9.13"
-          ports: "1885:1885 4369:4369 5672:5672 15672:15672 15674:15674 25672:25672"
-          config: ${{ github.workspace }}/.ci/rabbitmq.conf
-          container-name: "rabbit"
-
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v5
         with:
