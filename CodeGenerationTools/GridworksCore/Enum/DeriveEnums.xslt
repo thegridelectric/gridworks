@@ -19,7 +19,7 @@
     <xsl:template match="/">
         <FileSet>
             <FileSetFiles>
-                <xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gwproto') and not (NoVersions = 'true')]">
+                <xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gridworks') and not (NoVersions = 'true')]">
                 <xsl:variable name="enum-id" select="GtEnumId"/>
                 <xsl:variable name="enum-version" select="EnumVersion"/>
                 <xsl:variable name="enum-name" select="EnumName"/>
@@ -32,7 +32,7 @@
                         </xsl:call-template>
                     </xsl:variable>
                     <FileSetFile>
-                                <xsl:element name="RelativePath"><xsl:text>../../../src/gwproto/enums/</xsl:text>
+                                <xsl:element name="RelativePath"><xsl:text>../../../src/gw/enums/</xsl:text>
                                 <xsl:value-of select="translate(LocalName,'.','_')"/><xsl:text>.py</xsl:text></xsl:element>
 
                         <OverwriteMode>Always</OverwriteMode>
@@ -43,7 +43,7 @@
 from typing import List
 from typing import Optional
 
-from gridworks.enums import GwStrEnum
+from gw.enums import GwStrEnum
 
 
 class </xsl:text><xsl:value-of select="$enum-class-name"/>
@@ -63,8 +63,7 @@ class </xsl:text><xsl:value-of select="$enum-class-name"/>
     Enum </xsl:text><xsl:value-of select="Name"/><xsl:text> version </xsl:text><xsl:value-of select="$enum-version"/>
     <xsl:text> in the GridWorks Type registry.
 
-    Used by used by multiple Application Shared Languages (ASLs), including but not limited to
-    gwproto. For more information:
+    Used by used by multiple Application Shared Languages (ASLs). For more information:
       - [ASLs](https://gridworks-type-registry.readthedocs.io/en/latest/)
       - [Global Authority](https://gridworks-type-registry.readthedocs.io/en/latest/enums.html#</xsl:text>
     <xsl:value-of select="translate($enum-name,'.','')"/>

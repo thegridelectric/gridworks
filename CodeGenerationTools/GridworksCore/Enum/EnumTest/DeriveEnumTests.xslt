@@ -19,7 +19,7 @@
     <xsl:template match="/">
         <FileSet>
             <FileSetFiles>
-                <xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gwproto')]">
+                <xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gridworks')]">
                 <xsl:variable name="enum-id" select="GtEnumId"/>
                 <xsl:variable name="version" select="EnumVersion"/>
                 <xsl:variable name="enum-name" select="EnumName"/>
@@ -43,7 +43,7 @@ Tests for enum </xsl:text><xsl:value-of select="Name"/><xsl:text>.</xsl:text><xs
     <xsl:text> from the GridWorks Type Registry.
 """
 
-from gwproto.enums import </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>
+from gw.enums import </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>
 
 
 def test_</xsl:text> <xsl:value-of select="translate(LocalName,'.','_')"/>
@@ -70,7 +70,7 @@ def test_</xsl:text> <xsl:value-of select="translate(LocalName,'.','_')"/>
              <xsl:text>",</xsl:text>
         </xsl:otherwise>
         </xsl:choose>
-       
+
         </xsl:for-each>
     <xsl:text>
     }
@@ -96,7 +96,7 @@ def test_</xsl:text> <xsl:value-of select="translate(LocalName,'.','_')"/>
     <xsl:value-of select="$version"/>
     <xsl:text>"
 </xsl:text>
-    
+
 
     <xsl:for-each select="$airtable//EnumSymbols/EnumSymbol[(Enum = $enum-id) and (Version &lt;= $version)]">
     <xsl:sort select="Idx"  data-type="number"/>
@@ -117,7 +117,7 @@ def test_</xsl:text> <xsl:value-of select="translate(LocalName,'.','_')"/>
     for value in </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.values():
         symbol = </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.value_to_symbol(value)
         assert </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.symbol_to_value(symbol) == value</xsl:text>
-    
+
     </xsl:if>
 
         <!-- Add newline at EOF for git and pre-commit-->

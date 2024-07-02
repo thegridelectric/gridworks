@@ -19,7 +19,7 @@
     <xsl:template match="/">
         <FileSet>
             <FileSetFiles>
-                <xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gwproto') and (EnumType = 'Literal')]">
+                <xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gridworks') and (EnumType = 'Literal')]">
                 <xsl:variable name="enum-id" select="GtEnumId"/>
                 <xsl:variable name="enum-version" select="EnumVersion"/>
                 <xsl:variable name="enum-name" select="EnumName"/>
@@ -31,7 +31,7 @@
                         </xsl:call-template>
                     </xsl:variable>
                     <FileSetFile>
-                                <xsl:element name="RelativePath"><xsl:text>../../../../src/gwproto/enums/</xsl:text>
+                                <xsl:element name="RelativePath"><xsl:text>../../../../src/gw/enums/</xsl:text>
                                 <xsl:value-of select="translate(LocalName,'.','_')"/><xsl:text>.py</xsl:text></xsl:element>
 
                         <OverwriteMode>Always</OverwriteMode>
@@ -39,7 +39,7 @@
 
 
 <xsl:text>
-# Literal Enum: 
+# Literal Enum:
 #  - no additional values can be added over time.
 #  - Sent as-is, not in hex symbol
 from enum import auto

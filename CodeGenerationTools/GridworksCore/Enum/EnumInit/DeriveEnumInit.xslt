@@ -20,12 +20,12 @@
         <FileSet>
 
             <FileSetFile>
-                    <xsl:element name="RelativePath"><xsl:text>../../../../src/gwproto/enums/__init__.py</xsl:text></xsl:element>
+                    <xsl:element name="RelativePath"><xsl:text>../../../../src/gw/enums/__init__.py</xsl:text></xsl:element>
 
                 <OverwriteMode>Always</OverwriteMode>
                 <xsl:element name="FileContents">
 <xsl:text>"""
-GridWorks Enums used in gwproto, the Application Shared Language (ASL) used by SCADA
+GridWorks Enums used in gw, the Application Shared Language (ASL) used by SCADA
 devices and AtomicTNodes to communicate with each other. These enums play a specific structural
 role as semantic "glue" within ASLs.
 
@@ -56,11 +56,13 @@ on these ideas:
   - [ASLs](https://gridwork-type-registry.readthedocs.io/en/latest/asls.html)
 
 
- """</xsl:text>
-<xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gwproto') and not(normalize-space(EnumName)='')]">
+ """
+
+from gw.enums.gw_str_enum import GwStrEnum</xsl:text>
+<xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gridworks') and not(normalize-space(EnumName)='')]">
 <xsl:sort select="LocalEnumName" data-type="text"/>
 <xsl:text>
-from gwproto.enums.</xsl:text>
+from gw.enums.</xsl:text>
 <xsl:value-of select="translate(LocalEnumName,'.','_')"/>
 <xsl:text> import </xsl:text>
 <xsl:call-template name="nt-case">
@@ -72,8 +74,9 @@ from gwproto.enums.</xsl:text>
 <xsl:text>
 
 
-__all__ = [</xsl:text>
-<xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gwproto')]">
+__all__ = [
+    "GwStrEnum",</xsl:text>
+<xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gridworks')]">
 <xsl:sort select="LocalEnumName" data-type="text"/>
 <xsl:variable name="gt-enum-id" select="GtEnumId"/>
 

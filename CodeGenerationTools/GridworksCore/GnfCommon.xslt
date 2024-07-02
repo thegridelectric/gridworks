@@ -53,6 +53,16 @@
 </xsl:template>
 
 
+<xsl:template name="insert-spaces">
+    <xsl:param name="count" select="4"/>
+    <xsl:if test="$count > 0">
+        <xsl:text> </xsl:text>
+        <xsl:call-template name="insert-spaces">
+            <xsl:with-param name="count" select="$count - 1"/>
+        </xsl:call-template>
+    </xsl:if>
+</xsl:template>
+
 <xsl:template name="message-case">
     <xsl:param name="type-name-text" select="''"></xsl:param>
     <xsl:param name="is_first" select="'true'"></xsl:param>
