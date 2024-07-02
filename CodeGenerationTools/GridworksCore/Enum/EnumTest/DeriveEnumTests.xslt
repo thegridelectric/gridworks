@@ -19,10 +19,12 @@
     <xsl:template match="/">
         <FileSet>
             <FileSetFiles>
-                <xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gridworks')]">
-                <xsl:variable name="enum-id" select="Enum"/>
+                <xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gwproto')]">
+                <xsl:variable name="enum-id" select="GtEnumId"/>
+                <xsl:variable name="version" select="EnumVersion"/>
+                <xsl:variable name="enum-name" select="EnumName"/>
                 <xsl:for-each select="$airtable//GtEnums/GtEnum[GtEnumId=$enum-id]">
-                    <xsl:variable name="enum-name-style" select="PythonEnumNameStyle" />
+                    <xsl:variable name="enum-type" select="EnumType" />
                     <xsl:variable name="local-class-name">
                         <xsl:call-template name="nt-case">
                             <xsl:with-param name="type-name-text" select="LocalName" />
@@ -36,43 +38,90 @@
                         <xsl:element name="FileContents">
 
 
-<xsl:text>"""Tests for schema enum </xsl:text><xsl:value-of select="Name"/><xsl:text>"""
-from gw.enums import </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>
+<xsl:text>"""
+Tests for enum </xsl:text><xsl:value-of select="Name"/><xsl:text>.</xsl:text><xsl:value-of select="$version"/>
+    <xsl:text> from the GridWorks Type Registry.
+"""
+
+from gwproto.enums import </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>
 
 
 def test_</xsl:text> <xsl:value-of select="translate(LocalName,'.','_')"/>
     <xsl:text>() -> None:
-
-    assert set(</xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.values()) == set(
-        [
-            </xsl:text>
-    <xsl:for-each select="$airtable//EnumSymbols/EnumSymbol[(Enum = $enum-id)]">
-    <xsl:sort select="Idx"/>
-        <xsl:text>"</xsl:text>
-        <xsl:if test="$enum-name-style = 'Upper'">
+    assert set(</xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.values()) == {</xsl:text>
+    <xsl:for-each select="$airtable//EnumSymbols/EnumSymbol[(Enum = $enum-id) and (Version &lt;= $version)]">
+    <xsl:sort select="Idx"  data-type="number"/>
+        <xsl:choose>
+        <xsl:when test="$enum-type = 'Upper'">
+                <xsl:text>
+        "</xsl:text>
             <xsl:value-of select="translate(translate(LocalValue,'-',''),$lcletters, $ucletters)"/>
-        </xsl:if>
-        <xsl:if test="$enum-name-style ='UpperPython'">
+             <xsl:text>",</xsl:text>
+        </xsl:when>
+        <xsl:when test="$enum-type = 'OldSchool'">
+        <xsl:text>&#10;        </xsl:text>
+            <xsl:value-of select="Symbol"/>
+            <xsl:text>,</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+        <xsl:text>
+        "</xsl:text>
             <xsl:value-of select="LocalValue"/>
-        </xsl:if>
-
-        <xsl:text>",
-            </xsl:text>
+             <xsl:text>",</xsl:text>
+        </xsl:otherwise>
+        </xsl:choose>
+       
         </xsl:for-each>
     <xsl:text>
-        ]
-    )
+    }
 
     assert </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.default() == </xsl:text>
     <xsl:value-of select="$local-class-name"/><xsl:text>.</xsl:text>
-    <xsl:if test="$enum-name-style = 'Upper'">
+    <xsl:choose>
+    <xsl:when test="$enum-type = 'Upper'">
         <xsl:value-of select="translate(translate(DefaultEnumValue,'-',''),$lcletters, $ucletters)"/>
-    </xsl:if>
-    <xsl:if test="$enum-name-style ='UpperPython'">
+    </xsl:when>
+    <xsl:otherwise>
         <xsl:value-of select="DefaultEnumValue"/>
+    </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>
+    assert </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.enum_name() == "</xsl:text>
+    <xsl:value-of select="$enum-name"/>
+    <xsl:text>"</xsl:text>
+
+    <xsl:if test="$enum-type = 'Upper' or $enum-type = 'UpperPython'">
+    <xsl:text>
+    assert </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.enum_version() == "</xsl:text>
+    <xsl:value-of select="$version"/>
+    <xsl:text>"
+</xsl:text>
+    
+
+    <xsl:for-each select="$airtable//EnumSymbols/EnumSymbol[(Enum = $enum-id) and (Version &lt;= $version)]">
+    <xsl:sort select="Idx"  data-type="number"/>
+    <xsl:text>
+    assert </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.version("</xsl:text>
+     <xsl:if test="$enum-type = 'Upper'">
+            <xsl:value-of select="translate(translate(LocalValue,'-',''),$lcletters, $ucletters)"/>
+        </xsl:if>
+        <xsl:if test="$enum-type ='UpperPython'">
+            <xsl:value-of select="LocalValue"/>
+        </xsl:if>
+    <xsl:text>") == "</xsl:text>
+    <xsl:value-of select="Version"/>
+    <xsl:text>"</xsl:text>
+    </xsl:for-each>
+    <xsl:text>
+
+    for value in </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.values():
+        symbol = </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.value_to_symbol(value)
+        assert </xsl:text><xsl:value-of select="$local-class-name"/><xsl:text>.symbol_to_value(symbol) == value</xsl:text>
+    
     </xsl:if>
 
-
+        <!-- Add newline at EOF for git and pre-commit-->
+        <xsl:text>&#10;</xsl:text>
 
 
                         </xsl:element>

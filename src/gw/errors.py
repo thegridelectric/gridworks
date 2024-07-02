@@ -1,11 +1,11 @@
-class SchemaError(Exception):
-    """Base class for Schema errors"""
+class GwTypeError(Exception):
+    """Base class for errors in making GridWorks Types"""
 
     pass
 
 
-class AlgoError(Exception):
-    """Base class for errors related to Algorand"""
+class BlockChainError(Exception):
+    """Base class for errors related to Blockchain"""
 
     pass
 
