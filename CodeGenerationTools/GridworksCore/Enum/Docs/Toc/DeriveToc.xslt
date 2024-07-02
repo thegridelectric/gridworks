@@ -29,7 +29,7 @@ Enum Application Shared Language (ASL) Specifications
 ===============
 
 </xsl:text>
-<xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gwproto')]">
+<xsl:for-each select="$airtable//ProtocolEnums/ProtocolEnum[(normalize-space(ProtocolName) ='gridworks')]">
 <xsl:sort select="VersionedTypeName" data-type="text"/>
 <xsl:variable name="versioned-enum-id" select="VersionedEnum"/>
 <xsl:for-each select="$airtable//VersionedEnums/VersionedEnum[(VersionedEnumId = $versioned-enum-id)  and (Status = 'Active' or Status = 'Pending')]">
