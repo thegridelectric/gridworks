@@ -8,10 +8,8 @@ from typing import no_type_check
 
 from pydantic import BaseModel
 
-import gw.property_format as property_format
 from gw.enums import MessageCategory
 from gw.enums import MessageCategorySymbol
-from gw.errors import SchemaError
 
 
 DEFAULT_STEP_DURATION = 0.1
@@ -39,41 +37,6 @@ def camel_to_snake(name: str) -> str:
 
 def snake_to_camel(word: str) -> str:
     return "".join(x.capitalize() or "_" for x in word.split("_"))
-
-
-def dot_to_underscore(candidate: str) -> str:
-    """Translation between two different formats for a list of alphanumeric
-    words (where the most significant word does not start with a number).
-
-    Args:
-        candidate (str): left-right-dot format. Most significant word on the
-        left, word seperators are periods.
-
-    Raises:
-        SchemaError: if input is not left-right-dot format
-
-    Returns:
-        str:  Same string in LRU format. Seperator is now underscore, most
-        significant word still on the left.
-    """
-    try:
-        property_format.check_is_left_right_dot(candidate)
-    except SchemaError as e:
-        raise SchemaError(f"{candidate} not LrdAliasFormat: {e}!")
-
-    return candidate.replace(".", "_")
-
-
-def underscore_to_dot(candidate: str) -> str:
-    """Replaces underscores to dots in a string, checking that all words between
-    seperators are alphanumeric.
-    """
-    if property_format.is_lru_alias_format(candidate):
-        return candidate.replace("_", ".")
-    else:
-        raise SchemaError(
-            f"{candidate} words with underscore as separator are not alphanumeric!"
-        )
 
 
 def message_category_from_symbol(symbol: MessageCategorySymbol) -> MessageCategory:

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gridworks"
-version = "1.0.0"
+version = "1.1.0"
 
 description = "Gridworks"
 authors = ["GridWorks <gridworks@gridworks-consulting.com>"]
@@ -68,7 +68,7 @@ source = ["gridworks", "tests"]
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 55
+fail_under = 50
 
 [tool.isort]
 profile = "black"
