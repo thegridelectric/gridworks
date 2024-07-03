@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gridworks"
-version = "1.1.1"
+version = "1.1.2"
 
 description = "Gridworks"
 authors = ["GridWorks <gridworks@gridworks-consulting.com>"]
@@ -22,10 +22,8 @@ Changelog = "https://github.com/thegridelectric/gridworks/releases"
 
 [tool.poetry.dependencies]
 python = ">=3.11, <4.0"
-pydantic = "^1.10.2"
-python-dotenv = "^1.0.0"
-
-sphinx-rtd-theme = "^1.1.1" # move to dev dependencies. Look to cookie cutter online help.
+python-dotenv = ">=1.0.0"
+pydantic = ">=2.8.0"
 
 
 [tool.poetry.dev-dependencies]
@@ -54,6 +52,7 @@ sphinx-click = ">=3.0.2"
 typeguard = ">=2.13.3"
 xdoctest = {extras = ["colors"], version = ">=0.15.10"}
 myst-parser = {version = ">=0.16.1"}
+sphinx-rtd-theme = "^1.1.1"
 
 [tool.poetry.scripts]
 gridworks = "gridworks.__main__:main"
