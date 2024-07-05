@@ -46,23 +46,7 @@ The [GNodeFactory](https://github.com/thegridelectric/g-node-factory) currently 
 and does most of the heavy lifting in terms of identity management and authentication in GridWorks. Finally, since the demo
 is a distributed simulation, it needs a method of handling time. That's done by a [TimeCoordinator](https://github.com/thegridelectric/gridworks-timecoordinator) GNode.
 
-## RabbitMQ Infrastructure
 
-All GridWorks repos require a running rabbitMQ dev broker running to pass tests or run dev simulations. Instructions for setting it up:
-
-- Make sure you have [docker](https://www.docker.com/products/docker-desktop/) installed
-- Know whether your computer architecture is x86 or arm
-- Start the dev broker in a docker container:
-  - **x86 architecture**: `./x86.sh`
-  - **arm architecture**: `./arm.sh`
-- Tests for success:
-  1. go to http://0.0.0.0:15672/ - it should look like this:
-
-![alt_text](docs/images/dev-broker-login.png) 2) pytest tests should all passs
-
-Username/password for the dev rabbit broker: `smqPublic/smqPublic`
-
-The [Gridworks broker](docs/gridworks-broker) page has more information on the GridWorks brokers and how to use them for troubleshooting,
 
 ## Contributing
 
