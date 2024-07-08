@@ -5,12 +5,16 @@ from gw.enums import MessageCategory
 from gw.enums import MessageCategorySymbol
 
 
-def test_snake_camel():
+def test_pascal_camel():
     snake = "peaches_cat"
     camel = "PeachesCat"
-    assert gw.utils.snake_to_camel(snake) == camel
-    assert gw.utils.camel_to_snake(camel) == snake
+    assert gw.utils.snake_to_pascal(snake) == camel
+    assert gw.utils.pascal_to_snake(camel) == snake
 
+def test_is_pascal():
+    assert gw.utils.is_pascal_case('not_pascal') == False
+    assert gw.utils.is_pascal_case('notPascal') == False
+    assert gw.utils.is_pascal_case('IsPascal') == True
 
 def test_message_category_from_symbol():
     """

@@ -30,12 +30,13 @@ class RestfulResponse(BaseModel):
 
 snake_add_underscore_to_camel_pattern = re.compile(r"(?<!^)(?=[A-Z])")
 
+def is_pascal_case(s):
+    return re.match(r'^[A-Z][a-zA-Z0-9]*$', s) is not None
 
-def camel_to_snake(name: str) -> str:
+def pascal_to_snake(name: str) -> str:
     return snake_add_underscore_to_camel_pattern.sub("_", name).lower()
 
-
-def snake_to_camel(word: str) -> str:
+def snake_to_pascal(word: str) -> str:
     return "".join(x.capitalize() or "_" for x in word.split("_"))
 
 
