@@ -21,10 +21,10 @@ class Delay:
         self.sleep_duration = duration
         self.restart(delay)
 
-    def restart(self, delay: float):
+    def restart(self, delay: float) -> None:
         self.until = time.time() + delay
 
-    def __call__(self):
+    def __call__(self) -> bool:
         if self.sleep_duration is not None:
             time.sleep(self.sleep_duration)
         if time.time() >= self.until:
@@ -34,7 +34,7 @@ class Delay:
 
 
 def async_delay(delay: Delay) -> AwaitablePredicate:
-    async def async_function():
+    async def async_function() -> bool:
         if delay.sleep_duration is not None:
             await asyncio.sleep(delay.sleep_duration)
         if time.time() >= delay.until:
@@ -46,7 +46,7 @@ def async_delay(delay: Delay) -> AwaitablePredicate:
 
 
 @pytest.mark.asyncio
-async def test_await_for():
+async def test_await_for() -> None:
     delay_time = 0.01
     timeout = delay_time * 2
     retry_duration = delay_time / 4

@@ -9,7 +9,7 @@ def check_is_market_name(v: str) -> None:
         x = v.split(".")
     except AttributeError as e:
         raise ValueError(f"{v} failed to split on '.'") from e
-    if not x[0] in MarketTypeName.values():
+    if x[0] not in MarketTypeName.values():
         raise ValueError(f"{v} not recognized MarketType")
     g_node_alias = ".".join(x[1:])
     check_is_left_right_dot(g_node_alias)
@@ -34,9 +34,8 @@ def check_is_market_slot_name_lrd_format(v: str) -> None:
         x = v.split(".")
     except AttributeError as e:
         raise ValueError(f"{v} failed to split on '.'") from e
-    slot_start = x[-1]
     try:
-        slot_start = int(slot_start)
+        slot_start = int(x[-1])
     except ValueError as e:
         raise ValueError(f"slot start {slot_start} not an int") from e
     check_is_reasonable_unix_time_s(slot_start)

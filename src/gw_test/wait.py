@@ -6,9 +6,12 @@ import time
 from inspect import getframeinfo
 from inspect import stack
 from pathlib import Path
+from types import TracebackType
+from typing import Any
 from typing import Awaitable
 from typing import Callable
 from typing import Optional
+from typing import Type
 from typing import Union
 
 
@@ -24,10 +27,16 @@ class StopWatch:
     end: float = 0
     elapsed: float = 0
 
-    def __enter__(self):
+    def __enter__(self) -> "StopWatch":
         self.start = time.time()
+        return self
 
-    def __exit__(self, type_, value, traceback):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> None:
         self.end = time.time()
         self.elapsed = self.end - self.start
 
@@ -39,8 +48,8 @@ async def await_for(  # noqa: C901
     raise_timeout: bool = True,
     retry_duration: float = 0.1,
     err_str_f: Optional[ErrorStringFunction] = None,
-    logger: Optional[logging.Logger | logging.LoggerAdapter] = None,
-    error_dict: Optional[dict] = None,
+    logger: Optional[logging.Logger | logging.LoggerAdapter[Any]] = None,
+    error_dict: Optional[dict[Any, Any]] = None,
 ) -> bool:
     """Similar to wait_for(), but awaitable. Instead of sleeping after a False resoinse from function f, await_for
     will asyncio.sleep(), allowing the event loop to continue. Additionally, f may be either a function or a coroutine.
@@ -68,14 +77,14 @@ async def await_for(  # noqa: C901
     result = False
     if now >= until:
         if f_is_async:
-            result = await f()
+            result = await f()  # type: ignore
         else:
-            result = f()
+            result = f()  # type: ignore
     while now < until and not result:
         if f_is_async:
-            result = await f()
+            result = await f()  # type: ignore
         else:
-            result = f()
+            result = f()  # type: ignore
         if not result:
             now = time.time()
             if now < until:
@@ -84,9 +93,9 @@ async def await_for(  # noqa: C901
                 # oops! we overslept
                 if now >= until:
                     if f_is_async:
-                        result = await f()
+                        result = await f()  # type: ignore
                     else:
-                        result = f()
+                        result = f()  # type: ignore
     if result:
         return True
     else:

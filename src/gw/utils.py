@@ -30,7 +30,7 @@ class RestfulResponse(BaseModel):
 snake_add_underscore_to_camel_pattern = re.compile(r"(?<!^)(?=[A-Z])")
 
 
-def is_pascal_case(s):
+def is_pascal_case(s: str) -> bool:
     return re.match(r"^[A-Z][a-zA-Z0-9]*$", s) is not None
 
 
@@ -97,7 +97,7 @@ class MessageSummary:
         actor_alias: str,
         topic: str,
         payload_object: Any = None,
-        broker_flag=" ",
+        broker_flag: str = " ",
         timestamp: Optional[datetime.datetime] = None,
     ) -> str:
         """
