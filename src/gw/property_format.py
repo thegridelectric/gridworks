@@ -7,9 +7,9 @@ from gw.enums import MarketTypeName
 def check_is_market_name(v: str) -> None:
     try:
         x = v.split(".")
-    except AttributeError:
-        raise ValueError(f"{v} failed to split on '.'")
-    if not x[0] in MarketTypeName.values():
+    except AttributeError as e:
+        raise ValueError(f"{v} failed to split on '.'") from e
+    if x[0] not in MarketTypeName.values():
         raise ValueError(f"{v} not recognized MarketType")
     g_node_alias = ".".join(x[1:])
     check_is_left_right_dot(g_node_alias)
@@ -32,22 +32,23 @@ def check_is_market_slot_name_lrd_format(v: str) -> None:
     """
     try:
         x = v.split(".")
-    except AttributeError:
-        raise ValueError(f"{v} failed to split on '.'")
-    slot_start = x[-1]
+    except AttributeError as e:
+        raise ValueError(f"{v} failed to split on '.'") from e
+    slot_start_str = x[-1]
     try:
-        slot_start = int(slot_start)
-    except ValueError:
-        raise ValueError(f"slot start {slot_start} not an int")
-    check_is_reasonable_unix_time_s(slot_start)
-    if slot_start % 300 != 0:
-        raise ValueError(f"slot start {slot_start} not a multiple of 300")
+        slot_start = int(x[-1])
+    except ValueError as e:
+        raise ValueError(f"slot start {slot_start_str} not an int") from e
+    else:
+        check_is_reasonable_unix_time_s(slot_start)
+        if slot_start % 300 != 0:
+            raise ValueError(f"slot start {slot_start} not a multiple of 300")
 
     market_name = ".".join(x[:-1])
     try:
         check_is_market_name(market_name)
     except ValueError as e:
-        raise ValueError(f"e")
+        raise ValueError(e) from e
     market_type = MarketType.by_id[MarketTypeName(x[0])]
     if not slot_start % (market_type.duration_minutes * 60) == 0:
         raise ValueError(
@@ -68,8 +69,8 @@ def check_is_left_right_dot(candidate: str) -> None:
     """
     try:
         x: List[str] = candidate.split(".")
-    except:
-        raise ValueError("Failed to seperate into words with split'.'")
+    except Exception as e:
+        raise ValueError("Failed to seperate into words with split'.'") from e
     first_word = x[0]
     first_char = first_word[0]
     if not first_char.isalpha():

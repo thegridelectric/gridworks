@@ -1,15 +1,10 @@
-from typing import Any
-
 import pytest
-from pydantic import BaseModel
-from pydantic import ValidationError
 
-import gw
 from gw import check_is_market_name
 from gw import check_is_market_slot_name_lrd_format
 
 
-def test_property_format():
+def test_property_format() -> None:
 
     good_market_name = "rt60gate5.d1.isone"
     bad_market_name_1 = "not_a_market_type.d1.isone"

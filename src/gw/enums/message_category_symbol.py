@@ -74,7 +74,7 @@ class MessageCategorySymbol(GwStrEnum):
         if value is None:
             return "000"
         if not isinstance(value, str):
-            raise ValueError(f"This method applies to strings, not enums")
+            raise ValueError("This method applies to strings, not enums")
         if value not in value_to_version.keys():
             raise ValueError(f"Unknown enum value: {value}")
         return value_to_version[value]

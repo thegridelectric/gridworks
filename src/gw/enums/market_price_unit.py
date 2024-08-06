@@ -56,7 +56,7 @@ class MarketPriceUnit(GwStrEnum):
         if value is None:
             return "000"
         if not isinstance(value, str):
-            raise ValueError(f"This method applies to strings, not enums")
+            raise ValueError("This method applies to strings, not enums")
         if value not in value_to_version.keys():
             raise ValueError(f"Unknown enum value: {value}")
         return value_to_version[value]
@@ -98,7 +98,7 @@ class MarketPriceUnit(GwStrEnum):
         Provides the encoding symbol for a MarketPriceUnit enum to send in seriliazed messages.
 
         Args:
-            symbol (str): The candidate value.
+            value (str): The candidate value.
 
         Returns:
             str: The symbol encoding that value. If the value is not recognized -

@@ -1,3 +1,5 @@
+# type: ignore
+
 """Nox sessions."""
 
 import os
@@ -7,7 +9,7 @@ import sys
 from pathlib import Path
 from textwrap import dedent
 
-import nox
+import nox  # noqa
 
 
 try:
@@ -28,10 +30,8 @@ python_versions = ["3.11", "3.12"]
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
     "pre-commit",
-    # "safety",
     "mypy",
     "tests",
-    # "typeguard",
     "xdoctest",
     "docs-build",
 )
@@ -122,12 +122,12 @@ def precommit(session: Session) -> None:
     ]
     session.install(
         "black",
-        "darglint",
+        # "darglint",
         "flake8",
         "flake8-bandit",
         "flake8-bugbear",
-        # "flake8-docstrings",
-        # "flake8-rst-docstrings",
+        "flake8-docstrings",
+        "flake8-rst-docstrings",
         "isort",
         "pep8-naming",
         "pre-commit",
@@ -137,14 +137,6 @@ def precommit(session: Session) -> None:
     session.run("pre-commit", *args)
     if args and args[0] == "install":
         activate_virtualenv_in_precommit_hooks(session)
-
-
-@session(python=python_versions[0])
-def safety(session: Session) -> None:
-    """Scan dependencies for insecure packages."""
-    requirements = session.poetry.export_requirements()
-    session.install("safety")
-    session.run("safety", "check", "--full-report", f"--file={requirements}")
 
 
 @session(python=python_versions)
@@ -181,14 +173,6 @@ def coverage(session: Session) -> None:
         session.run("coverage", "combine")
 
     session.run("coverage", *args)
-
-
-@session(python=python_versions[0])
-def typeguard(session: Session) -> None:
-    """Runtime type checking using Typeguard."""
-    session.install(".")
-    session.install("pytest", "typeguard", "pygments")
-    session.run("pytest", f"--typeguard-packages={package}", *session.posargs)
 
 
 @session(python=python_versions)

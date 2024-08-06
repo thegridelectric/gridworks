@@ -4,14 +4,14 @@ devices and AtomicTNodes to communicate with each other. These enums play a spec
 role as semantic "glue" within ASLs.
 
 Key attributes:
-  - Enum values are translated into "GridWorks Type Enum Symbols" (GtEnumSymbols) when embedded
+- Enum values are translated into "GridWorks Type Enum Symbols" (GtEnumSymbols) when embedded
   in a serialized type sent as a message from one Application and/or Actor to another.
-  - Each Enum has a unique name in the type registry (like spaceheat.telemetry.name), along
+- Each Enum has a unique name in the type registry (like spaceheat.telemetry.name), along
   with a version (like 001).
-  - That name are interpretted locally in the SDK and do not necessarily carry the larger
+- That name are interpretted locally in the SDK and do not necessarily carry the larger
   context of the unique type registry name (for example gwproto uses TelemetryName, since
   the `spaceheat` context goes without saying).
-  - Each Value/Symbol pair also has a version. Value/Symbol pairs cannot be changed or removed.
+- Each Value/Symbol pair also has a version. Value/Symbol pairs cannot be changed or removed.
   The only adjustments that can be made to an enum are adding more Value/Symbols. This is to
   support forwards- and backwards- compatability in GridWorks Types that use these enums.
 

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gridworks"
-version = "1.1.6"
+version = "1.1.7"
 
 description = "Gridworks"
 authors = ["GridWorks <gridworks@gridworks-consulting.com>"]
@@ -23,8 +23,7 @@ Changelog = "https://github.com/thegridelectric/gridworks/releases"
 [tool.poetry.dependencies]
 python = ">=3.11, <4.0"
 python-dotenv = ">=1.0.0"
-pydantic = ">=1.10.2"
-#pydantic = ">=2.8.0"
+pydantic = "^2.8.0"
 
 
 [tool.poetry.dev-dependencies]
@@ -32,7 +31,7 @@ pytest-asyncio = "^0.20.3"
 Pygments = ">=2.10.0"
 black = ">=21.10b0"
 coverage = {extras = ["toml"], version = ">=6.2"}
-darglint = ">=1.8.1"
+# darglint = ">=1.8.1"
 flake8 = ">=4.0.1"
 flake8-bandit = ">=2.1.2"
 flake8-bugbear = ">=21.9.2"
@@ -46,17 +45,12 @@ pre-commit = ">=2.16.0"
 pre-commit-hooks = ">=4.1.0"
 pytest = ">=6.2.5"
 pyupgrade = ">=2.29.1"
-safety = ">=1.10.3"
 sphinx = ">=4.3.2"
 sphinx-autobuild = ">=2021.3.14"
 sphinx-click = ">=3.0.2"
-typeguard = ">=2.13.3"
 xdoctest = {extras = ["colors"], version = ">=0.15.10"}
 myst-parser = {version = ">=0.16.1"}
 sphinx-rtd-theme = "^1.1.1"
-
-[tool.poetry.scripts]
-gridworks = "gridworks.__main__:main"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
@@ -78,10 +72,11 @@ lines_after_imports = 2
 [tool.mypy]
 strict = true
 warn_unreachable = true
-pretty = true
+pretty = false
 show_column_numbers = true
 show_error_codes = true
-show_error_context = true
+show_error_context = false
+show_absolute_path = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

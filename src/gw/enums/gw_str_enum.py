@@ -1,4 +1,6 @@
 import enum
+from typing import Any
+from typing import Sequence
 
 
 class GwStrEnum(str, enum.Enum):
@@ -15,5 +17,8 @@ class GwStrEnum(str, enum.Enum):
 
     """
 
-    def _generate_next_value_(name, start, count, last_values):
-        return name
+    @staticmethod
+    def _generate_next_value_(
+        name: Any, start: int, count: int, last_values: Sequence[Any]
+    ) -> str:
+        return str(name)

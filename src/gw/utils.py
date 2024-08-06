@@ -4,7 +4,6 @@ import re
 import time
 from typing import Any
 from typing import Optional
-from typing import no_type_check
 
 from pydantic import BaseModel
 
@@ -30,11 +29,14 @@ class RestfulResponse(BaseModel):
 
 snake_add_underscore_to_camel_pattern = re.compile(r"(?<!^)(?=[A-Z])")
 
-def is_pascal_case(s):
-    return re.match(r'^[A-Z][a-zA-Z0-9]*$', s) is not None
+
+def is_pascal_case(s: str) -> bool:
+    return re.match(r"^[A-Z][a-zA-Z0-9]*$", s) is not None
+
 
 def pascal_to_snake(name: str) -> str:
     return snake_add_underscore_to_camel_pattern.sub("_", name).lower()
+
 
 def snake_to_pascal(word: str) -> str:
     return "".join(x.capitalize() or "_" for x in word.split("_"))
@@ -88,7 +90,6 @@ class MessageSummary:
         "  {payload_type}"
     )
 
-    @no_type_check
     @classmethod
     def format(
         cls,
@@ -96,7 +97,7 @@ class MessageSummary:
         actor_alias: str,
         topic: str,
         payload_object: Any = None,
-        broker_flag=" ",
+        broker_flag: str = " ",
         timestamp: Optional[datetime.datetime] = None,
     ) -> str:
         """
