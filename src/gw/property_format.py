@@ -34,13 +34,15 @@ def check_is_market_slot_name_lrd_format(v: str) -> None:
         x = v.split(".")
     except AttributeError as e:
         raise ValueError(f"{v} failed to split on '.'") from e
+    slot_start_str = x[-1]
     try:
         slot_start = int(x[-1])
     except ValueError as e:
-        raise ValueError(f"slot start {slot_start} not an int") from e
-    check_is_reasonable_unix_time_s(slot_start)
-    if slot_start % 300 != 0:
-        raise ValueError(f"slot start {slot_start} not a multiple of 300")
+        raise ValueError(f"slot start {slot_start_str} not an int") from e
+    else:
+        check_is_reasonable_unix_time_s(slot_start)
+        if slot_start % 300 != 0:
+            raise ValueError(f"slot start {slot_start} not a multiple of 300")
 
     market_name = ".".join(x[:-1])
     try:
