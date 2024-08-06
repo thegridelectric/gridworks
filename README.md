@@ -46,8 +46,6 @@ The [GNodeFactory](https://github.com/thegridelectric/g-node-factory) currently 
 and does most of the heavy lifting in terms of identity management and authentication in GridWorks. Finally, since the demo
 is a distributed simulation, it needs a method of handling time. That's done by a [TimeCoordinator](https://github.com/thegridelectric/gridworks-timecoordinator) GNode.
 
-
-
 ## Contributing
 
 Contributions are very welcome.

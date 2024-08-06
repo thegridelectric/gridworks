@@ -32,7 +32,7 @@ class StopWatch:
         self.elapsed = self.end - self.start
 
 
-async def await_for(
+async def await_for(  # noqa: C901
     f: Union[Predicate, AwaitablePredicate],
     timeout: float,
     tag: str = "",

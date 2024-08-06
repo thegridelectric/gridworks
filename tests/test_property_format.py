@@ -1,10 +1,5 @@
-from typing import Any
-
 import pytest
-from pydantic import BaseModel
-from pydantic import ValidationError
 
-import gw
 from gw import check_is_market_name
 from gw import check_is_market_slot_name_lrd_format
 

@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 from textwrap import dedent
 
-import nox # noqa
+import nox  # noqa
 
 
 try:
