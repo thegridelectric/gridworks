@@ -30,7 +30,7 @@ on these ideas:
   - [ASLs](https://gridwork-type-registry.readthedocs.io/en/latest/asls.html)
 
 
- """
+"""
 
 from gw.enums.gw_str_enum import GwStrEnum
 from gw.enums.market_price_unit import MarketPriceUnit
