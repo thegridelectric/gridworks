@@ -1,12 +1,13 @@
 from enum import StrEnum
 from typing import Any, List, Optional, Self
 
+
 class GwStrEnum(StrEnum):
     """
     Mimics fastapi-utils use of StrEnum, which diverges from the
     python-native StrEnum for python 3.11+.  Also, fills in with default
     value if a string does not exist in the enum.
-    
+
     Specifically (re difference with python StrEnum) if
 
     class Foo(GwStrEnum):
@@ -17,6 +18,7 @@ class GwStrEnum(StrEnum):
     Foo.Bar.value is 'Bar' (instead of 'bar')
 
     """
+
     @staticmethod
     def _generate_next_value_(
         name: str,
@@ -50,7 +52,7 @@ class SymbolizedEnum(GwStrEnum):
     @classmethod
     def value_to_symbol(cls, value: str) -> str:
         raise NotImplementedError
-    
+
     @classmethod
     def symbols(cls) -> List[str]:
         raise NotImplementedError
