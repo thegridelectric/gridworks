@@ -26,3 +26,37 @@ def test_message_category_from_symbol() -> None:
             assert gw.utils.message_category_from_symbol(s) == MessageCategory.Unknown
         else:
             assert gw.utils.message_category_from_symbol(s) != MessageCategory.Unknown
+
+
+def test_recursively_pascal() -> None:
+    d = {
+        "FromGNodeAlias": "hw1.isone.me.versant.keene.beech.scada",
+        "DataChannelList": [
+            {
+                "Name": "hp-odu-pwr",
+                "DisplayName": "HP ODU Power",
+            },
+        ],
+    }
+    d1 = {
+        "FromGNodeAlias": "hw1.isone.me.versant.keene.beech.scada",
+        "DataChannelList": [
+            {
+                "Name": "hp-odu-pwr",
+                "display_name": "HP ODU Power",
+            },
+        ],
+    }
+    d2 = {
+        "FromGNodeAlias": "hw1.isone.me.versant.keene.beech.scada",
+        "DataChannelList": [
+            {
+                "Name": "hp-odu-pwr",
+                "DisplayName": "HP ODU Power",
+            },
+        ],
+        "Foo": {"bar": 0},
+    }
+    assert gw.utils.recursively_pascal(d)
+    assert not gw.utils.recursively_pascal(d1)
+    assert not gw.utils.recursively_pascal(d2)

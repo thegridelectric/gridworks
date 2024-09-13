@@ -54,6 +54,7 @@ def recursively_pascal(d: dict) -> bool:
     # If it's neither a dict nor a list, return True (nothing to check)
     return True
 
+
 def pascal_to_snake(name: str) -> str:
     return snake_add_underscore_to_camel_pattern.sub("_", name).lower()
 
