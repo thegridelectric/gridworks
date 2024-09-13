@@ -34,6 +34,26 @@ def is_pascal_case(s: str) -> bool:
     return re.match(r"^[A-Z][a-zA-Z0-9]*$", s) is not None
 
 
+def recursively_pascal(d: dict) -> bool:
+    """
+    Checks that all dict keys are pascal case, all the way down
+    """
+    if isinstance(d, dict):
+        # Check if all keys in the dictionary are in PascalCase
+        for key in d:
+            if not is_pascal_case(key):
+                return False
+            # Recursively check nested dictionaries or lists
+            if not recursively_pascal(d[key]):
+                return False
+    elif isinstance(d, list):
+        # Recursively check if dictionaries or lists inside a list pass the test
+        for item in d:
+            if not recursively_pascal(item):
+                return False
+    # If it's neither a dict nor a list, return True (nothing to check)
+    return True
+
 def pascal_to_snake(name: str) -> str:
     return snake_add_underscore_to_camel_pattern.sub("_", name).lower()
 
