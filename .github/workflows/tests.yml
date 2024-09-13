@@ -15,7 +15,7 @@ jobs:
           - { python: "3.11", os: "ubuntu-latest", session: "pre-commit" }
           #- { python: "3.12", os: "ubuntu-latest", session: "mypy" }
           - { python: "3.11", os: "ubuntu-latest", session: "tests" }
-          - { python: "3.12", os: "ubuntu-latest", session: "tests" }
+          - { python: "3.12", os: "ubuntu-latest", session: "tests", coverage: true}
           # - { python: "3.12", os: "windows-latest", session: "tests" }
           # - { python: "3.12", os: "macos-latest", session: "tests" }
           # - { python: "3.12", os: "ubuntu-latest", session: "xdoctest" }
@@ -97,20 +97,33 @@ jobs:
           restore-keys: |
             ${{ steps.pre-commit-cache.outputs.result }}-
 
-      - name: Run Nox
+      - name: Run Tests with coverage
+        if: matrix.session == 'tests' && matrix.coverage == true
+        run: |
+          nox --python=${{ matrix.python }}
+
+      - name: Run Tests without coverage
+        if: matrix.session == 'tests' && matrix.coverage != true
+        run: |
+          nox --python=${{ matrix.python }} -- --no-coverage
+
+      - name: Run non-test session
+        if: matrix.session != 'tests'
         run: |
           nox --python=${{ matrix.python }}
 
       - name: Upload coverage data
-        if: matrix.session == 'tests' && matrix.python == '3.12' && matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
+        if: always() && matrix.session == 'tests' && matrix.coverage == true
+        uses: "actions/upload-artifact@v4.4.0"
         with:
           name: coverage-data
           path: ".coverage.*"
+          if-no-files-found: error
+          include-hidden-files: true
 
       - name: Upload documentation
         if: matrix.session == 'docs-build'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.4.0
         with:
           name: docs
           path: docs/_build
