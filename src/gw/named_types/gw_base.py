@@ -18,6 +18,13 @@ class GwBase(BaseModel):
         populate_by_name=True,
     )
 
+    def to_type(self) -> bytes:
+        return self.model_dump_json(exclude_none=True, by_alias=True)
+
+    def to_dict(self) -> Dict[str, Any]:
+        bytes = self.model_dump_json(exclude_none=True, by_alias=True)
+        return json.loads(bytes)
+
     @classmethod
     def from_type(cls, bytes) -> T:
         try:
@@ -35,17 +42,6 @@ class GwBase(BaseModel):
         except ValidationError as e:
             raise GwTypeError(f"Pydantic validation error: {e}") from e
         return t
-
-    def to_dict(self) -> Dict[str, Any]:
-        d = self.model_dump_json(exclude_none=True, by_alias=True)
-        return d
-
-    def to_type(self) -> bytes:
-        """
-        Serialize to the get.hourly.price.forecast.channel.000 representation designed to send in a message.
-        """
-        json_string = json.dumps(self.to_dict())
-        return json_string.encode("utf-8")
 
     @classmethod
     def type_name_value(cls) -> str:
