@@ -36,7 +36,6 @@ class GwBase(BaseModel):
             raise GwTypeError(f"Pydantic validation error: {e}") from e
         return t
 
-
     def to_dict(self) -> Dict[str, Any]:
         d = self.model_dump_json(exclude_none=True, by_alias=True)
         return d
