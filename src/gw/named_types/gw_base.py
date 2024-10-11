@@ -16,7 +16,6 @@ class GwBase(BaseModel):
         alias_generator=snake_to_pascal,
         frozen=True,
         populate_by_name=True,
-        use_enum_values=True,
     )
 
     @classmethod
@@ -37,8 +36,9 @@ class GwBase(BaseModel):
             raise GwTypeError(f"Pydantic validation error: {e}") from e
         return t
 
+
     def to_dict(self) -> Dict[str, Any]:
-        d = self.model_dump(exclude_none=True, by_alias=True)
+        d = self.model_dump_json(exclude_none=True, by_alias=True)
         return d
 
     def to_type(self) -> bytes:
