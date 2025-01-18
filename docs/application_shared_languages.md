@@ -10,7 +10,7 @@ Every word in an ASL is expressed as either a Named Type or Named Enum with:
 - **TypeName/EnumName**: A unique LeftRightDot identifier (e.g., `layout.lite`) where:
   - Words are lowercase alphanumeric, with the first leter of the first word being a letter
   - Words are separated by dots
-- **Version**: Semantic version string (e.g., "000", "004") 
+- **Version**: Semantic version string (e.g., "000", "004")
 - **Structure**: JSON-serializable format for types, value set for enums
 - **Ownership**: Single maintainer responsible for versioning and updates
 
@@ -58,7 +58,7 @@ class TelemetryName(GwStrEnum):
     WaterTempCTimes1000 = auto()
     WaterTempFTimes1000 = auto()
     GpmTimes100 = auto()
-    
+
     # Version 001
     VoltageRmsMilliVolts = auto()
     CurrentRmsMicroAmps = auto()
@@ -181,7 +181,7 @@ class MainAutoState(GwStrEnum):
     @classmethod
     def default(cls) -> "MainAutoState":
         return cls.HomeAlone
-    
+
     @classmethod
     def enum_version(cls) -> str:
         return "000"
