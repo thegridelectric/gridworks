@@ -47,3 +47,8 @@ class GwBase(BaseModel):
     def type_name_value(cls) -> str:
         # Automatically return the type_name defined in the subclass
         return cls.model_fields["type_name"].default
+
+    @classmethod
+    def version_value(cls) -> str:
+        # return the Version defined in the subclass
+        return cls.model_fields["version"].default
