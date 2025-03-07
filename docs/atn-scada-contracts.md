@@ -1,21 +1,18 @@
 # ATN-SCADA Contracts: Overview
 
-The relationship between an Atomic Transactive Node (ATN) and a Supervisory Control and Data Acquisition (SCADA) system represents a critical partnership in delivering heat to building occupants while supporting a balanced electric griid.
+The relationship between an Atomic Transactive Node (ATN) and a Supervisory Control and Data Acquisition (SCADA) system represents a critical partnership in delivering heat to building occupants while reducing heating costs (and providing grid balancing) through electricity market participation.
 
-While these systems may be operated by different entities with distinct responsibilities, they must work in concert to:
+While these systems may be operated by different entities with distinct responsibilities, they must work in concert to maintain comfortable temperatures for building occupants.
 
- 1. Maintain comfortable temperatures for building occupants
- 2. Optimize electricity costs through market participation
- 3. Ensure reliable system operation
- 4. Provide transparent accountability
+The relationship is managed by a set of **contracts**. These contracts come in two categories.
 
-The relationship is managed by a set of **contracts**. These contracts come in two categories
-  1) **DispatchContracts** These are contracts that last the duration of an energy market period. For example, the initial Millinocket project has `SlowDispatchContracts` that specify using a certain amount of electrical energy within a time period, but do not have any particular power contraints.
-  2) **RepresentationContracts**  These are long-lasting contracts (multi-year) that reflect the relationship between a homeowner and an aggregator. They signal the long-standing agreement by the owner of the TerminalAsset to 
-    - have their Scada **agree** to DispatchContracts provided by the Aggregator's AtomicTNode
-    - have the Atn enter into market positions on their behalf
-  This contract is designed to be backed by an Algorand blockchain `TaTradingDeed` - a 
-  non fungible token that the owner of the heating system provides to an Aggregator.
+**DispatchContracts** These are contracts that last the duration of an energy market period. For example, the initial Millinocket project has `SlowDispatchContracts` that specify using a certain amount of electrical energy within a time period, but do not have any particular power contraints.
+
+**RepresentationContracts**  These are long-lasting contracts (multi-year) articulating the relationship between a homeowner and an aggregator. They signal the agreement by the owner of the TerminalAsset to:
+- have their Scada **agree** to DispatchContracts provided by the Aggregator's ATN, and
+- have the ATN enter into market positions on their behalf.
+
+This contract is designed to be backed by an blockchain Non-Fungible Token that the owner of the heating system provides to an Aggregator.
 
 ## Distinct Responsibilities
 The ATN and SCADA have separate but complementary roles:
@@ -24,7 +21,7 @@ The ATN and SCADA have separate but complementary roles:
  - Participates in electricity markets
  - Optimizes energy costs
  - Responsible for Service Level Agreement except in edge cases
- - Holds trading rights granted by homeowner
+ - Holds trading rights granted by owner of the heating system (`TaTradingRights`, the Algorand NFT)
  - Issues dispatch contracts to SCADA
 
 **SCADA**
@@ -36,7 +33,7 @@ The ATN and SCADA have separate but complementary roles:
 
 **Blockchain Umpire**
 
-To ensure fair and transparent operation, a blockchain-based umpire serves as the authoritative arbiter of contract states. The umpire does not actively control system operation, but rather serves as a trusted source of truth for Contract status (Created, Active, Completed, etc.) and other forms of performance verification. This will help provide a trusted foundation for dispute resolution and trading rights validation.
+A blockchain-based umpire serves as the authoritative arbiter of contract states. The umpire does not actively control system operation, but rather serves as a trusted source of truth for Contract status (Created, Active, Completed, etc.) and other forms of performance verification. This will help provide a trusted foundation for dispute resolution and trading rights validation.
 
 **Message Sequencing**
 
