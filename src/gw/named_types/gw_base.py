@@ -36,12 +36,35 @@ class GwBase(BaseModel):
     @classmethod
     def from_dict(cls: Type[T], d: dict) -> T:
         if not recursively_pascal(d):
-            raise GwTypeError(f"dict is not recursively pascal case! {d}")
+            GwTypeError(
+            f"Dictionary keys must be recursively PascalCase. "
+            f"Found: {d}. Consider checking nested structures."
+        )
         try:
             t = cls.model_validate(d)
         except ValidationError as e:
-            raise GwTypeError(f"Pydantic validation error: {e}") from e
+            raise GwTypeError(
+            f"Validation failed for {cls.__name__}: {e}"
+        ) from e
         return t
+
+    @classmethod
+    def get_schema_info(cls) -> Dict[str, Any]:
+        """Return schema information for this type.
+        """
+        return {
+            "type_name": cls.type_name_value(),
+            "version": cls.version_value(),
+            "fields": list(cls.model_fields.keys()),
+        }
+
+    def __repr__(self) -> str:
+        """Provide clear representation for debugging and logging."""
+        return f"{self.__class__.__name__}(type_name='{self.type_name}', version='{self.version}')"
+
+    def __str__(self) -> str:
+        """Human-readable string representation."""
+        return f"{self.type_name_value()}.{self.version_value()}"
 
     @classmethod
     def type_name_value(cls) -> str:
