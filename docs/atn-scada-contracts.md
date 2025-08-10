@@ -26,7 +26,7 @@ The ATN and SCADA have separate but complementary roles:
 
 **SCADA**
  - Controls physical heating equipment
- - Final backstop for homeowner safety and comfort 
+ - Final backstop for homeowner safety and comfort
  - Monitors system performance
  - Executes dispatch contracts from ATN
 

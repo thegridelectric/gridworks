@@ -5,14 +5,14 @@ from gw.enums import GwStrEnum
 
 class MessageCategory(GwStrEnum):
     """
-    Categorizes message delivery patterns for ASL types. See [Message Delivery 
-        Architecture](https://gridworks.readthedocs.io/message-delivery-architecture/) 
+    Categorizes message delivery patterns for ASL types. See [Message Delivery
+        Architecture](https://gridworks.readthedocs.io/message-delivery-architecture/)
         for details.
     Values:
       - Unknown: Default value when message pattern cannot be determined
       - JsonDirect: Point-to-point delivery between specific actors
         Use for: commands, responses, targeted telemetry
-      - JsonBroadcast: One-to-many delivery to multiple recipients 
+      - JsonBroadcast: One-to-many delivery to multiple recipients
         Use for: market updates, price and weather forecasts, shared data
       - ScadaWrapped: Messages sent from SCADA systems that may require acknowledgement tracking
       - Serial: Bandwidth-optimized binary format (future)

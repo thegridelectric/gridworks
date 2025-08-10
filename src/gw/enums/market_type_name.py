@@ -8,18 +8,18 @@ class MarketTypeName(GwStrEnum):
     Categorizes different markets run by MarketMaker
     Values:
       - unknown: Default unknown
-      - rt5gate5: Real-time energy, 5 minute MarketSlots, gate closing 5 minutes prior to 
+      - rt5gate5: Real-time energy, 5 minute MarketSlots, gate closing 5 minutes prior to
         start
-      - rt60gate5: Real-time energy, 60 minute MarketSlots, gate closing 5 minutes prior to 
+      - rt60gate5: Real-time energy, 60 minute MarketSlots, gate closing 5 minutes prior to
         start
       - da60: Day-ahead energy, 60 minute MarketSlots
-      - rt60gate30: Real-time energy, 60 minute MarketSlots, gate closing 30 minutes prior 
+      - rt60gate30: Real-time energy, 60 minute MarketSlots, gate closing 30 minutes prior
         to start
-      - rt15gate5: Real-time energy, 15 minute MarketSlots, gate closing 5 minutes prior to 
+      - rt15gate5: Real-time energy, 15 minute MarketSlots, gate closing 5 minutes prior to
         start
-      - rt30gate5: Real-time energy, 30 minute MarketSlots, gate closing 5 minutes prior to 
+      - rt30gate5: Real-time energy, 30 minute MarketSlots, gate closing 5 minutes prior to
         start
-      - rt60gate30b: Real-time energy, 30 minute MarketSlots, gate closing 5 minutes prior to 
+      - rt60gate30b: Real-time energy, 30 minute MarketSlots, gate closing 5 minutes prior to
         start, QuantityUnit AvgkW
 
     For more information:

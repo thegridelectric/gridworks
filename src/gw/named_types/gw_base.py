@@ -37,21 +37,18 @@ class GwBase(BaseModel):
     def from_dict(cls: Type[T], d: dict) -> T:
         if not recursively_pascal(d):
             GwTypeError(
-            f"Dictionary keys must be recursively PascalCase. "
-            f"Found: {d}. Consider checking nested structures."
-        )
+                f"Dictionary keys must be recursively PascalCase. "
+                f"Found: {d}. Consider checking nested structures."
+            )
         try:
             t = cls.model_validate(d)
         except ValidationError as e:
-            raise GwTypeError(
-            f"Validation failed for {cls.__name__}: {e}"
-        ) from e
+            raise GwTypeError(f"Validation failed for {cls.__name__}: {e}") from e
         return t
 
     @classmethod
     def get_schema_info(cls) -> Dict[str, Any]:
-        """Return schema information for this type.
-        """
+        """Return schema information for this type."""
         return {
             "type_name": cls.type_name_value(),
             "version": cls.version_value(),

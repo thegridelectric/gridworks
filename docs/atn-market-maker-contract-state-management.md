@@ -2,7 +2,7 @@
 
 ## Overview
 
-The GridWorks system manages constraints on the electric grid by using market mechanisms running at all potential constraints. 
+The GridWorks system manages constraints on the electric grid by using market mechanisms running at all potential constraints.
 
 ## Design Principles
 
@@ -20,7 +20,7 @@ The system uses layered bids rather than position replacement for several key ad
 class MarketContract:
     """Represents an active Market Contract"""
     ContractId: UUID4Str  # Derived from original bid message id
-    MarketSlotName: MarketSlotName 
+    MarketSlotName: MarketSlotName
     StartUnixS: int
     DurationMinutes: int
     AvgPowerWatts: int

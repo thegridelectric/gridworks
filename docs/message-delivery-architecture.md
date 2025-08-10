@@ -9,7 +9,7 @@ This document explains how GridWorks implements message delivery as a separate l
 **ASL Types are transport-agnostic vocabulary:**
 
 - `power.watts` - power measurement meant to be sent asynchronously and _without_ a timestamp
-- `slow.dispatch.contract` - represents the specifications of an hourly dispatch contract between a Scada and its LeafTransactiveNode (ltn) 
+- `slow.dispatch.contract` - represents the specifications of an hourly dispatch contract between a Scada and its LeafTransactiveNode (ltn)
 - `report` -  smallish (5 minute) batch of timestamped telemetry data
 
 **Delivery Mechanisms add routing intelligence:**
@@ -51,12 +51,12 @@ Point-to-point messages between specific actors. Used for commands, responses, a
 - Direct coordination between MarketMakers
 - SCADA sends `power.watts` to LeafTransactiveNode (FUTURE)
 
-### JsonBroadcast  
+### JsonBroadcast
 One-to-many messages broadcast to multiple recipients on a shared "radio channel."
 
 **Use cases:**
 - Market price updates to all participants (general broadcast)
-- Grid status announcements  
+- Grid status announcements
 - Weather forecasts to all interested actors
 - Targeted broadcasts using radio channels (e.g., `rt60gate5` for specific market timing)
 
@@ -89,12 +89,12 @@ GridWorks RabbitMQ infrastructure uses a **two-exchange pattern** for each actor
 - **Publish Exchange**: `{class}mic_tx` - where this role publishes messages
 
 **Examples:**
-- `LeafTransactiveNode` consumes from `ltn_tx`, publishes to `ltnmic_tx`  
+- `LeafTransactiveNode` consumes from `ltn_tx`, publishes to `ltnmic_tx`
 - MarketMaker consumes from `marketmaker_tx`, publishes to `marketmakermic_tx`
 
 **Important Counterexample**
 
-The [GridWorks SCADA systems](https://github.com/thegridelectric/gridworks-scada) use MQTT for edge simplicity while participating in the broader RabbitMQ ecosystem. MQTT's lightweight publish/subscribe model is ideal for SCADA deployments - it requires minimal configuration, has lower overhead than AMQP, and works well on resource-constrained edge devices like Raspberry Pi systems. RabbitMQ bridges this gap through its MQTT plugin, which accepts MQTT clients and maps their topic-based messages to the **amq.topic exchange**. 
+The [GridWorks SCADA systems](https://github.com/thegridelectric/gridworks-scada) use MQTT for edge simplicity while participating in the broader RabbitMQ ecosystem. MQTT's lightweight publish/subscribe model is ideal for SCADA deployments - it requires minimal configuration, has lower overhead than AMQP, and works well on resource-constrained edge devices like Raspberry Pi systems. RabbitMQ bridges this gap through its MQTT plugin, which accepts MQTT clients and maps their topic-based messages to the **amq.topic exchange**.
 
 ### Message Flow Pattern
 
@@ -114,11 +114,11 @@ RabbitMQ bindings connect the exchanges based on routing key patterns. In this c
 ```
 *.*.ltn.*.marketmaker.*
 ```
-and passes it onto the `marketmaker_tx` exchange. 
+and passes it onto the `marketmaker_tx` exchange.
 
 In addition, each actor will set up a queue on its receiver exchange that binds to any
 message meant for it specifically. In this example, the MarketMaker `hw1.keene` will
-set up a queue and create a binding that matches 
+set up a queue and create a binding that matches
 
 ```
 *.*.*.*.*.hw1-keene
@@ -143,7 +143,7 @@ rj.hw1-keene-beech-scada.scada.power-watts.ltn.hw1-keene-beech
 **Breakdown:**
 - `rj` = JsonDirect message category symbol
 - `hw1-keene-beech-scada` = sender's GNode alias (dots → hyphens)
-- `scada` = sender's role  
+- `scada` = sender's role
 - `power-watts` = ASL type name (dots → hyphens)
 - `ltn` = receiver's role
 - `hw1-keene-beech` = receiver's GNode alias
@@ -171,7 +171,7 @@ rjb.hw1-keene.marketmaker.latest-price.rt60gate5
 
 **Breakdown:**
 - `rjb` = JsonBroadcast message category symbol
-- `hw1-keene` = sender's GNode alias  
+- `hw1-keene` = sender's GNode alias
 - `marketmaker` = sender's role
 - `market-list` / `latest-price` = ASL type being broadcast
 - No radio channel (general broadcast) / `rt60gate5` = specific radio channel for targeted scope
@@ -196,7 +196,7 @@ Same as JsonDirect but uses `gw` symbol and includes wrapper envelope with Heade
 {
   "Header": {
     "Src": "hw1-keene-beech-scada",
-    "Dst": "ltn", 
+    "Dst": "ltn",
     "MessageType": "power.watts",
     "MessageId": "12345678-abcd-1234-abcd-123456789012",
     "AckRequired": false
@@ -213,7 +213,7 @@ Same as JsonDirect but uses `gw` symbol and includes wrapper envelope with Heade
 
 ## 5. Current SCADA Usage of ScadaWrapped
 
-Right now SCADA uses ScadaWrapped for all of its messages. Plan to migrate to _only_ using ScadaWrapped for messages requiring delivery confirmation. 
+Right now SCADA uses ScadaWrapped for all of its messages. Plan to migrate to _only_ using ScadaWrapped for messages requiring delivery confirmation.
 
 
 **Use JsonDirect/JsonBroadcast for:**
@@ -228,13 +228,13 @@ Right now SCADA uses ScadaWrapped for all of its messages. Plan to migrate to _o
 GridWorks is moving toward a simpler model where **the envelope tells you what you're looking at**:
 
 **RabbitMQ routing key contains:**
-- Message category (`rj`, `rjb`) 
+- Message category (`rj`, `rjb`)
 - Sender and receiver identification
 - ASL type name
 
 **MQTT topic contains:**
 - Hierarchical addressing
-- Message type identification  
+- Message type identification
 - Delivery semantics
 
 **API endpoint contains:**
@@ -255,17 +255,17 @@ GridWorks is moving toward a simpler model where **the envelope tells you what y
 ### Migration Strategy
 
 **Phase 1** (Current): Support both patterns
-- SCADA continues using `ScadaWrapped` for all messages and expects the same from its `ltn`. 
+- SCADA continues using `ScadaWrapped` for all messages and expects the same from its `ltn`.
 - New development uses `JsonDirect`/`JsonBroadcast` for all actor-to-actor comms except for SCADA <-> LeafTransactiveNode
 
 
-**Phase 2** (Near-term): Minimize wrapper usage  
+**Phase 2** (Near-term): Minimize wrapper usage
 - `Scada` and `LeafTransactiveNode` mostly use the JsonDirect pattern
 - Clear documentation of when each pattern applies
 
 **Phase 3** (Future): Transport evolution
 - RabbitMQ → Kafka migration maintains ASL types
-- API integration provides alternative delivery mechanisms  
+- API integration provides alternative delivery mechanisms
 - Acknowledgment handled at transport level rather than application level
 
 ## 7. Choosing the Right Pattern
