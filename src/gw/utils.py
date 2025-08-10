@@ -66,19 +66,13 @@ def snake_to_pascal(word: str) -> str:
 def message_category_from_symbol(symbol: MessageCategorySymbol) -> MessageCategory:
     category = MessageCategory.Unknown
     if symbol == MessageCategorySymbol.rj:
-        category = MessageCategory.RabbitJsonDirect
+        category = MessageCategory.JsonDirect
     elif symbol == MessageCategorySymbol.rjb:
-        category = MessageCategory.RabbitJsonBroadcast
+        category = MessageCategory.JsonBroadcast
     elif symbol == MessageCategorySymbol.s:
-        category = MessageCategory.RabbitGwSerial
+        category = MessageCategory.Serial
     elif symbol == MessageCategorySymbol.gw:
-        category = MessageCategory.MqttJsonBroadcast
-    elif symbol == MessageCategorySymbol.post:
-        category = MessageCategory.RestApiPost
-    elif symbol == MessageCategorySymbol.postack:
-        category = MessageCategory.RestApiPostResponse
-    elif symbol == MessageCategorySymbol.get:
-        category = MessageCategory.RestApiGet
+        category = MessageCategory.ScadaWrapped
     return category
 
 

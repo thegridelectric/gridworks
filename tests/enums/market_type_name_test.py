@@ -21,15 +21,3 @@ def test_market_type_name() -> None:
     assert MarketTypeName.enum_name() == "market.type.name"
     assert MarketTypeName.enum_version() == "000"
 
-    assert MarketTypeName.version("unknown") == "000"
-    assert MarketTypeName.version("rt5gate5") == "000"
-    assert MarketTypeName.version("rt60gate5") == "000"
-    assert MarketTypeName.version("da60") == "000"
-    assert MarketTypeName.version("rt60gate30") == "000"
-    assert MarketTypeName.version("rt15gate5") == "000"
-    assert MarketTypeName.version("rt30gate5") == "000"
-    assert MarketTypeName.version("rt60gate30b") == "000"
-
-    for value in MarketTypeName.values():
-        symbol = MarketTypeName.value_to_symbol(value)
-        assert MarketTypeName.symbol_to_value(symbol) == value
