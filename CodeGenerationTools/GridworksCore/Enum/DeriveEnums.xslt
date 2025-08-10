@@ -41,7 +41,6 @@
 
 <xsl:text>from enum import auto
 from typing import List
-from typing import Optional
 
 from gw.enums import GwStrEnum
 
@@ -57,33 +56,13 @@ class </xsl:text><xsl:value-of select="$enum-class-name"/>
         <xsl:with-param name="indent-spaces" select="4"/>
     </xsl:call-template>
     </xsl:if>
-
     <xsl:text>
-
-    Enum </xsl:text><xsl:value-of select="Name"/><xsl:text> version </xsl:text><xsl:value-of select="$enum-version"/>
-    <xsl:text> in the GridWorks Type registry.
-
-    Used by used by multiple Application Shared Languages (ASLs). For more information:
-      - [ASLs](https://gridworks-type-registry.readthedocs.io/en/latest/)
-      - [Global Authority](https://gridworks-type-registry.readthedocs.io/en/latest/enums.html#</xsl:text>
-    <xsl:value-of select="translate($enum-name,'.','')"/>
-    <xsl:text>)</xsl:text>
-
-    <xsl:if test="(normalize-space(Url)!='')">
-    <xsl:text>
-      - [More Info](</xsl:text>
-    <xsl:value-of select="normalize-space(Url)"/>
-    <xsl:text>)</xsl:text>
-    </xsl:if>
-    <xsl:text>
-
-    Values (with symbols in parens):</xsl:text>
+    Values:</xsl:text>
     <xsl:for-each select="$airtable//EnumSymbols/EnumSymbol[(Enum = $enum-id)  and (Version &lt;= $enum-version)]">
     <xsl:sort select="Idx" data-type="number"/>
     <xsl:text>
       - </xsl:text>
-      <xsl:value-of select="LocalValue"/><xsl:text> (</xsl:text>
-     <xsl:value-of select="Symbol"/><xsl:text>)</xsl:text>
+      <xsl:value-of select="LocalValue"/>
 
     <xsl:if test="(normalize-space(Description)!='') or (normalize-space(Url)!='')">
     <xsl:text>: </xsl:text>
@@ -105,7 +84,20 @@ class </xsl:text><xsl:value-of select="$enum-class-name"/>
     </xsl:if>
 
     </xsl:for-each>
+    <xsl:text>
 
+    For more information:
+        - [ASL Definition](https://raw.githubusercontent.com/thegridelectric/gridworks-asl/refs/heads/dev/type_definitions/enums/</xsl:text>
+       <xsl:value-of select="$enum-name"/> <xsl:text>.</xsl:text>
+       <xsl:value-of select="$enum-version"/><xsl:text>.yaml)
+        - [GridWorks ASL Docs](https://gridworks-asl.readthedocs.io)</xsl:text>
+
+    <xsl:if test="(normalize-space(Url)!='')">
+    <xsl:text>
+      - [More Info](</xsl:text>
+    <xsl:value-of select="normalize-space(Url)"/>
+    <xsl:text>)</xsl:text>
+    </xsl:if>
     <xsl:text>
     """
 
@@ -131,16 +123,6 @@ class </xsl:text><xsl:value-of select="$enum-class-name"/>
     def default(cls) -> "</xsl:text>
     <xsl:value-of select="$enum-class-name"/>
     <xsl:text>":
-        """
-        Returns default value (in this case </xsl:text>
-        <xsl:if test="$enum-type = 'Upper'">
-            <xsl:value-of select="translate(translate(DefaultEnumValue,'-',''),$lcletters, $ucletters)"/>
-        </xsl:if>
-        <xsl:if test="$enum-type ='UpperPython'">
-            <xsl:value-of select="DefaultEnumValue"/>
-        </xsl:if>
-        <xsl:text>)
-        """
         return cls.</xsl:text>
         <xsl:if test="$enum-type = 'Upper'">
             <xsl:value-of select="translate(translate(DefaultEnumValue,'-',''),$lcletters, $ucletters)"/>
@@ -153,142 +135,21 @@ class </xsl:text><xsl:value-of select="$enum-class-name"/>
 
     @classmethod
     def values(cls) -> List[str]:
-        """
-        Returns enum choices
-        """
         return [elt.value for elt in cls]
 
     @classmethod
-    def version(cls, value: Optional[str] = None) -> str:
-        """
-        Returns the version of the class (default) used by this package or the
-        version of a candidate enum value (always less than or equal to the version
-        of the class)
-
-        Args:
-            value (Optional[str]): None (for version of the Enum itself) or
-            the candidate enum value.
-
-        Raises:
-            ValueError: If the value is not one of the enum values.
-
-        Returns:
-            str: The version of the enum used by this code (if given no
-            value) OR the earliest version of the enum containing the value.
-        """
-        if value is None:
-            return "</xsl:text><xsl:value-of select="$enum-version"/><xsl:text>"
-        if not isinstance(value, str):
-            raise ValueError(f"This method applies to strings, not enums")
-        if value not in value_to_version.keys():
-            raise ValueError(f"Unknown enum value: {value}")
-        return value_to_version[value]
-
-    @classmethod
     def enum_name(cls) -> str:
-        """
-        The name in the GridWorks Type Registry (</xsl:text><xsl:value-of select="$enum-name"/><xsl:text>)
-        """
         return "</xsl:text>
     <xsl:value-of select="$enum-name"/>
     <xsl:text>"
 
     @classmethod
     def enum_version(cls) -> str:
-        """
-        The version in the GridWorks Type Registry (</xsl:text><xsl:value-of select="$enum-version"/><xsl:text>)
-        """
         return "</xsl:text>
     <xsl:value-of select="$enum-version"/>
-    <xsl:text>"
-
-    @classmethod
-    def symbol_to_value(cls, symbol: str) -> str:
-        """
-        Given the symbol sent in a serialized message, returns the encoded enum.
-
-        Args:
-            symbol (str): The candidate symbol.
-
-        Returns:
-            str: The encoded value associated to that symbol. If the symbol is not
-            recognized - which could happen if the actor making the symbol is using
-            a later version of this enum, returns the default value of "</xsl:text>
-            <xsl:value-of select="DefaultEnumValue"/><xsl:text>".
-        """
-        if symbol not in symbol_to_value.keys():
-            return cls.default().value
-        return symbol_to_value[symbol]
-
-    @classmethod
-    def value_to_symbol(cls, value: str) -> str:
-        """
-        Provides the encoding symbol for a </xsl:text><xsl:value-of select="$enum-class-name"/>
-        <xsl:text> enum to send in seriliazed messages.
-
-        Args:
-            symbol (str): The candidate value.
-
-        Returns:
-            str: The symbol encoding that value. If the value is not recognized -
-            which could happen if the actor making the message used a later version
-            of this enum than the actor decoding the message, returns the default
-            symbol of "</xsl:text>
-            <xsl:value-of select="DefaultSymbol"/><xsl:text>".
-        """
-        if value not in value_to_symbol.keys():
-            return value_to_symbol[cls.default().value]
-        return value_to_symbol[value]
-
-    @classmethod
-    def symbols(cls) -> List[str]:
-        """
-        Returns a list of the enum symbols
-        """
-        return [</xsl:text>
-<xsl:for-each select="$airtable//EnumSymbols/EnumSymbol[(Enum = $enum-id) and (Version &lt;= $enum-version)]">
-<xsl:sort select="Idx" data-type="number"/>
-        <xsl:text>
-            "</xsl:text><xsl:value-of select="Symbol"/><xsl:text>",</xsl:text>
-
-</xsl:for-each>
-        <xsl:text>
-        ]
+    <xsl:text>"</xsl:text>
 
 
-symbol_to_value = {</xsl:text>
-<xsl:for-each select="$airtable//EnumSymbols/EnumSymbol[(Enum = $enum-id) and (Version &lt;= $enum-version)]">
-<xsl:sort select="Idx" data-type="number"/>
-    <xsl:text>
-    "</xsl:text><xsl:value-of select="Symbol"/><xsl:text>": "</xsl:text>
-    <xsl:if test="$enum-type = 'Upper'">
-        <xsl:value-of select="translate(translate(LocalValue,'-',''),$lcletters, $ucletters)"/>
-    </xsl:if>
-    <xsl:if test="$enum-type ='UpperPython'">
-        <xsl:value-of select="LocalValue"/>
-    </xsl:if>
-<xsl:text>",</xsl:text>
-</xsl:for-each>
-<xsl:text>
-}
-
-value_to_symbol = {value: key for key, value in symbol_to_value.items()}
-
-value_to_version = {</xsl:text>
-<xsl:for-each select="$airtable//EnumSymbols/EnumSymbol[(Enum = $enum-id) and (Version &lt;= $enum-version)]">
-<xsl:sort select="Idx" data-type="number"/>
-    <xsl:text>
-    "</xsl:text>
-    <xsl:if test="$enum-type = 'Upper'">
-        <xsl:value-of select="translate(translate(LocalValue,'-',''),$lcletters, $ucletters)"/>
-    </xsl:if>
-    <xsl:if test="$enum-type ='UpperPython'">
-        <xsl:value-of select="LocalValue"/>
-    </xsl:if>
-<xsl:text>": "</xsl:text> <xsl:value-of select="Version"/><xsl:text>",</xsl:text>
-</xsl:for-each>
-<xsl:text>
-}</xsl:text>
 
 <!-- Add newline at EOF for git and pre-commit-->
 <xsl:text>&#10;</xsl:text>
