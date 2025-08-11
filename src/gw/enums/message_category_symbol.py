@@ -5,18 +5,18 @@ from gw.enums import GwStrEnum
 
 class MessageCategorySymbol(GwStrEnum):
     """
-    Shorthand symbols used as the first element in GridWorks routing keys. 
-        See [Message Delivery Architecture](https://gridworks.readthedocs.io/message-delivery-architecture/) 
+    Shorthand symbols used as the first element in GridWorks routing keys.
+        See [Message Delivery Architecture](https://gridworks.readthedocs.io/message-delivery-architecture/)
         for details.
     Values:
       - unknown: Default value when routing key parsing fails or symbol is not recognized
-      - rj: JsonDirect - point-to-point messages. 
+      - rj: JsonDirect - point-to-point messages.
         Example: rj.hw1-keene-beech-scada.scada.power-watts.ltn.hw1-keene-beech
-      - rjb: JsonBroadcast - One-to-many messages with optional radio channel targeting 
-        Examples: 
-          rjb.hw1-keene.marketmaker.market-list 
+      - rjb: JsonBroadcast - One-to-many messages with optional radio channel targeting
+        Examples:
+          rjb.hw1-keene.marketmaker.market-list
           rjb.hw1-keene.marketmaker.latest-price.rt60gate5
-      - gw: ScadaWrapped - SCADA message with sckmowledgement tracking 
+      - gw: ScadaWrapped - SCADA message with sckmowledgement tracking
         Example: gw.hw1-keene-beech-scada.to.a.report-event
       - s: Serial - Future bandwidth-optimized format
 

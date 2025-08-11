@@ -17,4 +17,3 @@ def test_message_category() -> None:
     assert MessageCategory.default() == MessageCategory.Unknown
     assert MessageCategory.enum_name() == "message.category"
     assert MessageCategory.enum_version() == "000"
-

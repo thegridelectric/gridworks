@@ -14,4 +14,3 @@ def test_market_quantity_unit() -> None:
     assert MarketQuantityUnit.default() == MarketQuantityUnit.AvgMW
     assert MarketQuantityUnit.enum_name() == "market.quantity.unit"
     assert MarketQuantityUnit.enum_version() == "000"
-

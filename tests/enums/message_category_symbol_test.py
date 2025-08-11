@@ -17,4 +17,3 @@ def test_message_category_symbol() -> None:
     assert MessageCategorySymbol.default() == MessageCategorySymbol.unknown
     assert MessageCategorySymbol.enum_name() == "message.category.symbol"
     assert MessageCategorySymbol.enum_version() == "000"
-

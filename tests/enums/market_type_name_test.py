@@ -20,4 +20,3 @@ def test_market_type_name() -> None:
     assert MarketTypeName.default() == MarketTypeName.unknown
     assert MarketTypeName.enum_name() == "market.type.name"
     assert MarketTypeName.enum_version() == "000"
-
