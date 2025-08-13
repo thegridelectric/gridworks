@@ -14,7 +14,7 @@ jobs:
         include:
           - { python: "3.12", os: "ubuntu-latest", session: "pre-commit" }
           #- { python: "3.12", os: "ubuntu-latest", session: "mypy" }
-          # - { python: "3.11", os: "ubuntu-latest", session: "tests" }
+          - { python: "3.11", os: "ubuntu-latest", session: "tests" }
           - { python: "3.12", os: "ubuntu-latest", session: "tests", coverage: true}
           # - { python: "3.12", os: "windows-latest", session: "tests" }
           # - { python: "3.12", os: "macos-latest", session: "tests" }
@@ -31,7 +31,7 @@ jobs:
       ###############################
       # Work around pipx issue #1331 with absolute path to constraint.txt
       # https://github.com/pypa/pipx/issues/1331#issuecomment-2043163012
-      - name: Set PIP_ARGS
+      - name: Set PIP_ARGS on Windows
         run: echo "PIP_ARGS=--constraint=$env:GITHUB_WORKSPACE/.github/workflows/constraints.txt" | Out-File -FilePath $env:GITHUB_ENV -Append
         if: runner.os == 'Windows'
 
