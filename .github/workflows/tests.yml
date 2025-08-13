@@ -31,7 +31,7 @@ jobs:
       ###############################
       # Work around pipx issue #1331 with absolute path to constraint.txt
       # https://github.com/pypa/pipx/issues/1331#issuecomment-2043163012
-      - name: Set PIP_ARGS on Windows
+      - name: Set PIP_ARGS
         run: echo "PIP_ARGS=--constraint=$env:GITHUB_WORKSPACE/.github/workflows/constraints.txt" | Out-File -FilePath $env:GITHUB_ENV -Append
         if: runner.os == 'Windows'
 
@@ -159,7 +159,6 @@ jobs:
 
       - name: Install Poetry
         run: |
-          echo "PIP_ARGS: ${{ env.PIP_ARGS }}"
           pipx install --pip-args=${{ env.PIP_ARGS }} poetry
           poetry --version
 
