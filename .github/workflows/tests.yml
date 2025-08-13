@@ -132,6 +132,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     steps:
+      ###############################
+      # Work around pipx issue #1331 with absolute path to constraint.txt
+      # https://github.com/pypa/pipx/issues/1331#issuecomment-2043163012
+      - name: Set PIP_ARGS on Windows
+        run: echo "PIP_ARGS=--constraint=$env:GITHUB_WORKSPACE/.github/workflows/constraints.txt" | Out-File -FilePath $env:GITHUB_ENV -Append
+        if: runner.os == 'Windows'
+
+      - name: Set PIP_ARGS on not-Windows
+        run: echo "PIP_ARGS=--constraint=$GITHUB_WORKSPACE/.github/workflows/constraints.txt" >> "$GITHUB_ENV"
+        if: runner.os != 'Windows'
+      ###############################
+
       - name: Check out the repository
         uses: actions/checkout@v4
 
