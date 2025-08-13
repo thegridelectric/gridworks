@@ -14,7 +14,7 @@ jobs:
         include:
           - { python: "3.12", os: "ubuntu-latest", session: "pre-commit" }
           #- { python: "3.12", os: "ubuntu-latest", session: "mypy" }
-          - { python: "3.11", os: "ubuntu-latest", session: "tests" }
+          # - { python: "3.11", os: "ubuntu-latest", session: "tests" }
           - { python: "3.12", os: "ubuntu-latest", session: "tests", coverage: true}
           # - { python: "3.12", os: "windows-latest", session: "tests" }
           # - { python: "3.12", os: "macos-latest", session: "tests" }
@@ -147,6 +147,7 @@ jobs:
 
       - name: Install Poetry
         run: |
+          echo "PIP_ARGS: ${{ env.PIP_ARGS }}"
           pipx install --pip-args=${{ env.PIP_ARGS }} poetry
           poetry --version
 
