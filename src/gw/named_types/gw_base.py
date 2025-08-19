@@ -1,9 +1,9 @@
 import json
-from typing import Annotated, Any, Dict, Type, TypeVar
+from typing import Any, Dict, Type, TypeVar
 
 from gw.errors import GwTypeError
 from gw.utils import recursively_pascal, snake_to_pascal
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, ValidationError
 
 T = TypeVar("T", bound="GwBase")
 
