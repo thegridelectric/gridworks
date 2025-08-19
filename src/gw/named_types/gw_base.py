@@ -1,9 +1,9 @@
 import json
-from typing import Annotated, Any, Dict, Type, TypeVar
+from typing import Any, Dict, Type, TypeVar
 
 from gw.errors import GwTypeError
 from gw.utils import recursively_pascal, snake_to_pascal
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, ValidationError
 
 T = TypeVar("T", bound="GwBase")
 
@@ -16,7 +16,7 @@ class GwBase(BaseModel):
         - `type_name`: Must follow left-right-dot (LRD) format. Subclasses
         are expected to overwrite this with a literal. The format is enforced
         by the ASL Type Registry , which is the source of truth
-        - `version`: Must be a three-digit string (e.g. "000", "001").
+        - `version`: Must be  a three-digit string (e.g. "000", "001"), or None.
         Subclasses are expected to overwrite this with either a literal or a
         string, with the literal (strict versioning) being the default. The
         format is enforced by the ASL Type Registry, which is the source of truth.
@@ -25,8 +25,8 @@ class GwBase(BaseModel):
       - [GridWorks ASL Docs](https://gridworks-asl.readthedocs.io)
     """
 
-    type_name: Annotated[str, Field(pattern=r"^[a-z][a-z0-9]*(\.[a-z0-9]+)*$")]
-    version: Annotated[str, Field(pattern=r"^\d{3}$")]
+    type_name: str
+    version: str | None  # no default here, subclasses must provide one
 
     model_config = ConfigDict(
         alias_generator=snake_to_pascal,
@@ -91,6 +91,6 @@ class GwBase(BaseModel):
         return cls.model_fields["type_name"].default
 
     @classmethod
-    def version_value(cls) -> str:
+    def version_value(cls) -> str | None:
         # return the Version defined in the subclass
         return cls.model_fields["version"].default
