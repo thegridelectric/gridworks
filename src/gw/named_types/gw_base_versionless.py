@@ -20,8 +20,9 @@ class GwBaseVersionless(BaseModel):
     For more information:
       - [GridWorks ASL Docs](https://gridworks-asl.readthedocs.io)
     """
+
     type_name: str
-    version: None = None   # enforce that no version field is accepted
+    version: None = None  # enforce that no version field is accepted
 
     model_config = ConfigDict(
         alias_generator=snake_to_pascal,

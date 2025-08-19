@@ -1,11 +1,12 @@
 import json
-from typing import Annotated, Any, Dict,Type, TypeVar
+from typing import Annotated, Any, Dict, Type, TypeVar
 
 from gw.errors import GwTypeError
 from gw.utils import recursively_pascal, snake_to_pascal
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 T = TypeVar("T", bound="GwBase")
+
 
 class GwBase(BaseModel):
     """
@@ -18,7 +19,7 @@ class GwBase(BaseModel):
         - `version`: Must be a three-digit string (e.g. "000", "001").
         Subclasses are expected to overwrite this with either a literal or a
         string, with the literal (strict versioning) being the default. The
-        format is enforced by the ASL Type Registry, which is the source of truth. 
+        format is enforced by the ASL Type Registry, which is the source of truth.
 
     For more information:
       - [GridWorks ASL Docs](https://gridworks-asl.readthedocs.io)
