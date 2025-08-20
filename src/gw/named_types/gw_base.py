@@ -26,7 +26,7 @@ class GwBase(BaseModel):
     """
 
     type_name: str
-    version: str | None  # no default here, subclasses must provide one
+    version: str | None = None
 
     model_config = ConfigDict(
         alias_generator=snake_to_pascal,
