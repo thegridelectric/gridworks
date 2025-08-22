@@ -41,7 +41,7 @@ class GwBase(BaseModel):
     )
 
     def to_type(self) -> bytes:
-        return self.model_dump_json(exclude_none=True, by_alias=True)
+        return self.model_dump_json(exclude_none=True, by_alias=True).encode()
 
     def to_dict(self) -> Dict[str, Any]:
         bytes = self.model_dump_json(exclude_none=True, by_alias=True)
