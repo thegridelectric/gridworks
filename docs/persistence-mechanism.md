@@ -10,7 +10,7 @@ TBD ADD DIAGRAM
 - Role: Local buffering and reliable upstream delivery
 - [Details...]
 
-### gridworks-ingester  
+### gridworks-ingester
 - Repository: https://github.com/thegridelectric/gridworks-ingester
 - Role: Cloud-based persistence to PostgreSQL and S3
 - [Details...]

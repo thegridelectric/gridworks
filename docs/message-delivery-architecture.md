@@ -305,7 +305,7 @@ This approach will serve us until we need to scale beyond about 30 homes, or unt
 
 #### Phase 0: Passwd -> certificate-based mutual autentication [mTLS]
 
-Unlike regular TLS (where only the broker/server proves its identity to the client), in mTLS each SCADA or other connecting app must prove its identity to the broker as well. 
+Unlike regular TLS (where only the broker/server proves its identity to the client), in mTLS each SCADA or other connecting app must prove its identity to the broker as well.
 
 
 #### Phase 1: Broker Separation (Next 3 months)
@@ -356,7 +356,7 @@ When scaling demands it:
 Layers of trust:
 
  - Layer 1: OAuth/SAML web authentication
- - Layer 2: Client certificate verification 
+ - Layer 2: Client certificate verification
  - Layer 3: Tailscale network for admin operations
  - Layer 4: Command authorization at SCADA level
 
@@ -365,7 +365,7 @@ Certificate lifecycle management UI:
  - Web interface for certificate generation/revocation
  - Self-service certificate renewal for authorized devices
  - Certificate expiry monitoring and alerts
- 
+
 ### Security Principles
 
 Following the Reactive Manifesto, our security architecture emphasizes:
