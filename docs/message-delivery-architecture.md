@@ -125,7 +125,6 @@ set up a queue and create a binding that matches
 ```
 
 
-
 ## 4. Routing Key Patterns
 
 ### JsonDirect (`rj`)
@@ -180,12 +179,12 @@ rjb.hw1-keene.marketmaker.latest-price.rt60gate5
 
 **Pattern:**
 ```
-gw.{from-alias}.{from-role}.{type-name}.{to-role}.{to-alias}
+gw.{from-alias}.to.{dst}.{type-name}
 ```
 
 **Example from ASL registry:**
 ```
-gw.hw1-keene-beech-scada.to.ltn.power-watts
+gw.hw1-isone-ma-boston-scada.to.a.report-event
 ```
 
 **Structure:**
@@ -211,21 +210,16 @@ Same as JsonDirect but uses `gw` symbol and includes wrapper envelope with Heade
 ```
 
 
-## 5. Current SCADA Usage of ScadaWrapped
+**Current SCADA Usage of ScadaWrapped**
 
-Right now SCADA uses ScadaWrapped for all of its messages. Plan to migrate to _only_ using ScadaWrapped for messages requiring delivery confirmation.
-
-
-**Use JsonDirect/JsonBroadcast for:**
+Right now SCADA uses ScadaWrapped for all of its messages. Plan to migrate to _only_ using ScadaWrapped for messages requiring delivery confirmation and to use JsonDirect/JsonBroadcast for:
 - Telemetry data that doesn't require acknowledgment
 - High-frequency measurements where wrapper overhead matters
 - New integrations that can use simpler patterns
 
-## 6. Evolution Toward Simpler Patterns
+**The Vision: Envelope-Based Routing**
 
-### The Vision: Envelope-Based Routing
-
-GridWorks is moving toward a simpler model where **the envelope tells you what you're looking at**:
+While we're keeping ScadaWrapped because of its critical role in tracking events that have been acked and can therefore no longer be stored by the SCADA, it violates the core vision that that the **envelope includes everythign needed to see who is sending and what is getting sent**
 
 **RabbitMQ routing key contains:**
 - Message category (`rj`, `rjb`)
@@ -242,35 +236,7 @@ GridWorks is moving toward a simpler model where **the envelope tells you what y
 - Operation semantics
 - Type expectations
 
-### Benefits of Simpler Patterns
-
-**Reduced Complexity**: No need to unwrap messages to understand their purpose - the routing envelope contains the metadata.
-
-**Better Performance**: Eliminate JSON parsing overhead for message routing decisions.
-
-**Clearer Semantics**: Routing behavior is explicit in the delivery mechanism rather than hidden in message content.
-
-**Transport Flexibility**: Same ASL types work across RabbitMQ, MQTT, HTTP APIs, and future transports.
-
-### Migration Strategy
-
-**Phase 1** (Current): Support both patterns
-- SCADA continues using `ScadaWrapped` for all messages and expects the same from its `ltn`.
-- New development uses `JsonDirect`/`JsonBroadcast` for all actor-to-actor comms except for SCADA <-> LeafTransactiveNode
-
-
-**Phase 2** (Near-term): Minimize wrapper usage
-- `Scada` and `LeafTransactiveNode` mostly use the JsonDirect pattern
-- Clear documentation of when each pattern applies
-
-**Phase 3** (Future): Transport evolution
-- RabbitMQ → Kafka migration maintains ASL types
-- API integration provides alternative delivery mechanisms
-- Acknowledgment handled at transport level rather than application level
-
-## 7. Choosing the Right Pattern
-
-### Decision Matrix
+**DECISION MATRIX**
 
 **Use JsonDirect when:**
 - Sending to a specific actor
@@ -293,6 +259,129 @@ GridWorks is moving toward a simpler model where **the envelope tells you what y
 - Minimal latency required (future)
 - Bit-level optimization necessary (future)
 
+## 5. Security Architecture for Message Passing
+
+### Current Security Model
+
+#### Production RabbitMQ Broker
+- **Access**: Currently allows both encrypted (TLS) and unencrypted connections
+- **Authentication**: Username/password based
+- **Authorization**: Single user (`smqPublic`) with full read/write permissions to all exchanges
+- **Network**: Exposed to internet for remote SCADA connections
+- **Risk Assessment**: Medium - passwords provide basic protection but shared credentials increase risk
+- **TLS encryption available but not enforced**: Low-Medium. Provides encryption but not mutual identificaiton
+
+#### Local MQTT Brokers (Mosquitto on Pis)
+- **Access**: Local network only
+- **Authentication**: None required for local access
+- **Network**: Not exposed to internet
+- **Risk Assessment**: Low - physical access required
+
+#### Admin Control Interface
+- **Access**: Textual terminal interface only
+- **Network**: Tailscale VPN required (zero-trust network with WireGuard encryption)
+- **Authentication**: Device-level authentication through Tailscale
+- **Authorization**: Binary (on Tailscale = admin access)
+- **Risk Assessment**: Very Low - multiple layers of protection
+
+### Design Decisions and Rationale
+
+#### Why Tailscale for Admin (Current Approach)
+
+We're maintaining admin control through Tailscale-protected textual interfaces because:
+
+1. **Security without complexity**: Tailscale provides enterprise-grade security without requiring us to build authentication, authorization, and audit systems
+2. **Appropriate for current scale**: Works well for our current deployment (5-7 homes, <10 operators) but not 100 homes (hits limit w 100 devices)
+3. **Focus on core functionality**: Allows team to focus on SCADA/market functionality rather than security infrastructure
+4. **Clear security boundary**: Physical separation between read-only (dashboard) and control (admin) interfaces
+
+This approach will serve us until we need to scale beyond about 30 homes, or until are ready to implement
+- Role-based access control
+- Audit logging for compliance
+- Partner/customer access
+
+
+### Planned Security Improvements
+
+#### Phase 0: Passwd -> certificate-based mutual autentication [mTLS]
+
+Unlike regular TLS (where only the broker/server proves its identity to the client), in mTLS each SCADA or other connecting app must prove its identity to the broker as well.
+
+
+#### Phase 1: Broker Separation (Next 3 months)
+
+Separate production and analytics brokers to limit attack surface:
+```
+Production Broker (Critical Operations Only):
+├── SCADA ←→ LTN communication
+├── Admin control messages (via Tailscale)
+└── Real-time telemetry
+Analytics Broker (Read-Only Mirror):
+├── Historical data analysis
+├── Dashboard connections
+├── Partner integrations
+└── Development/testing
+```
+**Implementation approach:**
+- Use RabbitMQ federation or shovel to mirror messages from production to analytics
+- Production broker only accessible via Tailscale + strong authentication
+- Analytics broker can have broader access with read-only permissions
+
+#### Phase 2: Certificate-Based Granular Permissions (Months 4-6)
+
+Leverage the CN (Common Name) from mTLS certificates to create fine-grained permissions:
+
+**Automatic permission assignment based on certificate CN**
+
+ - `CN=hw1-keene-beech-scada`: Can only publish/subscribe to own exchanges
+ - `CN=hw1-keene-atn`: Limited to ATN-specific message types
+ - `CN=admin-{operator}`: Full control (requires Tailscale IP + admin certificate)
+
+**Network-layer enhancement**:
+
+ - Source IP allowlisting for production broker (Tailscale ranges + known SCADA IPs)
+ - Geographic IP filtering if applicable
+
+#### Phase 3: Web-Based Admin with Certificate Foundation (Months 12-18)
+
+When scaling demands it:
+
+**Build web admin leveraging existing certificate infrastructure:**
+
+ 1. OAuth2/SAML for web authentication
+ 2. Backend validates both web session AND client certificate
+ 3. Role mappings derived from certificate CN + OAuth claims
+ 4.Audit logging ties actions to both certificate and OAuth identity
+
+Layers of trust:
+
+ - Layer 1: OAuth/SAML web authentication
+ - Layer 2: Client certificate verification
+ - Layer 3: Tailscale network for admin operations
+ - Layer 4: Command authorization at SCADA level
+
+Certificate lifecycle management UI:
+
+ - Web interface for certificate generation/revocation
+ - Self-service certificate renewal for authorized devices
+ - Certificate expiry monitoring and alerts
+
+### Security Principles
+
+Following the Reactive Manifesto, our security architecture emphasizes:
+
+- **Isolation**: Components fail independently (separate brokers for different purposes)
+- **Resilience**: Security failures in analytics don't affect production
+- **Message-Driven**: All security decisions based on message content and origin, not implicit state
+- **Elasticity**: Easy to add new sites without compromising security
+
+### Emergency Response
+
+Current capabilities if compromise detected:
+1. Rotate RabbitMQ passwords (immediate)
+2. Revoke Tailscale device access (immediate)
+3. Restart SCADA in local-only mode (HomeAlone mode)
+4. Physical access to sites for manual control
 ---
 
 *This architecture enables GridWorks to maintain consistent ASL vocabulary while adapting delivery mechanisms to specific operational requirements, from real-time grid coordination to market participation and regulatory reporting.*

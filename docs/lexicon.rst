@@ -27,6 +27,7 @@ GridWorks lexicon
     MarketMaker <market-maker>
     MarketSlot <market-slot>
     MarketType <market-type>
+    Persistence Mechanism <persistence-mechanism>
     PriceService <price-service>
     RepresentationContract <representation-contract>
     SCADA <scada>
