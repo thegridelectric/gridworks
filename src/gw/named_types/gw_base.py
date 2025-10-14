@@ -32,12 +32,7 @@ class GwBase(BaseModel):
         alias_generator=snake_to_pascal,
         frozen=True,
         populate_by_name=True,
-    )
-
-    model_config = ConfigDict(
-        alias_generator=snake_to_pascal,
-        frozen=True,
-        populate_by_name=True,
+        extra="forbid",
     )
 
     def to_type(self) -> bytes:
@@ -58,7 +53,7 @@ class GwBase(BaseModel):
     @classmethod
     def from_dict(cls: Type[T], d: dict) -> T:
         if not recursively_pascal(d):
-            GwTypeError(
+            raise GwTypeError(
                 f"Dictionary keys must be recursively PascalCase. "
                 f"Found: {d}. Consider checking nested structures."
             )

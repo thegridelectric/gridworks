@@ -179,12 +179,12 @@ rjb.hw1-keene.marketmaker.latest-price.rt60gate5
 
 **Pattern:**
 ```
-gw.{from-alias}.{from-role}.{type-name}.{to-role}.{to-alias}
+gw.{from-alias}.to.{dst}.{type-name}
 ```
 
 **Example from ASL registry:**
 ```
-gw.hw1-keene-beech-scada.to.ltn.power-watts
+gw.hw1-isone-ma-boston-scada.to.a.report-event
 ```
 
 **Structure:**
