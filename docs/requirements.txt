@@ -1,5 +1,5 @@
 furo==2025.7.19
 sphinx==8.0.2
 sphinx-click==5.1.0
-myst_parser==4.0.0
+myst_parser==5.0.0
 sphinx-rtd-theme
